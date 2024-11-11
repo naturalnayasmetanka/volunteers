@@ -1,8 +1,3 @@
-﻿namespace Volunteers.Domain.Volunteer.Models
-{
-    public class SocialNetwork
-    {
-        public string Title { get; set; } = default!;
-        public string Link { get; set; } = default!;
-    }
-}
+﻿namespace Volunteers.Domain.Volunteer.Models;
+
+public record SocialNetwork(string title, string link);

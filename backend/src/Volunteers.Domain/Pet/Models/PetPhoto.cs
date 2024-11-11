@@ -1,8 +1,3 @@
-﻿namespace Volunteers.Domain.Pet.Models
-{
-    public class PetPhoto
-    {
-        public string Path { get; set; } = default!;
-        public bool IsMain { get; set; }
-    }
-}
+﻿namespace Volunteers.Domain.Pet.Models;
+
+public record PetPhoto(string path, bool isMain);

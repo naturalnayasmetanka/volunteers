@@ -4,25 +4,28 @@ namespace Volunteers.Domain.Pet.Models
 {
     public class Pet
     {
-        public Guid Id { get; set; }
-        public string Nickname { get; set; } = default!;
-        public string Type { get; set; } = default!;
-        public string Description { get; set; } = default!;
-        public string Gender { get; set; } = default!;
-        public string Breed { get; set; } = default!;
-        public string Color { get; set; } = default!;
-        public string HelthInfo { get; set; } = default!;
-        public string Location { get; set; } = default!;
-        public double Weight { get; set; }
-        public double Height { get; set; }
-        public int PhoneNumber { get; set; }
-        public bool IsSterilized { get; set; }
-        public bool IsVaccinated { get; set; }
-        public PetStatus HelpStatus { get; set; }
-        public DateTime BirthDate { get; set; }
-        public DateTime CreationDate { get; set; }
+        public Guid Id { get; private set; }
+        public string Nickname { get; private set; } = default!;
+        public string Type { get; private set; } = default!;
+        public string Description { get; private set; } = default!;
+        public string Gender { get; private set; } = default!;
+        public string Breed { get; private set; } = default!;
+        public string Color { get; private set; } = default!;
+        public string HelthInfo { get; private set; } = default!;
+        public string Location { get; private set; } = default!;
+        public double Weight { get; private set; }
+        public double Height { get; private set; }
+        public int PhoneNumber { get; private set; }
+        public bool IsSterilized { get; private set; }
+        public bool IsVaccinated { get; private set; }
+        public PetStatus HelpStatus { get; private set; }
+        public DateTime BirthDate { get; private set; }
+        public DateTime CreationDate { get; private set; }
 
-        public List<PetRequisite> Requisites { get; set; } = [];
-        public List<PetPhoto> Photo { get; set; } = [];
+        private List<PetRequisite> _requisites = [];
+        public IReadOnlyList<PetRequisite> Requisites => _requisites;
+
+        private List<PetPhoto> _photo = [];
+        public IReadOnlyList<PetPhoto> Photo=> _photo;
     }
 }

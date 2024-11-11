@@ -1,8 +1,3 @@
-﻿namespace Volunteers.Domain.Pet.Models
-{
-    public class PetRequisite
-    {
-        public string Title { get; set; } = default!;
-        public string Description { get; set; } = default!;
-    }
-}
+﻿namespace Volunteers.Domain.Pet.Models;
+
+public record PetRequisite(string title, string description);

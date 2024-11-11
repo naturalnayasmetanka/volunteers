@@ -1,8 +1,3 @@
-﻿namespace Volunteers.Domain.Volunteer.Models
-{
-    public class VolunteerRequisite
-    {
-        public string Title { get; set; } = default!;
-        public string Description { get; set; } = default!;
-    }
-}
+﻿namespace Volunteers.Domain.Volunteer.Models;
+
+public record VolunteerRequisite(string title, string description);
