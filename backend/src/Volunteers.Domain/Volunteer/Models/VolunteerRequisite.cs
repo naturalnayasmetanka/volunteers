@@ -1,3 +1,3 @@
 ﻿namespace Volunteers.Domain.Volunteer.Models;
 
-public record VolunteerRequisite(string title, string description);
+public record VolunteerRequisite(string Title, string Description);

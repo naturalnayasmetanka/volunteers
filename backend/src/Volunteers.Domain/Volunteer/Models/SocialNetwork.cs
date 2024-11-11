@@ -1,3 +1,3 @@
 ﻿namespace Volunteers.Domain.Volunteer.Models;
 
-public record SocialNetwork(string title, string link);
+public record SocialNetwork(string Title, string Link);
