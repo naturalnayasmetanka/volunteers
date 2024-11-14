@@ -1,4 +1,6 @@
 
+using Volunteers.Infrastructure.Contexts;
+
 namespace Volunteers.API
 {
     public class Program
@@ -10,6 +12,8 @@ namespace Volunteers.API
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddScoped<ApplicationDbContext>();
 
             var app = builder.Build();
 
