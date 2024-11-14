@@ -7,6 +7,12 @@ namespace Volunteers.Domain.Volunteer.Models;
 
 public class Volunteer : CustomEntity.Entity<VolunteerId>
 {
+    private Volunteer(VolunteerId id)
+        :base(id)
+    {
+        
+    }
+
     private Volunteer(
         VolunteerId id,
         string name,
@@ -26,11 +32,8 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>
     public double ExperienceInYears { get; private set; }
     public int PhoneNumber { get; private set; }
 
-    private List<SocialNetwork> _socialNetworks = [];
-    public IReadOnlyList<SocialNetwork> SocialNetworks => _socialNetworks;
-
-    private List<VolunteerRequisite> _requisites = [];
-    public IReadOnlyList<VolunteerRequisite> Requisites => _requisites;
+    public SocialNetworkDetails? SocialNetworkDetails { get; private set; }
+    public VolunteerRequisiteDetails? RequisiteDetails { get; private set; }
 
     private List<PetModel> _pets = [];
     public IReadOnlyList<PetModel> Pets => _pets;
@@ -66,12 +69,12 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>
 
     public void AddSocialNetwork(SocialNetwork socialNetwork)
     {
-        _socialNetworks.Add(socialNetwork);
+        SocialNetworkDetails?.SocialNetworks.Add(socialNetwork);
     }
 
     public void AddVolunteerRequisite(VolunteerRequisite requisite)
     {
-        _requisites.Add(requisite);
+        RequisiteDetails?.Requisites.Add(requisite);
     }
 
     public void AddPet(PetModel pet)
