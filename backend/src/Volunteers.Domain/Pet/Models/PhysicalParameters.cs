@@ -25,9 +25,9 @@ public record PhysicalParameters
     }
 
     public string Type { get; }
-    public string Gender { get; }
-    public string Breed { get; }
-    public string Color { get; }
+    public string? Gender { get; }
+    public string? Breed { get; }
+    public string? Color { get; }
     public double Weight { get; }
     public double Height { get; }
     public bool IsSterilized { get; }
