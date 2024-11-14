@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using Volunteers.Domain.Pet.Enums;
 using CustomEntity = Volunteers.Domain.Shared;
+using VolunteerModel = Volunteers.Domain.Volunteer.Models.Volunteer;
 
 namespace Volunteers.Domain.Pet.Models;
 
@@ -40,11 +41,23 @@ public class Pet : CustomEntity.Entity<PetId>
     public DateTime? BirthDate { get; private set; }
     public DateTime CreationDate { get; private set; }
 
-    public PetDetailsLocation? LocationDetails { get; private set; }
-    public PetDetailsRequisite? RequisiteDetails { get; private set; }
-    public PetDetailsPhoto? PhotoDetails { get; private set; }
-    public PetDetailsPhysicalParameters? PhysicalDetails { get; private set; }
-    public SpeciesBreed? SpeciesBreed { get; set; }
+
+    public VolunteerModel Volunteer { get; private set; } = default!;
+
+
+    private List<Location> _locations = [];
+    public IReadOnlyList<Location> Locations => _locations;
+   
+    private List<PetRequisite> _requisites = [];
+    public IReadOnlyList<PetRequisite> Requisites => _requisites;
+
+    private List<PetPhoto> _photo = [];
+    public IReadOnlyList<PetPhoto> Photo => _photo;
+
+    private List<PhysicalParameters> _physicalParameters = [];
+    public IReadOnlyList<PhysicalParameters> PhysicalParameters => _physicalParameters;
+
+    public SpeciesBreed? SpeciesBreed { get; private set; } = default!;
 
     public static Result<Pet> Create(
         PetId id,
@@ -84,21 +97,21 @@ public class Pet : CustomEntity.Entity<PetId>
 
     public void AddLocation(Location location)
     {
-        LocationDetails?.Locations.Add(location);
+        _locations.Add(location);
     }
 
     public void AddRequisite(PetRequisite requisite)
     {
-        RequisiteDetails?.Requisites.Add(requisite);
+        _requisites.Add(requisite);
     }
 
     public void AddPhysicalParameters(PhysicalParameters physicalParameters)
     {
-        PhysicalDetails?.PhysicalParameters.Add(physicalParameters);
+        _physicalParameters.Add(physicalParameters);
     }
 
     public void AddPhoto(PetPhoto photo)
     {
-        PhotoDetails?.Photo.Add(photo);
+        _photo.Add(photo);
     }
 }

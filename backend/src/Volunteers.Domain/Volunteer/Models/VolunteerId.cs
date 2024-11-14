@@ -13,4 +13,3 @@ public record VolunteerId
     public static VolunteerId EmptyVolunteerId() => new VolunteerId(Guid.Empty);
     public static VolunteerId Create(Guid id) => new VolunteerId(id);
 }
-

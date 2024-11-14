@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Volunteers.Domain.Volunteer.Models;
+using Volunteers.Infrastructure.Extentions.ef;
 
 namespace Volunteers.Infrastructure.Configurations;
 
@@ -35,40 +36,18 @@ public class VolunteerConfigurations : IEntityTypeConfiguration<Volunteer>
             .HasMaxLength(15);
 
         builder.HasMany(x => x.Pets)
-            .WithOne()
+            .WithOne(x => x.Volunteer)
             .HasForeignKey("volunteer_id")
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired();
 
-        builder.OwnsOne(x => x.RequisiteDetails, ib =>
-        {
-            ib.ToJson();
+        builder.Navigation(x => x.Pets)
+            .AutoInclude();
 
-            ib.OwnsMany(x => x.Requisites, fb =>
-            {
-                fb.Property(x => x.Title)
-                    .IsRequired(true)
-                    .HasMaxLength(100);
+        builder.Property(x => x.SocialNetworks)
+            .JsonValueObjectCollectionСonversion();
 
-                fb.Property(x => x.Description)
-                    .IsRequired(true)
-                    .HasMaxLength(1000);
-            });
-        });
-
-        builder.OwnsOne(x => x.SocialNetworkDetails, ib =>
-        {
-            ib.ToJson();
-
-            ib.OwnsMany(x => x.SocialNetworks, fb =>
-            {
-                fb.Property(x => x.Title)
-                    .IsRequired(true)
-                    .HasMaxLength(100);
-
-                fb.Property(x => x.Link)
-                    .IsRequired(true)
-                    .HasMaxLength(1000);
-            });
-        });
+        builder.Property(x => x.Requisites)
+            .JsonValueObjectCollectionСonversion();
     }
 }

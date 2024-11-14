@@ -27,8 +27,12 @@ public class SpeciesConfigurations : IEntityTypeConfiguration<Species>
             .HasMaxLength(1000);
 
         builder.HasMany(x => x.Breeds)
-            .WithOne()
+            .WithOne(x => x.Species)
             .HasForeignKey("species_id")
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired();
+
+        builder.Navigation(x => x.Breeds)
+            .AutoInclude();
     }
 }

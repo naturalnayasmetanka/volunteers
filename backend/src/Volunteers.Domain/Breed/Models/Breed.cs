@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using CustomEntity = Volunteers.Domain.Shared;
+using SpeciesModel = Volunteers.Domain.Species.Models.Species;
 
 namespace Volunteers.Domain.Breed.Models;
 
@@ -22,6 +23,8 @@ public class Breed : CustomEntity.Entity<BreedId>
 
     public string Title { get; private set; } = default!;
     public string Description { get; private set; } = default!;
+
+    public SpeciesModel Species { get; private set; } = default!;
 
     public static Result<Breed> Create(
         BreedId id,

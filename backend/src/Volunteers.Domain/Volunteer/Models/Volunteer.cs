@@ -32,8 +32,11 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>
     public double ExperienceInYears { get; private set; }
     public int PhoneNumber { get; private set; }
 
-    public SocialNetworkDetails? SocialNetworkDetails { get; private set; }
-    public VolunteerRequisiteDetails? RequisiteDetails { get; private set; }
+    private List<SocialNetwork> _socialNetworks = [];
+    public IReadOnlyList<SocialNetwork> SocialNetworks => _socialNetworks;
+
+    private List<VolunteerRequisite> _requisites = [];
+    public IReadOnlyList<VolunteerRequisite> Requisites => _requisites;
 
     private List<PetModel> _pets = [];
     public IReadOnlyList<PetModel> Pets => _pets;
@@ -69,12 +72,12 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>
 
     public void AddSocialNetwork(SocialNetwork socialNetwork)
     {
-        SocialNetworkDetails?.SocialNetworks.Add(socialNetwork);
+        _socialNetworks.Add(socialNetwork);
     }
 
     public void AddVolunteerRequisite(VolunteerRequisite requisite)
     {
-        RequisiteDetails?.Requisites.Add(requisite);
+        _requisites.Add(requisite);
     }
 
     public void AddPet(PetModel pet)
