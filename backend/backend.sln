@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Volunteers.API", "src\Volunteers.API\Volunteers.API.csproj", "{9DAF461A-53F2-4341-AC6D-08238FEE66D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Volunteers.API", "src\Volunteers.API\Volunteers.API.csproj", "{9DAF461A-53F2-4341-AC6D-08238FEE66D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Volunteers.Infrastructure", "src\Volunteers.Infrastructure\Volunteers.Infrastructure.csproj", "{8DF603DE-6C0E-49DD-BB73-F2BA2E40C801}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Volunteers.Infrastructure", "src\Volunteers.Infrastructure\Volunteers.Infrastructure.csproj", "{8DF603DE-6C0E-49DD-BB73-F2BA2E40C801}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Volunteers.Domain", "src\Volunteers.Domain\Volunteers.Domain.csproj", "{ECEF576E-E49E-4CB5-B2E8-AFFC5AAE8A98}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Volunteers.Domain", "src\Volunteers.Domain\Volunteers.Domain.csproj", "{ECEF576E-E49E-4CB5-B2E8-AFFC5AAE8A98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Volunteers.Application", "src\Volunteers.Application\Volunteers.Application.csproj", "{1C282B38-72A5-47DB-BB78-DB0777A98609}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Volunteers.Application", "src\Volunteers.Application\Volunteers.Application.csproj", "{1C282B38-72A5-47DB-BB78-DB0777A98609}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{39FEC0CF-54D8-457C-9801-EAF458D0B83D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{1C282B38-72A5-47DB-BB78-DB0777A98609}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C282B38-72A5-47DB-BB78-DB0777A98609}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C282B38-72A5-47DB-BB78-DB0777A98609}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39FEC0CF-54D8-457C-9801-EAF458D0B83D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39FEC0CF-54D8-457C-9801-EAF458D0B83D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39FEC0CF-54D8-457C-9801-EAF458D0B83D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39FEC0CF-54D8-457C-9801-EAF458D0B83D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
