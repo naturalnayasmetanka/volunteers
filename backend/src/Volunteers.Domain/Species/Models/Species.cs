@@ -4,7 +4,7 @@ using CustomEntity = Volunteers.Domain.Shared;
 
 namespace Volunteers.Domain.Species.Models
 {
-    public class Species : CustomEntity.Entity<SpeciesId>
+    public class Species : CustomEntity.Models.Entity<SpeciesId>
     {
         private Species(SpeciesId id)
             : base(id)

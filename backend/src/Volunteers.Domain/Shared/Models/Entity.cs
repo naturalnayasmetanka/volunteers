@@ -1,6 +1,6 @@
-﻿namespace Volunteers.Domain.Shared;
+﻿namespace Volunteers.Domain.Shared.Models;
 
-public abstract class Entity<TId> where TId : notnull 
+public abstract class Entity<TId> where TId : notnull
 {
     protected Entity(TId id)
     {

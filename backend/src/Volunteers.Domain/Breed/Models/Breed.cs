@@ -4,7 +4,7 @@ using SpeciesModel = Volunteers.Domain.Species.Models.Species;
 
 namespace Volunteers.Domain.Breed.Models;
 
-public class Breed : CustomEntity.Entity<BreedId>
+public class Breed : CustomEntity.Models.Entity<BreedId>
 {
     private Breed(BreedId id)
         : base(id)

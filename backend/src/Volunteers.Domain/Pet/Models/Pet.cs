@@ -5,7 +5,7 @@ using VolunteerModel = Volunteers.Domain.Volunteer.Models.Volunteer;
 
 namespace Volunteers.Domain.Pet.Models;
 
-public class Pet : CustomEntity.Entity<PetId>
+public class Pet : CustomEntity.Models.Entity<PetId>
 {
     private Pet(PetId id)
         :base(id)
