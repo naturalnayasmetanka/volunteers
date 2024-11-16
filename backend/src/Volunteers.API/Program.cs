@@ -1,36 +1,20 @@
+using Volunteers.API.Extentions.DI;
+using Volunteers.Infrastructure.Extentions.DI;
+using Volunteers.Application.Extentions.DI;
 
-using Volunteers.Infrastructure.Contexts;
+namespace Volunteers.API;
 
-namespace Volunteers.API
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
+        var builder = WebApplication.CreateBuilder(args);
+        builder.Services
+            .AddInfrastructure() 
+            .AddApplication()
+            .AddApi();
 
-            builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
-            builder.Services.AddScoped<ApplicationDbContext>();
-
-            var app = builder.Build();
-
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();
-
-
-            app.MapControllers();
-
-            app.Run();
-        }
+        var app = builder.Build();
+        app.AddWebApp();
     }
 }
