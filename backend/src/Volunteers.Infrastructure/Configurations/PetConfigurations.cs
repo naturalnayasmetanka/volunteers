@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Volunteers.Domain.Pet.Models;
-using Volunteers.Infrastructure.Extentions.ef;
+using Volunteers.Infrastructure.Extentions.EF;
 
 namespace Volunteers.Infrastructure.Configurations;
 
