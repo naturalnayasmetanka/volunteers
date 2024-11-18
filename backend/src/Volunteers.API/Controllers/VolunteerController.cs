@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Volunteers.API.Extentions;
 using Volunteers.Application.Volunteer.CreateVolunteer;
+using Volunteers.Domain.Shared.CustomErrors;
 
 namespace Volunteers.API.Controllers;
 
@@ -8,11 +10,20 @@ namespace Volunteers.API.Controllers;
 public class VolunteerController : ControllerBase
 {
     [HttpPost]
-    public IEnumerable<string> Create(
+    public async Task<IActionResult> Create(
         [FromServices] CreateVolunteerHandler handler,
-        [FromBody] CreateVolunteerRequest request,
+        [FromBody] CreateVolunteerDto volunteerDto,
         CancellationToken cancellationToken = default)
     {
-        return new string[] { "value1", "value2" };
+        var createRequest = new CreateVolunteerRequest(volunteerDto);
+        var createResult = await handler.Handle(createRequest, cancellationToken);
+
+        if (createResult.Error.Type == ErrorType.Validation)
+            return BadRequest(createResult.Error);
+
+        if (createResult.IsFailure)
+            return createResult.Error.ToResponse();
+
+        return Created();
     }
 }
