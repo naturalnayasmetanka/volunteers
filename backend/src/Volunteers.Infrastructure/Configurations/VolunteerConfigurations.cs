@@ -20,18 +20,34 @@ public class VolunteerConfigurations : IEntityTypeConfiguration<Volunteer>
             );
 
         builder.Property(x => x.Name)
+            .HasConversion(
+                name => name.Value,
+                value => Name.Create(value).Value
+            )
             .IsRequired(true)
             .HasMaxLength(50);
 
         builder.Property(x => x.Email)
+            .HasConversion(
+                email => email.Value,
+                value => Email.Create(value).Value
+            )
             .IsRequired(true)
             .HasMaxLength(50);
 
         builder.Property(x => x.ExperienceInYears)
+            .HasConversion(
+                experienceInYears => experienceInYears.Value,
+                value => ExperienceInYears.Create(value).Value
+            )
             .IsRequired(true)
             .HasMaxLength(4);
 
         builder.Property(x => x.PhoneNumber)
+            .HasConversion(
+                phoneNumber => phoneNumber.Value,
+                value => PhoneNumber.Create(value).Value
+            )
             .IsRequired(true)
             .HasMaxLength(15);
 
