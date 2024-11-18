@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Volunteers.Domain.Shared.Enums;
-using Volunteers.Domain.Shared.Models.CustomErrors;
+using Volunteers.Domain.Shared.CustomErrors;
 
 namespace Volunteers.API.Extentions;
 
