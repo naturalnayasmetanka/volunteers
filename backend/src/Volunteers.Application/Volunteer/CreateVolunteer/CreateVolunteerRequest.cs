@@ -1,5 +1,3 @@
 ﻿namespace Volunteers.Application.Volunteer.CreateVolunteer;
 
-public record CreateVolunteerRequest
-{
-}
+public record CreateVolunteerRequest(CreateVolunteerDto VolunteerDto);
