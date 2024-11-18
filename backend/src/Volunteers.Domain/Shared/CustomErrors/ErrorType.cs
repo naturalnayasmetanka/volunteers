@@ -1,4 +1,4 @@
-﻿namespace Volunteers.Domain.Shared.Enums;
+﻿namespace Volunteers.Domain.Shared.CustomErrors;
 
 public enum ErrorType
 {

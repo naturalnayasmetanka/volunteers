@@ -8,17 +8,17 @@ namespace Volunteers.Domain.Volunteer.Models;
 public class Volunteer : CustomEntity.Models.Entity<VolunteerId>
 {
     private Volunteer(VolunteerId id)
-        :base(id)
+        : base(id)
     {
-        
+
     }
 
     private Volunteer(
         VolunteerId id,
-        string name,
-        string email,
-        double experienceInYears,
-        int phoneNumber
+        Name name,
+        Email email,
+        ExperienceInYears experienceInYears,
+        PhoneNumber phoneNumber
         ) : base(id)
     {
         Name = name;
@@ -27,10 +27,10 @@ public class Volunteer : CustomEntity.Models.Entity<VolunteerId>
         PhoneNumber = phoneNumber;
     }
 
-    public string Name { get; private set; } = default!;
-    public string Email { get; private set; } = default!;
-    public double ExperienceInYears { get; private set; }
-    public int PhoneNumber { get; private set; }
+    public Name Name { get; private set; } = default!;
+    public Email Email { get; private set; } = default!;
+    public ExperienceInYears ExperienceInYears { get; private set; } = default!;
+    public PhoneNumber PhoneNumber { get; private set; } = default!;
 
     private List<SocialNetwork> _socialNetworks = [];
     public IReadOnlyList<SocialNetwork> SocialNetworks => _socialNetworks;
@@ -43,23 +43,11 @@ public class Volunteer : CustomEntity.Models.Entity<VolunteerId>
 
     public static Result<Volunteer> Create(
         VolunteerId id,
-        string name,
-        string email,
-        double experienceInYears,
-        int phoneNumber)
+        Name name,
+        Email email,
+        ExperienceInYears experienceInYears,
+        PhoneNumber phoneNumber)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            return Result.Failure<Volunteer>("Name can not be empty");
-
-        if (string.IsNullOrWhiteSpace(email))
-            return Result.Failure<Volunteer>("Email can not be empty");
-
-        if (experienceInYears < 0)
-            return Result.Failure<Volunteer>("Experience in years cannot be less than to zero");
-
-        if (phoneNumber <= 0)
-            return Result.Failure<Volunteer>("Phone number cannot be less than or equal to zero");
-
         var newVolunteer = new Volunteer(
             id: id,
             name: name,

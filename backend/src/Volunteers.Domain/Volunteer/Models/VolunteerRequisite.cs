@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using Volunteers.Domain.Shared.CustomErrors;
 
 namespace Volunteers.Domain.Volunteer.Models;
 
@@ -15,20 +16,20 @@ public record VolunteerRequisite
     public string Title { get; }
     public string Description { get; }
 
-    public static Result<VolunteerRequisite> Create(
+    public static Result<VolunteerRequisite, Error> Create(
         string title,
         string description)
     {
         if (string.IsNullOrWhiteSpace(title))
-            return Result.Failure<VolunteerRequisite>("Title can not be empty");
+            return Errors.General.ValueIsInvalid("Requisite Title");
 
         if (string.IsNullOrWhiteSpace(description))
-            return Result.Failure<VolunteerRequisite>("Description can not be empty");
+            return Errors.General.ValueIsInvalid("Requisite Description");
 
         var newRequisite = new VolunteerRequisite(
             title: title,
             description: description);
 
-        return Result.Success(newRequisite);
+        return newRequisite;
     }
 }

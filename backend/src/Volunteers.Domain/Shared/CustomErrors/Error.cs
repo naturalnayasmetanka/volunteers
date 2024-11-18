@@ -1,6 +1,4 @@
-﻿using Volunteers.Domain.Shared.Enums;
-
-namespace Volunteers.Domain.Shared.Models.CustomErrors;
+﻿namespace Volunteers.Domain.Shared.CustomErrors;
 
 public record Error
 {

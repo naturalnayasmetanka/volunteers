@@ -15,10 +15,10 @@ public class Pet : CustomEntity.Models.Entity<PetId>
 
     private Pet(
         PetId id,
-        string nickname,
-        string commonDescription,
-        string helthDescription,
-        int phoneNumber,
+        Nickname nickname,
+        CommonDescription commonDescription,
+        HelthDescription helthDescription,
+        PetPhoneNumber phoneNumber,
         PetStatus helpStatus,
         DateTime birthDate,
         DateTime creationDate
@@ -33,10 +33,10 @@ public class Pet : CustomEntity.Models.Entity<PetId>
         CreationDate = creationDate;
     }
 
-    public string Nickname { get; private set; } = default!;
-    public string CommonDescription { get; private set; } = default!;
-    public string HelthDescription { get; private set; } = default!;
-    public int PhoneNumber { get; private set; }
+    public Nickname Nickname { get; private set; } = default!;
+    public CommonDescription CommonDescription { get; private set; } = default!;
+    public HelthDescription HelthDescription { get; private set; } = default!;
+    public PetPhoneNumber PhoneNumber { get; private set; } = default!;
     public PetStatus HelpStatus { get; private set; }
     public DateTime? BirthDate { get; private set; }
     public DateTime CreationDate { get; private set; }
@@ -61,27 +61,15 @@ public class Pet : CustomEntity.Models.Entity<PetId>
 
     public static Result<Pet> Create(
         PetId id,
-        string nickname,
-        string commonDescription,
-        string helthDescription,
-        int phoneNumber,
+        Nickname nickname,
+        CommonDescription commonDescription,
+        HelthDescription helthDescription,
+        PetPhoneNumber phoneNumber,
         PetStatus helpStatus,
         DateTime birthDate,
         DateTime creationDate
     )
     {
-        if (string.IsNullOrWhiteSpace(nickname))
-            return Result.Failure<Pet>("Nickname can not be empty");
-
-        if (string.IsNullOrWhiteSpace(commonDescription))
-            return Result.Failure<Pet>("Common Description can not be empty");
-
-        if (string.IsNullOrWhiteSpace(helthDescription))
-            return Result.Failure<Pet>("Helth Description can not be empty");
-
-        if (phoneNumber <= 0)
-            return Result.Failure<Pet>("Phone number cannot be less than or equal to zero");
-
         var newPet = new Pet(
             id: id,
             nickname: nickname,

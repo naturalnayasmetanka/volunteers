@@ -1,4 +1,4 @@
-﻿namespace Volunteers.Domain.Shared.Models.CustomErrors;
+﻿namespace Volunteers.Domain.Shared.CustomErrors;
 
 public static class Errors
 {
