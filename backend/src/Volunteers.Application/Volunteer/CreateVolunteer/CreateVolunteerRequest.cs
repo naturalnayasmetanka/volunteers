@@ -1,3 +1,5 @@
-﻿namespace Volunteers.Application.Volunteer.CreateVolunteer;
+﻿using FluentValidation;
+
+namespace Volunteers.Application.Volunteer.CreateVolunteer;
 
 public record CreateVolunteerRequest(CreateVolunteerDto VolunteerDto);

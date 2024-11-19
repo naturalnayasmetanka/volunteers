@@ -4,4 +4,6 @@ public record CreateVolunteerDto(
     string Name,
     string Email,
     double ExperienceInYears,
-    int PhoneNumber);
+    int PhoneNumber,
+    List<SocialNetworkDto>? SocialNetworks,
+    List<VolunteerRequisiteDto>? VolunteerRequisites);

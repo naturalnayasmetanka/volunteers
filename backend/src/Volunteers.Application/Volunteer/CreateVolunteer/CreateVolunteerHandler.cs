@@ -24,12 +24,33 @@ public class CreateVolunteerHandler
         var experienceInYears = ExperienceInYears.Create(request.VolunteerDto.ExperienceInYears);
         var phoneNumber = PhoneNumber.Create(request.VolunteerDto.PhoneNumber);
 
+        var socialNetworks = request.VolunteerDto.SocialNetworks;
+        var requisites = request.VolunteerDto.VolunteerRequisites;
+
         var volunteerResult = VolunteerModel.Create(
             volunteerId,
             name.Value,
             email.Value,
             experienceInYears.Value,
             phoneNumber.Value);
+
+        if (socialNetworks is not null)
+            socialNetworks
+                .ForEach(x =>
+                    volunteerResult.Value.AddSocialNetwork(
+                        SocialNetwork.Create(
+                            x.Title,
+                            x.Link
+                        ).Value));
+
+        if (requisites is not null)
+            requisites
+                .ForEach(x =>
+                    volunteerResult.Value.AddVolunteerRequisite(
+                        VolunteerRequisite.Create(
+                            x.Title,
+                            x.Description
+                        ).Value));
 
         if (name.IsFailure)
             return name.Error;
