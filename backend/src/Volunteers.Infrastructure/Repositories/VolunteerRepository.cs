@@ -1,5 +1,5 @@
 ﻿using Volunteers.Application.Volunteer;
-using Volunteers.Domain.Volunteer.Models;
+using Volunteers.Domain.PetManagment.Volunteer.AggregateRoot;
 using Volunteers.Infrastructure.Contexts;
 
 namespace Volunteers.Infrastructure.Repositories;

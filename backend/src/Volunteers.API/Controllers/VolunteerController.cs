@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Volunteers.API.Extentions;
 using Volunteers.Application.Volunteer.CreateVolunteer;
+using Volunteers.Application.Volunteer.CreateVolunteer.DTO;
 
 namespace Volunteers.API.Controllers;
 
@@ -8,7 +9,7 @@ namespace Volunteers.API.Controllers;
 [ApiController]
 public class VolunteerController : ControllerBase
 {
-    [HttpPost]
+    [HttpPost] 
     public async Task<IActionResult> Create(
         [FromServices] CreateVolunteerHandler handler,
         [FromBody] CreateVolunteerRequest createRequest,
@@ -17,7 +18,7 @@ public class VolunteerController : ControllerBase
         var createResult = await handler.Handle(createRequest, cancellationToken); 
 
         if (createResult.IsFailure)
-            return createResult.Error.ToResponse();
+            return createResult.Error.ToErrorResponse();
 
         return Created();
     }

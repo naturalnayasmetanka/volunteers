@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Volunteers.Domain.Volunteer.Models;
+using Volunteers.Domain.PetManagment.Volunteer.AggregateRoot;
+using Volunteers.Domain.PetManagment.Volunteer.ValueObjects;
+using Volunteers.Domain.Shared.Ids;
 using Volunteers.Infrastructure.Extentions.EF;
 
 namespace Volunteers.Infrastructure.Configurations;

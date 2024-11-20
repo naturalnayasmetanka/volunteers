@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Volunteers.Domain.Breed.Models;
+using Volunteers.Domain.Shared.Ids;
+using Volunteers.Domain.SpeciesManagment.Breed.Entities;
+using Volunteers.Domain.SpeciesManagment.Breed.ValueObjects;
 
 namespace Volunteers.Infrastructure.Configurations;
 
