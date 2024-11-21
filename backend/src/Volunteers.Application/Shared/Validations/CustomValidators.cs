@@ -2,7 +2,7 @@
 using FluentValidation;
 using Volunteers.Domain.Shared.CustomErrors;
 
-namespace Volunteers.Application.Validation;
+namespace Volunteers.Application.Shared.Validations;
 
 public static class CustomValidators
 {

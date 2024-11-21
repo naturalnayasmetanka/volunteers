@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc;
 using Volunteers.Domain.Shared.CustomErrors;
 
 namespace Volunteers.API.Extentions;
@@ -37,6 +38,21 @@ public static class ResponseExtentions
         }
 
         return new ObjectResult(errors)
+        {
+            StatusCode = StatusCodes.Status400BadRequest
+        };
+    }
+
+    public static ActionResult FromFluientToErrorResponse(this List<ValidationFailure> errors)
+    {
+        List<Error> _errors = [];
+
+        foreach (var error in errors)
+        {
+            _errors.Add(Errors.General.ValueIsInvalid(error.PropertyName));
+        }
+
+        return new ObjectResult(_errors)
         {
             StatusCode = StatusCodes.Status400BadRequest
         };
