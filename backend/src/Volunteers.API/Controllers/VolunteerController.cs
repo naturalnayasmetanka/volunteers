@@ -20,10 +20,8 @@ public class VolunteerController : ControllerBase
         var validationResult = await validator.ValidateAsync(createRequest, cancellationToken);
 
         if (!validationResult.IsValid)
-        {
             return validationResult.Errors
-                .FromFluientToErrorResponse();
-        }
+                    .FromFluientToErrorResponse();
 
         var createResult = await handler.Handle(createRequest, cancellationToken);
 

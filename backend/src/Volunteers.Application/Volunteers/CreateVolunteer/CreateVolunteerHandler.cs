@@ -60,7 +60,8 @@ public class CreateVolunteerHandler
                             x.Description
                         ).Value));
 
-        var createResult = await _repository.CreateAsync(volunteerResult, cancellationToken);
+        var createResult = await _repository
+            .CreateAsync(volunteerResult, cancellationToken);
 
         return (Guid)createResult.Id;
     }
