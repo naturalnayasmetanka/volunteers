@@ -11,9 +11,9 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         builder.Services
             .AddInfrastructure()
-            .AddApplication()
+            .AddApplication() 
             .AddApi();
-
+         
         var app = builder.Build();
         app.AddWebApp();
     }

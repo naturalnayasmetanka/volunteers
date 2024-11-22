@@ -5,7 +5,7 @@ using Volunteers.Application.Volunteer.CreateVolunteer;
 using Volunteers.Application.Volunteers.CreateVolunteer.RequestModels;
 
 namespace Volunteers.API.Controllers;
-
+ 
 [Route("api/[controller]")]
 [ApiController]
 public class VolunteerController : ControllerBase
@@ -17,6 +17,8 @@ public class VolunteerController : ControllerBase
         [FromBody] CreateVolunteerRequest createRequest,
         CancellationToken cancellationToken = default)
     {
+        throw new ApplicationException("ABOBAAAAA");
+
         var validationResult = await validator.ValidateAsync(createRequest, cancellationToken);
 
         if (!validationResult.IsValid)

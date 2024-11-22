@@ -1,4 +1,7 @@
-﻿namespace Volunteers.API.Extentions.DI;
+﻿using Volunteers.API.Extentions.Middlewares;
+using Volunteers.API.Extentions.WebAppExtentions;
+
+namespace Volunteers.API.Extentions.DI;
 
 public static class BuilderInjector
 {
@@ -8,7 +11,15 @@ public static class BuilderInjector
         {
             app.UseSwagger();
             app.UseSwaggerUI();
+
+            app.ApplyMigrations();
         }
+        else
+        {
+            app.UseExceptionMiddleware();
+        }
+
+        app.UseHttpLogging();
 
         app.UseHttpsRedirection();
 

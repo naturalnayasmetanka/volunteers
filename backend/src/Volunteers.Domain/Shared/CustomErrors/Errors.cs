@@ -24,5 +24,10 @@ public static class Errors
 
             return Error.Validation("length.is.invalid", $"invalid {label} length");
         }
+
+        public static Error InternalServerError(string? value = null)
+        {
+            return Error.ServerInternal("server.internal", value ?? string.Empty);
+        }
     }
 }

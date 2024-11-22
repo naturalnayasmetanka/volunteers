@@ -27,4 +27,7 @@ public record Error
 
     public static Error Failure(string message, string code)
         => new Error(message, code, ErrorType.Failure);
+
+    public static Error ServerInternal(string message, string code)
+        => new Error(message, code, ErrorType.ServerInternal);
 }
