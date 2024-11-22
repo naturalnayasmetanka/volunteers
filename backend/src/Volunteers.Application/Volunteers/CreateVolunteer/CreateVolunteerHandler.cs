@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
+using Microsoft.Extensions.Logging;
 using Volunteers.Application.Volunteers.CreateVolunteer.RequestModels;
 using Volunteers.Domain.PetManagment.Volunteer.ValueObjects;
 using Volunteers.Domain.Shared.CustomErrors;
@@ -13,13 +14,16 @@ public class CreateVolunteerHandler
     private List<Error> _errors = [];
     private readonly IVolunteerRepository _repository;
     private readonly IValidator<CreateVolunteerRequest> _validator;
+    private readonly ILogger<CreateVolunteerHandler> _logger;
 
     public CreateVolunteerHandler(
         IVolunteerRepository repository,
-        IValidator<CreateVolunteerRequest> validator)
+        IValidator<CreateVolunteerRequest> validator,
+        ILogger<CreateVolunteerHandler> logger)
     {
         _repository = repository;
         _validator = validator;
+        _logger = logger;
     }
 
     public async Task<Result<Guid, List<Error>>> Handle(
@@ -41,7 +45,7 @@ public class CreateVolunteerHandler
             email,
             experienceInYears,
             phoneNumber).Value;
-
+        
         if (socialNetworks is not null)
             socialNetworks
                 .ForEach(x =>
@@ -62,6 +66,8 @@ public class CreateVolunteerHandler
 
         var createResult = await _repository
             .CreateAsync(volunteerResult, cancellationToken);
+
+        _logger.LogInformation("Volunteer was created with id: {0}", volunteerId.Value);
 
         return (Guid)createResult.Id;
     }

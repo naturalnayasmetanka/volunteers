@@ -1,4 +1,5 @@
-﻿using Volunteers.API.Extentions.Middlewares;
+﻿using Serilog;
+using Volunteers.API.Extentions.Middlewares;
 using Volunteers.API.Extentions.WebAppExtentions;
 
 namespace Volunteers.API.Extentions.DI;
@@ -19,7 +20,8 @@ public static class BuilderInjector
             app.UseExceptionMiddleware();
         }
 
-        app.UseHttpLogging();
+
+        app.UseSerilogRequestLogging();
 
         app.UseHttpsRedirection();
 
