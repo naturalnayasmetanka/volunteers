@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Volunteers.Domain.Species.Models;
+using Volunteers.Domain.Shared.Ids;
+using Volunteers.Domain.SpeciesManagment.Species.AggregateRoot;
+using Volunteers.Domain.SpeciesManagment.Species.ValueObjects;
 
 namespace Volunteers.Infrastructure.Configurations;
 
@@ -19,10 +21,18 @@ public class SpeciesConfigurations : IEntityTypeConfiguration<Species>
             );
 
         builder.Property(x => x.Title)
+            .HasConversion(
+                title => title.Value,
+                value => Title.Create(value).Value
+            )
             .IsRequired(true)
             .HasMaxLength(50);
 
         builder.Property(x => x.Description)
+            .HasConversion(
+                description => description.Value,
+                value => Description.Create(value).Value
+            )
             .IsRequired(true)
             .HasMaxLength(1000);
 

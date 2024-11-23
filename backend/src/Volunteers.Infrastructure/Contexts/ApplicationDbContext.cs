@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Volunteers.Domain.Species.Models;
-using Volunteers.Domain.Volunteer.Models;
+using Volunteers.Domain.PetManagment.Volunteer.AggregateRoot;
+using Volunteers.Domain.SpeciesManagment.Species.AggregateRoot;
 
 namespace Volunteers.Infrastructure.Contexts
 {

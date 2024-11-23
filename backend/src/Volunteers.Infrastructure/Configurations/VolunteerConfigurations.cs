@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Volunteers.Domain.Volunteer.Models;
-using Volunteers.Infrastructure.Extentions.ef;
+using Volunteers.Domain.PetManagment.Volunteer.AggregateRoot;
+using Volunteers.Domain.PetManagment.Volunteer.ValueObjects;
+using Volunteers.Domain.Shared.Ids;
+using Volunteers.Infrastructure.Extentions.EF;
 
 namespace Volunteers.Infrastructure.Configurations;
 
@@ -20,18 +22,34 @@ public class VolunteerConfigurations : IEntityTypeConfiguration<Volunteer>
             );
 
         builder.Property(x => x.Name)
+            .HasConversion(
+                name => name.Value,
+                value => Name.Create(value).Value
+            )
             .IsRequired(true)
             .HasMaxLength(50);
 
         builder.Property(x => x.Email)
+            .HasConversion(
+                email => email.Value,
+                value => Email.Create(value).Value
+            )
             .IsRequired(true)
             .HasMaxLength(50);
 
         builder.Property(x => x.ExperienceInYears)
+            .HasConversion(
+                experienceInYears => experienceInYears.Value,
+                value => ExperienceInYears.Create(value).Value
+            )
             .IsRequired(true)
             .HasMaxLength(4);
 
         builder.Property(x => x.PhoneNumber)
+            .HasConversion(
+                phoneNumber => phoneNumber.Value,
+                value => PhoneNumber.Create(value).Value
+            )
             .IsRequired(true)
             .HasMaxLength(15);
 
