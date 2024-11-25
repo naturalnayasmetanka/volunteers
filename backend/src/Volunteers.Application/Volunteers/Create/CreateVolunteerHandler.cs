@@ -13,16 +13,13 @@ public class CreateVolunteerHandler
 {
     private List<Error> _errors = [];
     private readonly IVolunteerRepository _repository;
-    private readonly IValidator<CreateVolunteerRequest> _validator;
     private readonly ILogger<CreateVolunteerHandler> _logger;
 
     public CreateVolunteerHandler(
         IVolunteerRepository repository,
-        IValidator<CreateVolunteerRequest> validator,
         ILogger<CreateVolunteerHandler> logger)
     {
         _repository = repository;
-        _validator = validator;
         _logger = logger;
     }
 

@@ -1,30 +1,30 @@
 ﻿using FluentValidation;
 using Volunteers.Application.Shared.Validations;
-using Volunteers.Application.Volunteers.CreateVolunteer.RequestModels;
+using Volunteers.Application.Volunteer.CreateVolunteer.DTO;
 using Volunteers.Domain.PetManagment.Volunteer.ValueObjects;
 
 namespace Volunteers.Application.Volunteer.CreateVolunteer.ValidatorRules;
 
-public class CreateVolunteerRequestValidator : AbstractValidator<CreateVolunteerRequest>
+public class CreateVolunteerRequestValidator : AbstractValidator<CreateVolunteerDto>
 {
     public CreateVolunteerRequestValidator()
     {
-        RuleFor(c => c.VolunteerDto.Name)
+        RuleFor(c => c.Name)
             .MustBeValueObject(Name.Create);
 
-        RuleFor(c => c.VolunteerDto.Email)
+        RuleFor(c => c.Email)
             .MustBeValueObject(Email.Create);
 
-        RuleFor(c => c.VolunteerDto.PhoneNumber)
+        RuleFor(c => c.PhoneNumber)
             .MustBeValueObject(PhoneNumber.Create);
 
-        RuleFor(c => c.VolunteerDto.ExperienceInYears)
+        RuleFor(c => c.ExperienceInYears)
             .MustBeValueObject(ExperienceInYears.Create);
 
-        RuleForEach(c => c.VolunteerDto.VolunteerRequisites)
-            .MustBeValueObject(c =>VolunteerRequisite.Create(c.Title, c.Description));
+        RuleForEach(c => c.VolunteerRequisites)
+            .MustBeValueObject(c => VolunteerRequisite.Create(c.Title, c.Description));
 
-        RuleForEach(c => c.VolunteerDto.SocialNetworks)
+        RuleForEach(c => c.SocialNetworks)
             .MustBeValueObject(c => VolunteerRequisite.Create(c.Title, c.Link));
     }
 }

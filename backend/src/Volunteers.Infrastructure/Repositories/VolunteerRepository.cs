@@ -1,4 +1,5 @@
-﻿using Volunteers.Application.Volunteer;
+﻿using Microsoft.EntityFrameworkCore;
+using Volunteers.Application.Volunteer;
 using Volunteers.Domain.PetManagment.Volunteer.AggregateRoot;
 using Volunteers.Infrastructure.Contexts;
 
@@ -20,5 +21,12 @@ public class VolunteerRepository : IVolunteerRepository
         await _context.SaveChangesAsync(cancellationToken);
 
         return newVolunteer;
+    }
+
+    public async Task<Volunteer?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var volunteer = await _context.Volunteers.FirstOrDefaultAsync(x => x.Id == id);
+
+        return volunteer;
     }
 }
