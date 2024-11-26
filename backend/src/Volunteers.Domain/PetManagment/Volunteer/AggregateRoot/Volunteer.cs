@@ -9,8 +9,6 @@ namespace Volunteers.Domain.PetManagment.Volunteer.AggregateRoot;
 
 public class Volunteer : CustomEntity.Entity<VolunteerId>
 {
-    //private List<SocialNetwork> _socialNetworks = [];
-    //private List<VolunteerRequisite> _requisites = [];
     private List<PetModel> _pets = [];
 
     private Volunteer(VolunteerId id) : base(id) { }
@@ -36,8 +34,6 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>
 
     public SocialNetworkDetails? SocialNetworkDetails { get; private set; } = new();
     public RequisiteDetails? RequisiteDetails { get; private set; } = new();
-    //public IReadOnlyList<SocialNetwork> SocialNetworks => _socialNetworks;
-    //public IReadOnlyList<VolunteerRequisite> Requisites => _requisites;
     public IReadOnlyList<PetModel> Pets => _pets;
 
     public static Result<Volunteer> Create(
@@ -67,6 +63,12 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>
         Email = email;
         ExperienceInYears = experienceInYears;
         PhoneNumber = phoneNumber;
+    }
+
+    public void UpdateSocial(List<SocialNetwork> socialNetwork)
+    {
+        SocialNetworkDetails?.SocialNetworks.Clear();
+        SocialNetworkDetails?.SocialNetworks?.AddRange(socialNetwork);
     }
 
     public void AddSocialNetwork(SocialNetwork socialNetwork)

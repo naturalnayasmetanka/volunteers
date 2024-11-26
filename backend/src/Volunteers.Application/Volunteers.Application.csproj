@@ -22,8 +22,6 @@
   <ItemGroup>
     <Folder Include="Volunteers\UpdateRequisites\RequestModels\" />
     <Folder Include="Volunteers\UpdateRequisites\ValidationRules\" />
-    <Folder Include="Volunteers\UpdateSotialNetworks\RequestModels\" />
-    <Folder Include="Volunteers\UpdateSotialNetworks\ValidationRules\" />
   </ItemGroup>
 
 </Project>

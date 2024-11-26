@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Volunteers.Domain.PetManagment.Volunteer.AggregateRoot;
 using Volunteers.Domain.PetManagment.Volunteer.ValueObjects;
 using Volunteers.Domain.Shared.Ids;
-using Volunteers.Infrastructure.Extentions.EF;
 
 namespace Volunteers.Infrastructure.Configurations;
 
@@ -61,12 +60,6 @@ public class VolunteerConfigurations : IEntityTypeConfiguration<Volunteer>
 
         builder.Navigation(x => x.Pets)
             .AutoInclude();
-
-        //builder.Property(x => x.SocialNetworks)
-        //    .JsonValueObjectCollectionСonversion();
-
-        //builder.Property(x => x.Requisites)
-        //    .JsonValueObjectCollectionСonversion();
 
         builder.OwnsOne(x => x.RequisiteDetails, ib =>
         {

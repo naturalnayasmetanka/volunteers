@@ -7,6 +7,9 @@ using Volunteers.Application.Volunteers.CreateVolunteer.RequestModels;
 using Volunteers.Application.Volunteers.UpdateMainInfo;
 using Volunteers.Application.Volunteers.UpdateMainInfo.DTO;
 using Volunteers.Application.Volunteers.UpdateMainInfo.RequestModels;
+using Volunteers.Application.Volunteers.UpdateSotialNetworks;
+using Volunteers.Application.Volunteers.UpdateSotialNetworks.DTO;
+using Volunteers.Application.Volunteers.UpdateSotialNetworks.RequestModels;
 
 namespace Volunteers.API.Controllers;
 
@@ -56,6 +59,30 @@ public class VolunteerController : ControllerBase
 
         if (mainInfoUpdateResult.IsFailure)
             return mainInfoUpdateResult.Error
+                .ToErrorResponse();
+
+        return Ok(mainInfoUpdateResult);
+    }
+
+    [HttpPatch("{id:guid}/social-network")]
+    public async Task<IActionResult> Update(
+        [FromServices] UpdateSotialNetworksHandler handler,
+        [FromServices] IValidator<UpdateSocialListDto> validator,
+        [FromBody] UpdateSocialListDto socialDto,
+        [FromRoute] Guid id,
+        CancellationToken cancellationToken = default)
+    {
+        var validationResult = await validator.ValidateAsync(socialDto, cancellationToken);
+
+        if (!validationResult.IsValid)
+            return validationResult.Errors
+                    .FromFluientToErrorResponse();
+
+        var updateSocialInfoRequest = new UpdateSocialRequest(id, socialDto);
+        var socialUpdateResult = await handler.Handle(updateSocialInfoRequest, cancellationToken);
+
+        if (socialUpdateResult.IsFailure)
+            return socialUpdateResult.Error
                 .ToErrorResponse();
 
         return Ok();

@@ -40,12 +40,14 @@ public class UpdateMainInfoHandler
         var phoneNumber = PhoneNumber.Create(request.MainInfoDto.PhoneNumber).Value;
 
         volunteer.UpdateMainInfo(
-            name:name,
-            email:email,
-            experienceInYears:experienceInYears,
-            phoneNumber:phoneNumber);
+            name: name,
+            email: email,
+            experienceInYears: experienceInYears,
+            phoneNumber: phoneNumber);
 
         await _repository.UpdateAsync(volunteer, cancellationToken);
+
+        _logger.LogInformation("id: {0} Volunteer main info was updated", id);
 
         return (Guid)request.Id;
     }
