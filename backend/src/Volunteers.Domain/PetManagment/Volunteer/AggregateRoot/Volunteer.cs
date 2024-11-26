@@ -9,8 +9,8 @@ namespace Volunteers.Domain.PetManagment.Volunteer.AggregateRoot;
 
 public class Volunteer : CustomEntity.Entity<VolunteerId>
 {
-    private List<SocialNetwork> _socialNetworks = [];
-    private List<VolunteerRequisite> _requisites = [];
+    //private List<SocialNetwork> _socialNetworks = [];
+    //private List<VolunteerRequisite> _requisites = [];
     private List<PetModel> _pets = [];
 
     private Volunteer(VolunteerId id) : base(id) { }
@@ -34,8 +34,10 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>
     public ExperienceInYears ExperienceInYears { get; private set; } = default!;
     public PhoneNumber PhoneNumber { get; private set; } = default!;
 
-    public IReadOnlyList<SocialNetwork> SocialNetworks => _socialNetworks;
-    public IReadOnlyList<VolunteerRequisite> Requisites => _requisites;
+    public SocialNetworkDetails? SocialNetworkDetails { get; private set; } = new();
+    public RequisiteDetails? RequisiteDetails { get; private set; } = new();
+    //public IReadOnlyList<SocialNetwork> SocialNetworks => _socialNetworks;
+    //public IReadOnlyList<VolunteerRequisite> Requisites => _requisites;
     public IReadOnlyList<PetModel> Pets => _pets;
 
     public static Result<Volunteer> Create(
@@ -69,12 +71,12 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>
 
     public void AddSocialNetwork(SocialNetwork socialNetwork)
     {
-        _socialNetworks.Add(socialNetwork);
+        SocialNetworkDetails?.SocialNetworks.Add(socialNetwork);
     }
 
     public void AddVolunteerRequisite(VolunteerRequisite requisite)
     {
-        _requisites.Add(requisite);
+        RequisiteDetails?.Requisites.Add(requisite);
     }
 
     public void AddPet(PetModel pet)

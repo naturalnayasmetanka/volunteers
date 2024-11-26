@@ -62,10 +62,38 @@ public class VolunteerConfigurations : IEntityTypeConfiguration<Volunteer>
         builder.Navigation(x => x.Pets)
             .AutoInclude();
 
-        builder.Property(x => x.SocialNetworks)
-            .JsonValueObjectCollectionСonversion();
+        //builder.Property(x => x.SocialNetworks)
+        //    .JsonValueObjectCollectionСonversion();
 
-        builder.Property(x => x.Requisites)
-            .JsonValueObjectCollectionСonversion();
+        //builder.Property(x => x.Requisites)
+        //    .JsonValueObjectCollectionСonversion();
+
+        builder.OwnsOne(x => x.RequisiteDetails, ib =>
+        {
+            ib.ToJson();
+            ib.OwnsMany(x => x.Requisites, fb =>
+            {
+                fb.Property(x => x.Title)
+                    .IsRequired(true)
+                    .HasMaxLength(100);
+                fb.Property(x => x.Description)
+                    .IsRequired(true)
+                    .HasMaxLength(1000);
+            });
+        });
+
+        builder.OwnsOne(x => x.SocialNetworkDetails, ib =>
+        {
+            ib.ToJson();
+            ib.OwnsMany(x => x.SocialNetworks, fb =>
+            {
+                fb.Property(x => x.Title)
+                    .IsRequired(true)
+                    .HasMaxLength(100);
+                fb.Property(x => x.Link)
+                    .IsRequired(true)
+                    .HasMaxLength(1000);
+            });
+        });
     }
 }

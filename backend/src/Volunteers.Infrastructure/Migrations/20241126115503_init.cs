@@ -33,8 +33,8 @@ namespace Volunteers.Infrastructure.Migrations
                     email = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     experience_in_years = table.Column<double>(type: "double precision", maxLength: 4, nullable: false),
                     phone_number = table.Column<int>(type: "integer", maxLength: 15, nullable: false),
-                    social_networks = table.Column<string>(type: "text", nullable: false),
-                    requisites = table.Column<string>(type: "text", nullable: false)
+                    RequisiteDetails = table.Column<string>(type: "jsonb", nullable: true),
+                    SocialNetworkDetails = table.Column<string>(type: "jsonb", nullable: true)
                 },
                 constraints: table =>
                 {
