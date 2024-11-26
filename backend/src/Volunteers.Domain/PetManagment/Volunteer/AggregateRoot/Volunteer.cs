@@ -55,6 +55,18 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>
         return Result.Success(newVolunteer);
     }
 
+    public void UpdateMainInfo(
+        Name name,
+        Email email,
+        ExperienceInYears experienceInYears,
+        PhoneNumber phoneNumber)
+    {
+        Name = name;
+        Email = email;
+        ExperienceInYears = experienceInYears;
+        PhoneNumber = phoneNumber;
+    }
+
     public void AddSocialNetwork(SocialNetwork socialNetwork)
     {
         _socialNetworks.Add(socialNetwork);

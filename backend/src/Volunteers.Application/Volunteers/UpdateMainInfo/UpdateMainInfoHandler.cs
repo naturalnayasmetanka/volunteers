@@ -2,7 +2,9 @@
 using Microsoft.Extensions.Logging;
 using Volunteers.Application.Volunteer;
 using Volunteers.Application.Volunteers.UpdateMainInfo.RequestModels;
+using Volunteers.Domain.PetManagment.Volunteer.ValueObjects;
 using Volunteers.Domain.Shared.CustomErrors;
+using Volunteers.Domain.Shared.Ids;
 
 namespace Volunteers.Application.Volunteers.UpdateMainInfo;
 
@@ -23,9 +25,27 @@ public class UpdateMainInfoHandler
         UpdateMainInfoRequest request,
         CancellationToken cancellationToken = default)
     {
-        var volunteer = await _repository.GetByIdAsync(request.Id);
+        var id = VolunteerId.Create(request.Id);
+        var volunteer = await _repository.GetByIdAsync(id, cancellationToken);
 
-        _logger.LogInformation("Volunteer was updated with id: {0}", request.Id);
+        if (volunteer is null)
+        {
+            _errors.Add(Errors.General.NotFound(request.Id));
+            return _errors;
+        }
+
+        var name = Name.Create(request.MainInfoDto.Name).Value;
+        var email = Email.Create(request.MainInfoDto.Email).Value;
+        var experienceInYears = ExperienceInYears.Create(request.MainInfoDto.ExperienceInYears).Value;
+        var phoneNumber = PhoneNumber.Create(request.MainInfoDto.PhoneNumber).Value;
+
+        volunteer.UpdateMainInfo(
+            name:name,
+            email:email,
+            experienceInYears:experienceInYears,
+            phoneNumber:phoneNumber);
+
+        await _repository.UpdateAsync(volunteer, cancellationToken);
 
         return (Guid)request.Id;
     }
