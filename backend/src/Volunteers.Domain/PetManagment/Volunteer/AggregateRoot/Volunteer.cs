@@ -1,14 +1,16 @@
 ﻿using CSharpFunctionalExtensions;
 using Volunteers.Domain.PetManagment.Pet.Enums;
 using Volunteers.Domain.PetManagment.Volunteer.ValueObjects;
+using Volunteers.Domain.Shared;
 using Volunteers.Domain.Shared.Ids;
 using CustomEntity = Volunteers.Domain.Shared;
 using PetModel = Volunteers.Domain.PetManagment.Pet.Entities.Pet;
 
 namespace Volunteers.Domain.PetManagment.Volunteer.AggregateRoot;
 
-public class Volunteer : CustomEntity.Entity<VolunteerId>
+public class Volunteer : CustomEntity.Entity<VolunteerId>, ISoftDeletable
 {
+    private bool _isDeleted = false;
     private List<PetModel> _pets = [];
 
     private Volunteer(VolunteerId id) : base(id) { }
@@ -51,6 +53,16 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>
             phoneNumber: phoneNumber);
 
         return Result.Success(newVolunteer);
+    }
+
+    public void SoftDelete()
+    {
+        _isDeleted = true;
+    }
+
+    public void Restore()
+    {
+        _isDeleted = false;
     }
 
     public void UpdateMainInfo(

@@ -29,7 +29,8 @@ public class VolunteerRepository : IVolunteerRepository
         VolunteerId id,
         CancellationToken cancellationToken = default)
     {
-        var volunteer = await _context.Volunteers.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+        var volunteer = await _context.Volunteers
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
         return volunteer;
     }
@@ -42,5 +43,20 @@ public class VolunteerRepository : IVolunteerRepository
         await _context.SaveChangesAsync(cancellationToken);
 
         return volunteer.Id;
+    }
+
+    public async Task<Guid> DeleteAsync(
+        Volunteer volunteer,
+        CancellationToken cancellationToken = default)
+    {
+        _context.Volunteers.Remove(volunteer);
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return volunteer.Id.Value;
+    }
+
+    public async Task SaveAsync(CancellationToken cancellationToken = default)
+    {
+        await _context.SaveChangesAsync(cancellationToken);
     }
 }

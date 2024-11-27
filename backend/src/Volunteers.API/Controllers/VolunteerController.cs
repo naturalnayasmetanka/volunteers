@@ -4,6 +4,8 @@ using Volunteers.API.Extentions;
 using Volunteers.Application.Volunteer.CreateVolunteer;
 using Volunteers.Application.Volunteer.CreateVolunteer.DTO;
 using Volunteers.Application.Volunteers.CreateVolunteer.RequestModels;
+using Volunteers.Application.Volunteers.Delete;
+using Volunteers.Application.Volunteers.Delete.RequestModels;
 using Volunteers.Application.Volunteers.UpdateMainInfo;
 using Volunteers.Application.Volunteers.UpdateMainInfo.DTO;
 using Volunteers.Application.Volunteers.UpdateMainInfo.RequestModels;
@@ -113,5 +115,21 @@ public class VolunteerController : ControllerBase
                 .ToErrorResponse();
 
         return Ok(requisitesDto);
+    }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(
+    [FromServices] DeleteVolunteerHandler handler,
+    [FromRoute] Guid id,
+    CancellationToken cancellationToken = default)
+    {
+        var requestId = new DeleteRequest(id);
+        var deleteResult = await handler.Handle(requestId, cancellationToken);
+
+        if (deleteResult.IsFailure)
+            return deleteResult.Error
+                .ToErrorResponse();
+
+        return Ok(id);
     }
 }

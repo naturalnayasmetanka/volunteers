@@ -1,14 +1,17 @@
 ﻿using CSharpFunctionalExtensions;
 using Volunteers.Domain.PetManagment.Pet.Enums;
 using Volunteers.Domain.PetManagment.Pet.ValueObjects;
+using Volunteers.Domain.Shared;
 using Volunteers.Domain.Shared.Ids;
 using CustomEntity = Volunteers.Domain.Shared;
 using VolunteerModel = Volunteers.Domain.PetManagment.Volunteer.AggregateRoot.Volunteer;
 
 namespace Volunteers.Domain.PetManagment.Pet.Entities;
 
-public class Pet : CustomEntity.Entity<PetId>
+public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
 {
+    private bool _IsDelete = false;
+
     private List<Location> _locations = [];
     private List<PetRequisite> _requisites = [];
     private List<PhysicalParameters> _physicalParameters = [];
@@ -75,6 +78,16 @@ public class Pet : CustomEntity.Entity<PetId>
             creationDate: creationDate);
 
         return Result.Success(newPet);
+    }
+
+    public void SoftDelete()
+    {
+        _IsDelete = true;
+    }
+
+    public void Restore()
+    {
+        _IsDelete = false;
     }
 
     public void AddLocation(Location location)
