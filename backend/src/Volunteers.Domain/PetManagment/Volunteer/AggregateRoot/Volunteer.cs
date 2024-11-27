@@ -32,8 +32,8 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>
     public ExperienceInYears ExperienceInYears { get; private set; } = default!;
     public PhoneNumber PhoneNumber { get; private set; } = default!;
 
-    public SocialNetworkDetails? SocialNetworkDetails { get; private set; } = new();
-    public RequisiteDetails? RequisiteDetails { get; private set; } = new();
+    public SocialNetworkDetails? SocialNetworkDetails { get; private set; }
+    public RequisiteDetails? RequisiteDetails { get; private set; }
     public IReadOnlyList<PetModel> Pets => _pets;
 
     public static Result<Volunteer> Create(
@@ -65,15 +65,30 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>
         PhoneNumber = phoneNumber;
     }
 
-    public void UpdateSocial(List<SocialNetwork> socialNetwork)
+    public void UpdateSocial(List<SocialNetwork> socialNetworks)
     {
-        SocialNetworkDetails?.SocialNetworks.Clear();
-        SocialNetworkDetails?.SocialNetworks?.AddRange(socialNetwork);
+        if (SocialNetworkDetails is null)
+            SocialNetworkDetails = new SocialNetworkDetails();
+
+        SocialNetworkDetails.SocialNetworks.Clear();
+        SocialNetworkDetails.SocialNetworks?.AddRange(socialNetworks);
+    }
+
+    public void UpdateRequisites(List<VolunteerRequisite> requisites)
+    {
+        if (RequisiteDetails is null)
+            RequisiteDetails = new RequisiteDetails();
+
+        RequisiteDetails.Requisites.Clear();
+        RequisiteDetails.Requisites?.AddRange(requisites);
     }
 
     public void AddSocialNetwork(SocialNetwork socialNetwork)
     {
-        SocialNetworkDetails?.SocialNetworks.Add(socialNetwork);
+        if (SocialNetworkDetails is null)
+            SocialNetworkDetails = new SocialNetworkDetails();
+
+        SocialNetworkDetails.SocialNetworks.Add(socialNetwork);
     }
 
     public void AddVolunteerRequisite(VolunteerRequisite requisite)

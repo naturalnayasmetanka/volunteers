@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Volunteers.Application.Volunteer.CreateVolunteer;
 using Volunteers.Application.Volunteers.UpdateMainInfo;
+using Volunteers.Application.Volunteers.UpdateRequisites;
 using Volunteers.Application.Volunteers.UpdateSotialNetworks;
 
 namespace Volunteers.Application.Extentions.DI;
@@ -13,6 +14,7 @@ public static class ApplicationInjector
         services.AddScoped<CreateVolunteerHandler>();
         services.AddScoped<UpdateMainInfoHandler>();
         services.AddScoped<UpdateSotialNetworksHandler>();
+        services.AddScoped<UpdateRequisitesHandler>();
 
         services.AddValidatorsFromAssembly(typeof(ApplicationInjector).Assembly);
 

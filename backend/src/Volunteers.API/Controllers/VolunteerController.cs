@@ -7,6 +7,9 @@ using Volunteers.Application.Volunteers.CreateVolunteer.RequestModels;
 using Volunteers.Application.Volunteers.UpdateMainInfo;
 using Volunteers.Application.Volunteers.UpdateMainInfo.DTO;
 using Volunteers.Application.Volunteers.UpdateMainInfo.RequestModels;
+using Volunteers.Application.Volunteers.UpdateRequisites;
+using Volunteers.Application.Volunteers.UpdateRequisites.DTO;
+using Volunteers.Application.Volunteers.UpdateRequisites.RequestModels;
 using Volunteers.Application.Volunteers.UpdateSotialNetworks;
 using Volunteers.Application.Volunteers.UpdateSotialNetworks.DTO;
 using Volunteers.Application.Volunteers.UpdateSotialNetworks.RequestModels;
@@ -85,6 +88,30 @@ public class VolunteerController : ControllerBase
             return socialUpdateResult.Error
                 .ToErrorResponse();
 
-        return Ok();
+        return Ok(socialDto);
+    }
+
+    [HttpPatch("{id:guid}/requisites")]
+    public async Task<IActionResult> Update(
+    [FromServices] UpdateRequisitesHandler handler,
+    [FromServices] IValidator<UpdateRequisiteListDTO> validator,
+    [FromBody] UpdateRequisiteListDTO requisitesDto,
+    [FromRoute] Guid id,
+    CancellationToken cancellationToken = default)
+    {
+        var validationResult = await validator.ValidateAsync(requisitesDto, cancellationToken);
+
+        if (!validationResult.IsValid)
+            return validationResult.Errors
+                    .FromFluientToErrorResponse();
+
+        var updateRequisitesRequest = new UpdateRequisiteRequest(id, requisitesDto);
+        var requisitesUpdateResult = await handler.Handle(updateRequisitesRequest, cancellationToken);
+
+        if (requisitesUpdateResult.IsFailure)
+            return requisitesUpdateResult.Error
+                .ToErrorResponse();
+
+        return Ok(requisitesDto);
     }
 }
