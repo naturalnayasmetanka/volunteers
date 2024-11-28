@@ -1,28 +1,29 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
 using Volunteers.Application.Volunteer;
-using Volunteers.Application.Volunteers.Delete.RequestModels;
+using Volunteers.Application.Volunteers.Delete;
+using Volunteers.Application.Volunteers.Restore.RequestModels;
 using Volunteers.Domain.Shared.CustomErrors;
 using Volunteers.Domain.Shared.Ids;
 
-namespace Volunteers.Application.Volunteers.Delete;
+namespace Volunteers.Application.Volunteers.Restore;
 
-public class DeleteVolunteerHandler
+public class RestoreVolunteerHandler
 {
     private List<Error> _errors = [];
     private readonly IVolunteerRepository _repository;
-    private readonly ILogger<DeleteVolunteerHandler> _logger;
+    private readonly ILogger<HardDeleteVolunteerHandler> _logger;
 
-    public DeleteVolunteerHandler(
+    public RestoreVolunteerHandler(
         IVolunteerRepository repository,
-        ILogger<DeleteVolunteerHandler> logger)
+        ILogger<HardDeleteVolunteerHandler> logger)
     {
         _repository = repository;
         _logger = logger;
     }
 
     public async Task<Result<Guid, List<Error>>> Handle(
-        DeleteRequest request,
+        RestoreRequest request,
         CancellationToken cancellationToken = default)
     {
         var id = VolunteerId.Create(request.Id);
@@ -34,9 +35,11 @@ public class DeleteVolunteerHandler
             return _errors;
         }
 
-        var deleteResult = await _repository.DeleteAsync(volunteer, cancellationToken);
+        volunteer.Restore();
 
-        _logger.LogInformation("Volunteer was deleted with id (softdelete): {0}", request.Id);
+        await _repository.SaveAsync();
+
+        _logger.LogInformation("Volunteer was restored with id: {0}", request.Id);
 
         return request.Id;
     }

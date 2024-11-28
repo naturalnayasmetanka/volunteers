@@ -58,11 +58,27 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>, ISoftDeletable
     public void SoftDelete()
     {
         _isDeleted = true;
+
+        if (_pets is not null)
+        {
+            foreach (var pet in _pets)
+            {
+                pet.SoftDelete();
+            }
+        }
     }
 
     public void Restore()
     {
         _isDeleted = false;
+
+        if (_pets is not null)
+        {
+            foreach (var pet in _pets)
+            {
+                pet.Restore();
+            }
+        }
     }
 
     public void UpdateMainInfo(

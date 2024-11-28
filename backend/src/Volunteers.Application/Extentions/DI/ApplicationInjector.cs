@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Volunteers.Application.Volunteer.CreateVolunteer;
 using Volunteers.Application.Volunteers.Delete;
+using Volunteers.Application.Volunteers.Restore;
 using Volunteers.Application.Volunteers.UpdateMainInfo;
 using Volunteers.Application.Volunteers.UpdateRequisites;
 using Volunteers.Application.Volunteers.UpdateSotialNetworks;
@@ -13,7 +14,9 @@ public static class ApplicationInjector
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddScoped<CreateVolunteerHandler>();
-        services.AddScoped<DeleteVolunteerHandler>();
+        services.AddScoped<SoftDeleteVolunteerHandler>();
+        services.AddScoped<HardDeleteVolunteerHandler>();
+        services.AddScoped<RestoreVolunteerHandler>();
 
         services.AddScoped<UpdateMainInfoHandler>();
         services.AddScoped<UpdateSotialNetworksHandler>();

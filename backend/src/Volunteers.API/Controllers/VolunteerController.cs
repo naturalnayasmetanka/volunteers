@@ -6,6 +6,8 @@ using Volunteers.Application.Volunteer.CreateVolunteer.DTO;
 using Volunteers.Application.Volunteers.CreateVolunteer.RequestModels;
 using Volunteers.Application.Volunteers.Delete;
 using Volunteers.Application.Volunteers.Delete.RequestModels;
+using Volunteers.Application.Volunteers.Restore;
+using Volunteers.Application.Volunteers.Restore.RequestModels;
 using Volunteers.Application.Volunteers.UpdateMainInfo;
 using Volunteers.Application.Volunteers.UpdateMainInfo.DTO;
 using Volunteers.Application.Volunteers.UpdateMainInfo.RequestModels;
@@ -18,7 +20,7 @@ using Volunteers.Application.Volunteers.UpdateSotialNetworks.RequestModels;
 
 namespace Volunteers.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/volunteer")]
 [ApiController]
 public class VolunteerController : ControllerBase
 {
@@ -119,15 +121,47 @@ public class VolunteerController : ControllerBase
 
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(
-    [FromServices] DeleteVolunteerHandler handler,
+    [FromServices] SoftDeleteVolunteerHandler handler,
     [FromRoute] Guid id,
     CancellationToken cancellationToken = default)
     {
         var requestId = new DeleteRequest(id);
-        var deleteResult = await handler.Handle(requestId, cancellationToken);
+        var softDeleteResult = await handler.Handle(requestId, cancellationToken);
 
-        if (deleteResult.IsFailure)
-            return deleteResult.Error
+        if (softDeleteResult.IsFailure)
+            return softDeleteResult.Error
+                .ToErrorResponse();
+
+        return Ok(id);
+    }
+
+    [HttpDelete("{id:guid}/hard")]
+    public async Task<IActionResult> Delete(
+    [FromServices] HardDeleteVolunteerHandler handler,
+    [FromRoute] Guid id,
+    CancellationToken cancellationToken = default)
+    {
+        var requestId = new DeleteRequest(id);
+        var hardDeleteResult = await handler.Handle(requestId, cancellationToken);
+
+        if (hardDeleteResult.IsFailure)
+            return hardDeleteResult.Error
+                .ToErrorResponse();
+
+        return Ok(id);
+    }
+
+    [HttpPatch("{id:guid}/restore")]
+    public async Task<IActionResult> Restore(
+    [FromServices] RestoreVolunteerHandler handler,
+    [FromRoute] Guid id,
+    CancellationToken cancellationToken = default)
+    {
+        var requestId = new RestoreRequest(id);
+        var restoreResult = await handler.Handle(requestId, cancellationToken);
+
+        if (restoreResult.IsFailure)
+            return restoreResult.Error
                 .ToErrorResponse();
 
         return Ok(id);
