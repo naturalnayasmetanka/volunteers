@@ -1,16 +1,16 @@
 ﻿using CSharpFunctionalExtensions;
 using Volunteers.Domain.PetManagment.Pet.Enums;
 using Volunteers.Domain.PetManagment.Volunteer.ValueObjects;
+using Volunteers.Domain.Shared;
 using Volunteers.Domain.Shared.Ids;
 using CustomEntity = Volunteers.Domain.Shared;
 using PetModel = Volunteers.Domain.PetManagment.Pet.Entities.Pet;
 
 namespace Volunteers.Domain.PetManagment.Volunteer.AggregateRoot;
 
-public class Volunteer : CustomEntity.Entity<VolunteerId>
+public class Volunteer : CustomEntity.Entity<VolunteerId>, ISoftDeletable
 {
-    private List<SocialNetwork> _socialNetworks = [];
-    private List<VolunteerRequisite> _requisites = [];
+    private bool _isDeleted = false;
     private List<PetModel> _pets = [];
 
     private Volunteer(VolunteerId id) : base(id) { }
@@ -34,8 +34,8 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>
     public ExperienceInYears ExperienceInYears { get; private set; } = default!;
     public PhoneNumber PhoneNumber { get; private set; } = default!;
 
-    public IReadOnlyList<SocialNetwork> SocialNetworks => _socialNetworks;
-    public IReadOnlyList<VolunteerRequisite> Requisites => _requisites;
+    public SocialNetworkDetails? SocialNetworkDetails { get; private set; }
+    public RequisiteDetails? RequisiteDetails { get; private set; }
     public IReadOnlyList<PetModel> Pets => _pets;
 
     public static Result<Volunteer> Create(
@@ -55,14 +55,73 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>
         return Result.Success(newVolunteer);
     }
 
+    public void SoftDelete()
+    {
+        _isDeleted = true;
+
+        if (_pets is not null)
+        {
+            foreach (var pet in _pets)
+            {
+                pet.SoftDelete();
+            }
+        }
+    }
+
+    public void Restore()
+    {
+        _isDeleted = false;
+
+        if (_pets is not null)
+        {
+            foreach (var pet in _pets)
+            {
+                pet.Restore();
+            }
+        }
+    }
+
+    public void UpdateMainInfo(
+        Name name,
+        Email email,
+        ExperienceInYears experienceInYears,
+        PhoneNumber phoneNumber)
+    {
+        Name = name;
+        Email = email;
+        ExperienceInYears = experienceInYears;
+        PhoneNumber = phoneNumber;
+    }
+
+    public void UpdateSocial(List<SocialNetwork> socialNetworks)
+    {
+        if (SocialNetworkDetails is null)
+            SocialNetworkDetails = new SocialNetworkDetails();
+
+        SocialNetworkDetails.SocialNetworks.Clear();
+        SocialNetworkDetails.SocialNetworks?.AddRange(socialNetworks);
+    }
+
+    public void UpdateRequisites(List<VolunteerRequisite> requisites)
+    {
+        if (RequisiteDetails is null)
+            RequisiteDetails = new RequisiteDetails();
+
+        RequisiteDetails.Requisites.Clear();
+        RequisiteDetails.Requisites?.AddRange(requisites);
+    }
+
     public void AddSocialNetwork(SocialNetwork socialNetwork)
     {
-        _socialNetworks.Add(socialNetwork);
+        if (SocialNetworkDetails is null)
+            SocialNetworkDetails = new SocialNetworkDetails();
+
+        SocialNetworkDetails.SocialNetworks.Add(socialNetwork);
     }
 
     public void AddVolunteerRequisite(VolunteerRequisite requisite)
     {
-        _requisites.Add(requisite);
+        RequisiteDetails?.Requisites.Add(requisite);
     }
 
     public void AddPet(PetModel pet)

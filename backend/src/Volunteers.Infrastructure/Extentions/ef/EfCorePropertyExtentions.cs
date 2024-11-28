@@ -18,7 +18,7 @@ public static class EfCorePropertyExtentions
     public static PropertyBuilder<IReadOnlyList<TValueObject>> JsonValueObjectCollectionСonversion<TValueObject>(
         this PropertyBuilder<IReadOnlyList<TValueObject>> builder)
     {
-        return builder.HasConversion(
+        return builder.HasConversion<string>(
             v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
             json => JsonSerializer.Deserialize<IReadOnlyList<TValueObject>>(json, JsonSerializerOptions.Default)!,
             new ValueComparer<IReadOnlyList<TValueObject>>(
