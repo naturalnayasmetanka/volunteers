@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Volunteers.Domain.PetManagment.Pet.Enums;
+using Volunteers.Domain.PetManagment.Pet.ValueObjects;
 using Volunteers.Domain.PetManagment.Volunteer.ValueObjects;
 using Volunteers.Domain.Shared;
 using Volunteers.Domain.Shared.Ids;
@@ -121,11 +122,17 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>, ISoftDeletable
 
     public void AddVolunteerRequisite(VolunteerRequisite requisite)
     {
-        RequisiteDetails?.Requisites.Add(requisite);
+        if (RequisiteDetails is null)
+            RequisiteDetails = new RequisiteDetails();
+
+        RequisiteDetails.Requisites.Add(requisite);
     }
 
     public void AddPet(PetModel pet)
     {
+        var serialPetNumber = SerialNumber.Create(_pets.Count + 1);
+        pet.SetSerialNumber(serialNumber: serialPetNumber.Value);
+
         _pets.Add(pet);
     }
 

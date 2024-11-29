@@ -12,11 +12,6 @@ public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
 {
     private bool _IsDelete = false;
 
-    private List<Location> _locations = [];
-    private List<PetRequisite> _requisites = [];
-    private List<PhysicalParameters> _physicalParameters = [];
-
-    private List<PetPhoto> _photo = [];
     private Pet(PetId id) : base(id) { }
 
     private Pet(
@@ -46,15 +41,21 @@ public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
     public PetStatus HelpStatus { get; private set; }
     public DateTime? BirthDate { get; private set; }
     public DateTime CreationDate { get; private set; }
+    public SerialNumber SerialNumber { get; private set; } = default!;
 
     public VolunteerModel Volunteer { get; private set; } = default!;
 
-    public IReadOnlyList<Location> Locations => _locations;
-    public IReadOnlyList<PetRequisite> Requisites => _requisites;
-    public IReadOnlyList<PetPhoto> Photo => _photo;
-    public IReadOnlyList<PhysicalParameters> PhysicalParameters => _physicalParameters;
+    public LocationDetails? LocationDetails { get; private set; }
+    public RequisitesDetails? RequisitesDetails { get; private set; }
+    public PhotoDetails? PhotoDetails { get; private set; }
+    public PhysicalParametersDetails? PhysicalParametersDetails { get; private set; }
 
     public SpeciesBreed? SpeciesBreed { get; private set; } = default!;
+
+    public void SetSerialNumber(SerialNumber serialNumber)
+    {
+        SerialNumber = serialNumber;
+    }
 
     public static Result<Pet> Create(
         PetId id,
@@ -92,21 +93,33 @@ public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
 
     public void AddLocation(Location location)
     {
-        _locations.Add(location);
+        if (LocationDetails is null)
+            LocationDetails = new LocationDetails();
+
+        LocationDetails.Locations.Add(location);
     }
 
     public void AddRequisite(PetRequisite requisite)
     {
-        _requisites.Add(requisite);
+        if (RequisitesDetails is null)
+            RequisitesDetails = new RequisitesDetails();
+
+        RequisitesDetails.PetRequisites.Add(requisite);
     }
 
     public void AddPhysicalParameters(PhysicalParameters physicalParameters)
     {
-        _physicalParameters.Add(physicalParameters);
+        if (PhysicalParametersDetails is null)
+            PhysicalParametersDetails = new PhysicalParametersDetails();
+
+        PhysicalParametersDetails.PhysicalParameters.Add(physicalParameters);
     }
 
     public void AddPhoto(PetPhoto photo)
     {
-        _photo.Add(photo);
+        if (PhotoDetails is null)
+            PhotoDetails = new PhotoDetails();
+
+        PhotoDetails.PetPhoto.Add(photo);
     }
 }

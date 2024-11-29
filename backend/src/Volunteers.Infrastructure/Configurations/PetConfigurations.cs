@@ -53,6 +53,13 @@ public class PetConfigurations : IEntityTypeConfiguration<Pet>
             .IsRequired(true)
             .HasMaxLength(15);
 
+        builder.Property(x => x.SerialNumber)
+            .HasConversion(
+                serialNumber => serialNumber.Value,
+                value => SerialNumber.Create(value).Value
+            )
+            .IsRequired(true);
+
         builder.Property(x => x.HelpStatus)
             .IsRequired(true);
 
@@ -62,17 +69,88 @@ public class PetConfigurations : IEntityTypeConfiguration<Pet>
         builder.Property(x => x.CreationDate)
             .IsRequired(true);
 
-        builder.Property(x => x.Locations)
-            .JsonValueObjectCollectionСonversion();
+        builder.OwnsOne(x => x.LocationDetails, ib =>
+        {
+            ib.ToJson();
+            ib.OwnsMany(x => x.Locations, fb =>
+            {
+                fb.Property(x => x.Country)
+                    .IsRequired(true)
+                    .HasMaxLength(50);
+                fb.Property(x => x.City)
+                    .IsRequired(true)
+                    .HasMaxLength(50);
+                fb.Property(x => x.Street)
+                    .IsRequired(true)
+                    .HasMaxLength(50);
+                fb.Property(x => x.HouseNumber)
+                    .IsRequired(true)
+                    .HasMaxLength(4);
+                fb.Property(x => x.Floor)
+                    .IsRequired(true)
+                    .HasMaxLength(3);
+                fb.Property(x => x.RoomNumber)
+                    .IsRequired(true)
+                    .HasMaxLength(5);
+            });
+        });
 
-        builder.Property(x => x.Requisites)
-            .JsonValueObjectCollectionСonversion();
+        builder.OwnsOne(x => x.RequisitesDetails, ib =>
+        {
+            ib.ToJson();
+            ib.OwnsMany(x => x.PetRequisites, fb =>
+            {
+                fb.Property(x => x.Title)
+                    .IsRequired(true)
+                    .HasMaxLength(100);
+                fb.Property(x => x.Description)
+                    .IsRequired(true)
+                    .HasMaxLength(1000);
+            });
+        });
 
-        builder.Property(x => x.Photo)
-            .JsonValueObjectCollectionСonversion();
+        builder.OwnsOne(x => x.PhotoDetails, ib =>
+        {
+            ib.ToJson();
+            ib.OwnsMany(x => x.PetPhoto, fb =>
+            {
+                fb.Property(x => x.Path)
+                    .IsRequired(true)
+                    .HasMaxLength(1000);
+                fb.Property(x => x.IsMain)
+                    .IsRequired(true);
+            });
+        });
 
-        builder.Property(x => x.PhysicalParameters)
-            .JsonValueObjectCollectionСonversion();
+        builder.OwnsOne(x => x.PhysicalParametersDetails, ib =>
+        {
+            ib.ToJson();
+            ib.OwnsMany(x => x.PhysicalParameters, fb =>
+            {
+                fb.Property(x => x.Type)
+                    .IsRequired(true)
+                    .HasMaxLength(50);
+                fb.Property(x => x.Gender)
+                    .IsRequired(false)
+                    .HasMaxLength(20);
+                fb.Property(x => x.Breed)
+                    .IsRequired(false)
+                    .HasMaxLength(100);
+                fb.Property(x => x.Color)
+                    .IsRequired(false)
+                    .HasMaxLength(100);
+                fb.Property(x => x.Weight)
+                    .IsRequired(true)
+                    .HasMaxLength(5);
+                fb.Property(x => x.Height)
+                    .IsRequired(true)
+                    .HasMaxLength(5);
+                fb.Property(x => x.IsVaccinated)
+                    .IsRequired(true);
+                fb.Property(x => x.IsSterilized)
+                    .IsRequired(true);
+            });
+        });
 
         builder.Property(x => x.SpeciesBreed)
             .JsonValueObjectСonversion();
