@@ -53,10 +53,10 @@ public class PetConfigurations : IEntityTypeConfiguration<Pet>
             .IsRequired(true)
             .HasMaxLength(15);
 
-        builder.Property(x => x.SerialNumber)
+        builder.Property(x => x.Position)
             .HasConversion(
-                serialNumber => serialNumber.Value,
-                value => SerialNumber.Create(value).Value
+                position => position.Value,
+                value => Position.Create(value).Value
             )
             .IsRequired(true);
 
@@ -93,7 +93,7 @@ public class PetConfigurations : IEntityTypeConfiguration<Pet>
                     .IsRequired(true)
                     .HasMaxLength(5);
             });
-        });
+        }) ;
 
         builder.OwnsOne(x => x.RequisitesDetails, ib =>
         {

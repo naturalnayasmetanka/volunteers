@@ -2,6 +2,7 @@
 using Volunteers.Domain.PetManagment.Pet.Enums;
 using Volunteers.Domain.PetManagment.Pet.ValueObjects;
 using Volunteers.Domain.Shared;
+using Volunteers.Domain.Shared.CustomErrors;
 using Volunteers.Domain.Shared.Ids;
 using CustomEntity = Volunteers.Domain.Shared;
 using VolunteerModel = Volunteers.Domain.PetManagment.Volunteer.AggregateRoot.Volunteer;
@@ -41,7 +42,7 @@ public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
     public PetStatus HelpStatus { get; private set; }
     public DateTime? BirthDate { get; private set; }
     public DateTime CreationDate { get; private set; }
-    public SerialNumber SerialNumber { get; private set; } = default!;
+    public Position Position { get; private set; } = default!;
 
     public VolunteerModel Volunteer { get; private set; } = default!;
 
@@ -51,11 +52,6 @@ public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
     public PhysicalParametersDetails? PhysicalParametersDetails { get; private set; }
 
     public SpeciesBreed? SpeciesBreed { get; private set; } = default!;
-
-    public void SetSerialNumber(SerialNumber serialNumber)
-    {
-        SerialNumber = serialNumber;
-    }
 
     public static Result<Pet> Create(
         PetId id,
@@ -79,6 +75,11 @@ public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
             creationDate: creationDate);
 
         return Result.Success(newPet);
+    }
+
+    public void SetSerialNumber(Position position)
+    {
+        Position = position;
     }
 
     public void SoftDelete()
@@ -121,5 +122,29 @@ public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
             PhotoDetails = new PhotoDetails();
 
         PhotoDetails.PetPhoto.Add(photo);
+    }
+
+    public Result<Position, Error> MoveForward()
+    {
+        var newPosition = Position.Forward();
+
+        if (newPosition.IsFailure)
+            return newPosition.Error;
+
+        Position = newPosition.Value;
+
+        return Position;
+    }
+
+    public Result<Position, Error> MoveBack()
+    {
+        var newPosition = Position.Back();
+
+        if (newPosition.IsFailure)
+            return newPosition.Error;
+
+        Position = newPosition.Value;
+
+        return Position;
     }
 }
