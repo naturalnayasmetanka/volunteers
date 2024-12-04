@@ -1,6 +1,6 @@
 ﻿using Serilog;
 using Volunteers.API.Extentions.Middlewares;
-using Volunteers.API.Extentions.WebAppExtentions;
+using Volunteers.API.Extentions.WebApp;
 
 namespace Volunteers.API.Extentions.DI;
 

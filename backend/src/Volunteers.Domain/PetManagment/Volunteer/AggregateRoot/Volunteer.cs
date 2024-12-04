@@ -144,6 +144,15 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>, ISoftDeletable
         return pet;
     }
 
+    public int NumberOfAttachedAnimals()
+       => Pets.Where(x => x.HelpStatus == PetStatus.FoundHome).Count();
+
+    public int NumberOfLookingHomeAnimals()
+        => Pets.Where(x => x.HelpStatus == PetStatus.LookingHome).Count();
+
+    public int NumberOfNeedsHelpAnimals()
+        => Pets.Where(x => x.HelpStatus == PetStatus.NeedsHelp).Count();
+
     public Result<Position, Error> MovePetPosition(PetModel pet, Position newPosition)
     {
         var currentPosition = pet.Position;
@@ -214,13 +223,4 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>, ISoftDeletable
 
         return lastPosition.Value;
     }
-
-    public int NumberOfAttachedAnimals()
-        => Pets.Where(x => x.HelpStatus == PetStatus.FoundHome).Count();
-
-    public int NumberOfLookingHomeAnimals()
-        => Pets.Where(x => x.HelpStatus == PetStatus.LookingHome).Count();
-
-    public int NumberOfNeedsHelpAnimals()
-        => Pets.Where(x => x.HelpStatus == PetStatus.NeedsHelp).Count();
 }

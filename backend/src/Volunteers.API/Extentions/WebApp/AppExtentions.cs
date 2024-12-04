@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Volunteers.Infrastructure.Contexts;
 
-namespace Volunteers.API.Extentions.WebAppExtentions;
+namespace Volunteers.API.Extentions.WebApp;
 
 public static class AppExtentions
 {
