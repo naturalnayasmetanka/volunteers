@@ -24,6 +24,19 @@ public class MockDataVolunteers
         return volunteer.Value;
     }
 
+    public Volunteer GetSingleVolunteerWithPets()
+    {
+        MockDataVolunteers volunteers = new MockDataVolunteers();
+        MockDataPets pets = new MockDataPets();
+
+        var mockVolunteer = volunteers.GetSingleVolunteer();
+        var mockPets = pets.GetListPet();
+
+        mockVolunteer.AddPets(mockPets);
+
+        return mockVolunteer;
+    }
+
     public List<Volunteer> GetListVolunteers()
     {
         var volunteerId = VolunteerId.NewVolunteerId();

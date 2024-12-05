@@ -147,4 +147,9 @@ public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
 
         return Position;
     }
+
+    public void Move(Position position)
+    {
+        Position = position;
+    }
 }

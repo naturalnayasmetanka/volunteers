@@ -144,6 +144,23 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>, ISoftDeletable
         return pet;
     }
 
+    public Result<List<PetModel>, Error> AddPets(List<PetModel> pets)
+    {
+        foreach (var pet in pets)
+        {
+            var position = Position.Create(_pets.Count + 1);
+
+            if (position.IsFailure)
+                return position.Error;
+
+            pet.SetSerialNumber(position: position.Value);
+
+            _pets.Add(pet);
+        }
+
+        return pets;
+    }
+
     public int NumberOfAttachedAnimals()
        => Pets.Where(x => x.HelpStatus == PetStatus.FoundHome).Count();
 
@@ -157,8 +174,11 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>, ISoftDeletable
     {
         var currentPosition = pet.Position;
 
-        if (currentPosition == newPosition || _pets.Count == 1)
-            return Errors.General.ValueIsInvalid("Position");
+        if (currentPosition == newPosition)
+            return currentPosition;
+
+        if (_pets.Count == 1)
+            return Errors.General.ValueIsInvalid("Single pet");
 
         var adjustedPosition = AdjustNewPositionIfOutOfRandge(newPosition);
 
@@ -171,6 +191,8 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>, ISoftDeletable
 
         if (moveResult.IsFailure)
             return Errors.General.ValueIsInvalid("Move result");
+
+        pet.Move(newPosition);
 
         return moveResult;
     }
@@ -199,7 +221,7 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>, ISoftDeletable
 
             foreach (var pet in petsToMove)
             {
-                var result = pet.MoveForward();/////////////////////////////////////////////////////////////////////
+                var result = pet.MoveBack();
 
                 if (result.IsFailure)
                 {
