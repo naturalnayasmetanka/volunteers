@@ -1,7 +1,9 @@
 ﻿using CSharpFunctionalExtensions;
 using Volunteers.Domain.PetManagment.Pet.Enums;
+using Volunteers.Domain.PetManagment.Pet.ValueObjects;
 using Volunteers.Domain.PetManagment.Volunteer.ValueObjects;
 using Volunteers.Domain.Shared;
+using Volunteers.Domain.Shared.CustomErrors;
 using Volunteers.Domain.Shared.Ids;
 using CustomEntity = Volunteers.Domain.Shared;
 using PetModel = Volunteers.Domain.PetManagment.Pet.Entities.Pet;
@@ -36,6 +38,7 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>, ISoftDeletable
 
     public SocialNetworkDetails? SocialNetworkDetails { get; private set; }
     public RequisiteDetails? RequisiteDetails { get; private set; }
+
     public IReadOnlyList<PetModel> Pets => _pets;
 
     public static Result<Volunteer> Create(
@@ -121,20 +124,125 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>, ISoftDeletable
 
     public void AddVolunteerRequisite(VolunteerRequisite requisite)
     {
-        RequisiteDetails?.Requisites.Add(requisite);
+        if (RequisiteDetails is null)
+            RequisiteDetails = new RequisiteDetails();
+
+        RequisiteDetails.Requisites.Add(requisite);
     }
 
-    public void AddPet(PetModel pet)
+    public Result<PetModel, Error> AddPet(PetModel pet)
     {
+        var position = Position.Create(_pets.Count + 1);
+
+        if (position.IsFailure)
+            return position.Error;
+
+        pet.SetSerialNumber(position: position.Value);
+
         _pets.Add(pet);
+
+        return pet;
+    }
+
+    public Result<List<PetModel>, Error> AddPets(List<PetModel> pets)
+    {
+        foreach (var pet in pets)
+        {
+            var position = Position.Create(_pets.Count + 1);
+
+            if (position.IsFailure)
+                return position.Error;
+
+            pet.SetSerialNumber(position: position.Value);
+
+            _pets.Add(pet);
+        }
+
+        return pets;
     }
 
     public int NumberOfAttachedAnimals()
-        => Pets.Where(x => x.HelpStatus == PetStatus.FoundHome).Count();
+       => Pets.Where(x => x.HelpStatus == PetStatus.FoundHome).Count();
 
     public int NumberOfLookingHomeAnimals()
         => Pets.Where(x => x.HelpStatus == PetStatus.LookingHome).Count();
 
     public int NumberOfNeedsHelpAnimals()
         => Pets.Where(x => x.HelpStatus == PetStatus.NeedsHelp).Count();
+
+    public Result<Position, Error> MovePetPosition(PetModel pet, Position newPosition)
+    {
+        var currentPosition = pet.Position;
+
+        if (currentPosition == newPosition)
+            return currentPosition;
+
+        if (_pets.Count == 1)
+            return Errors.General.ValueIsInvalid("Single pet");
+
+        var adjustedPosition = AdjustNewPositionIfOutOfRandge(newPosition);
+
+        if (adjustedPosition.IsFailure)
+            return adjustedPosition.Error;
+
+        newPosition = adjustedPosition.Value;
+
+        var moveResult = MovePet(newPosition, currentPosition);
+
+        if (moveResult.IsFailure)
+            return Errors.General.ValueIsInvalid("Move result");
+
+        pet.Move(newPosition);
+
+        return moveResult;
+    }
+
+    private Result<Position, Error> MovePet(Position newPosition, Position currentPosition)
+    {
+        if (newPosition.Value < currentPosition.Value)
+        {
+            var petsToMove = _pets
+                .Where(x => x.Position.Value >= newPosition.Value
+                    && x.Position.Value < currentPosition.Value);
+
+            foreach (var pet in petsToMove)
+            {
+                var result = pet.MoveForward();
+
+                if (result.IsFailure)
+                    return Errors.General.ValueIsInvalid("Moving forvard");
+            }
+        }
+        else if (newPosition.Value > currentPosition.Value)
+        {
+            var petsToMove = _pets
+               .Where(x => x.Position.Value > currentPosition.Value
+                   && x.Position.Value <= newPosition.Value);
+
+            foreach (var pet in petsToMove)
+            {
+                var result = pet.MoveBack();
+
+                if (result.IsFailure)
+                {
+                    return Errors.General.ValueIsInvalid("Moving forvard");
+                }
+            }
+        }
+
+        return newPosition;
+    }
+
+    private Result<Position, Error> AdjustNewPositionIfOutOfRandge(Position newPosition)
+    {
+        if (newPosition.Value <= _pets.Count)
+            return newPosition;
+
+        var lastPosition = Position.Create(_pets.Count - 1);
+
+        if (lastPosition.IsFailure)
+            return lastPosition.Error;
+
+        return lastPosition.Value;
+    }
 }
