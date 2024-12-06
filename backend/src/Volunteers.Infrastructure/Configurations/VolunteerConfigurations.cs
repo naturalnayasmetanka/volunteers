@@ -9,7 +9,7 @@ namespace Volunteers.Infrastructure.Configurations;
 public class VolunteerConfigurations : IEntityTypeConfiguration<Volunteer>
 {
     public void Configure(EntityTypeBuilder<Volunteer> builder)
-    {
+    { 
         builder.ToTable("volunteers");
 
         builder.HasKey(x => x.Id);
