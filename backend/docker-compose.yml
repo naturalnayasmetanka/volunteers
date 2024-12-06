@@ -15,7 +15,7 @@ services:
     image: datalust/seq:latest
     container_name: seq
     restart: always
-    environment:
+    environment: 
      - ACCEPT_EULA=Y
     ports:
       - 5341:5341

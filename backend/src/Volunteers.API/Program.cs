@@ -10,7 +10,7 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         builder.Services
-            .AddInfrastructure()
+            .AddInfrastructure(builder)
             .AddApplication()
             .AddApi(builder);
 
