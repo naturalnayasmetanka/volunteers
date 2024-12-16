@@ -12,8 +12,8 @@ using Volunteers.Infrastructure.Contexts;
 namespace Volunteers.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241203062504_pet_serial_number")]
-    partial class pet_serial_number
+    [Migration("20241216100849_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -66,9 +66,9 @@ namespace Volunteers.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("phone_number");
 
-                    b.Property<int>("SerialNumber")
+                    b.Property<int>("Position")
                         .HasColumnType("integer")
-                        .HasColumnName("serial_number");
+                        .HasColumnName("position");
 
                     b.Property<string>("SpeciesBreed")
                         .HasColumnType("text")
