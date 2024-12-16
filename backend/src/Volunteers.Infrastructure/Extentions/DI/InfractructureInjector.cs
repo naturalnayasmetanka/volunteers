@@ -5,7 +5,9 @@ using Minio;
 using Volunteers.Application.Volunteer;
 using Volunteers.Infrastructure.Contexts;
 using Volunteers.Infrastructure.Repositories;
+using Serilog;
 using MinIO = Volunteers.Infrastructure.Options.Minio;
+using Volunteers.Infrastructure.Options;
 
 namespace Volunteers.Infrastructure.Extentions.DI;
 
@@ -17,7 +19,28 @@ public static class InfractructureInjector
 
         services.AddScoped<IVolunteerRepository, VolunteerRepository>();
 
+        services.AddLogger(builder);
         services.AddMinIO(builder);
+        services.AddSerilog();
+
+        return services;
+    }
+
+    private static IServiceCollection AddLogger(this IServiceCollection services, WebApplicationBuilder builder)
+    {
+        services.Configure<Seq>(builder.Configuration.GetSection(Seq.SEQ_SECTION_NAME));  // for DI usage
+
+        var seqOptions = builder.Configuration.GetSection(Seq.SEQ_SECTION_NAME).Get<Seq>()
+                ?? throw new ApplicationException("Seq Options not found in appsettings");
+
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .WriteTo.Debug()
+            .WriteTo.Seq(seqOptions.Url ?? throw new ApplicationException("Seq connection not found in appsettings"))
+            .MinimumLevel.Override("Microsoft.AspNetCore.Hosting", Serilog.Events.LogEventLevel.Warning)
+            .MinimumLevel.Override("Microsoft.AspNetCore.Mvc", Serilog.Events.LogEventLevel.Warning)
+            .MinimumLevel.Override("Microsoft.AspNetCore.Roating", Serilog.Events.LogEventLevel.Warning)
+            .CreateLogger();
 
         return services;
     }
