@@ -33,6 +33,7 @@ namespace Volunteers.Infrastructure.Migrations
                     email = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     experience_in_years = table.Column<double>(type: "double precision", maxLength: 4, nullable: false),
                     phone_number = table.Column<int>(type: "integer", maxLength: 15, nullable: false),
+                    is_deleted = table.Column<bool>(type: "boolean", nullable: false),
                     RequisiteDetails = table.Column<string>(type: "jsonb", nullable: true),
                     SocialNetworkDetails = table.Column<string>(type: "jsonb", nullable: true)
                 },
@@ -73,12 +74,14 @@ namespace Volunteers.Infrastructure.Migrations
                     help_status = table.Column<int>(type: "integer", nullable: false),
                     birth_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     creation_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    position = table.Column<int>(type: "integer", nullable: false),
                     volunteer_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    locations = table.Column<string>(type: "text", nullable: false),
-                    requisites = table.Column<string>(type: "text", nullable: false),
-                    photo = table.Column<string>(type: "text", nullable: false),
-                    physical_parameters = table.Column<string>(type: "text", nullable: false),
-                    species_breed = table.Column<string>(type: "text", nullable: true)
+                    species_breed = table.Column<string>(type: "text", nullable: true),
+                    is_deleted = table.Column<bool>(type: "boolean", nullable: false),
+                    LocationDetails = table.Column<string>(type: "jsonb", nullable: true),
+                    PhotoDetails = table.Column<string>(type: "jsonb", nullable: true),
+                    PhysicalParametersDetails = table.Column<string>(type: "jsonb", nullable: true),
+                    RequisitesDetails = table.Column<string>(type: "jsonb", nullable: true)
                 },
                 constraints: table =>
                 {
