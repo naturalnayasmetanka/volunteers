@@ -8,6 +8,8 @@ using Volunteers.Infrastructure.Repositories;
 using Serilog;
 using MinIO = Volunteers.Infrastructure.Options.Minio;
 using Volunteers.Infrastructure.Options;
+using Volunteers.Application.Providers;
+using Volunteers.Infrastructure.Providers;
 
 namespace Volunteers.Infrastructure.Extentions.DI;
 
@@ -57,7 +59,10 @@ public static class InfractructureInjector
             options.WithEndpoint(minioOptions.Enpdoint);
             options.WithCredentials(minioOptions.AccessKey, minioOptions.SecretKey);
             options.WithSSL(minioOptions.IsWithSSL);
+            options.Build();
         });
+
+        services.AddScoped<IMinIoProvider, MinIoProvider>();
 
         return services;
     }
