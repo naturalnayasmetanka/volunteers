@@ -119,6 +119,22 @@ public class VolunteerController : ControllerBase
         return Ok(requisitesDto);
     }
 
+    [HttpPatch("{id:guid}/restore")]
+    public async Task<IActionResult> Restore(
+    [FromServices] RestoreVolunteerHandler handler,
+    [FromRoute] Guid id,
+    CancellationToken cancellationToken = default)
+    {
+        var requestId = new RestoreRequest(id);
+        var restoreResult = await handler.Handle(requestId, cancellationToken);
+
+        if (restoreResult.IsFailure)
+            return restoreResult.Error
+                .ToErrorResponse();
+
+        return Ok(id);
+    }
+
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(
     [FromServices] SoftDeleteVolunteerHandler handler,
@@ -146,22 +162,6 @@ public class VolunteerController : ControllerBase
 
         if (hardDeleteResult.IsFailure)
             return hardDeleteResult.Error
-                .ToErrorResponse();
-
-        return Ok(id);
-    }
-
-    [HttpPatch("{id:guid}/restore")]
-    public async Task<IActionResult> Restore(
-    [FromServices] RestoreVolunteerHandler handler,
-    [FromRoute] Guid id,
-    CancellationToken cancellationToken = default)
-    {
-        var requestId = new RestoreRequest(id);
-        var restoreResult = await handler.Handle(requestId, cancellationToken);
-
-        if (restoreResult.IsFailure)
-            return restoreResult.Error
                 .ToErrorResponse();
 
         return Ok(id);

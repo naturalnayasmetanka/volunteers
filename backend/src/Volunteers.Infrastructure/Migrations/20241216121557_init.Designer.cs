@@ -12,7 +12,7 @@ using Volunteers.Infrastructure.Contexts;
 namespace Volunteers.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241216100849_init")]
+    [Migration("20241216121557_init")]
     partial class init
     {
         /// <inheritdoc />
