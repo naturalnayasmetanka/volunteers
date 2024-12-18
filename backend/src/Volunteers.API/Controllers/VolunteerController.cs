@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Volunteers.API.Extentions;
 using Volunteers.Application.Volunteer.CreateVolunteer;
 using Volunteers.Application.Volunteer.CreateVolunteer.DTO;
+using Volunteers.Application.Volunteers.AddPet;
 using Volunteers.Application.Volunteers.CreateVolunteer.RequestModels;
 using Volunteers.Application.Volunteers.Delete;
 using Volunteers.Application.Volunteers.Delete.RequestModels;
@@ -45,6 +46,15 @@ public class VolunteerController : ControllerBase
                 .ToErrorResponse();
 
         return Created();
+    }
+
+    [HttpPost("{volunteerId:guid}/pet")]
+    public async Task<IActionResult> Create(
+        [FromRoute] Guid volunteerId,
+        [FromServices] AddPetVolunteerHandler handler,
+        CancellationToken cancellationToken = default)
+    {
+        return Ok();
     }
 
     [HttpPatch("{id:guid}/main-info")]

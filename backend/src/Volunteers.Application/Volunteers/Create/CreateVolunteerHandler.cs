@@ -1,5 +1,4 @@
 ﻿using CSharpFunctionalExtensions;
-using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Volunteers.Application.Volunteers.CreateVolunteer.RequestModels;
 using Volunteers.Domain.PetManagment.Volunteer.ValueObjects;
@@ -42,7 +41,7 @@ public class CreateVolunteerHandler
             email,
             experienceInYears,
             phoneNumber).Value;
-        
+
         if (socialNetworks is not null)
             socialNetworks
                 .ForEach(x =>
