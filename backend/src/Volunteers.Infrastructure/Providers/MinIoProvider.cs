@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Minio;
 using Minio.DataModel.Args;
+using Minio.Exceptions;
 using Volunteers.Application.Providers;
 using Volunteers.Application.Providers.Models;
 using Volunteers.Domain.Shared.CustomErrors;
@@ -74,18 +75,15 @@ public class MinIoProvider : IMinIoProvider
     {
         try
         {
-            var bucket = new BucketExistsArgs()
-                .WithBucket(fileData.BucketName);
+            var statArgs = new StatObjectArgs()
+                .WithBucket(fileData.BucketName)
+                .WithObject(fileData.FileName);
 
-            var bucketExist = await _minioClient
-                .BucketExistsAsync(bucket, cancellationToken);
+            var statObject = await _minioClient.StatObjectAsync(statArgs, cancellationToken);
 
-            if (!bucketExist)
+            if (statObject is null)
             {
-                var makeBucket = new MakeBucketArgs()
-                    .WithBucket(fileData.BucketName);
-
-                await _minioClient.MakeBucketAsync(makeBucket, cancellationToken);
+                throw new InvalidObjectNameException($"Object {fileData.FileName} was not found");
             }
 
             var presignetArgs = new PresignedGetObjectArgs()
@@ -109,23 +107,20 @@ public class MinIoProvider : IMinIoProvider
     {
         try
         {
-            var bucket = new BucketExistsArgs()
-                .WithBucket(fileData.BucketName);
+            var statArgs = new StatObjectArgs()
+                .WithBucket(fileData.BucketName)
+                .WithObject(fileData.FileName);
 
-            var bucketExist = await _minioClient
-                .BucketExistsAsync(bucket, cancellationToken);
+            var statObject = await _minioClient.StatObjectAsync(statArgs, cancellationToken);
 
-            if (!bucketExist)
+            if (statObject is null)
             {
-                var makeBucket = new MakeBucketArgs()
-                    .WithBucket(fileData.BucketName);
-
-                await _minioClient.MakeBucketAsync(makeBucket, cancellationToken);
+                throw new InvalidObjectNameException($"Object {fileData.FileName} was not found");
             }
 
             var presignetArgs = new RemoveObjectArgs()
-                .WithBucket(fileData.BucketName)
-                .WithObject(fileData.FileName);
+                       .WithBucket(fileData.BucketName)
+                       .WithObject(fileData.FileName);
 
             await _minioClient.RemoveObjectAsync(presignetArgs, cancellationToken);
 

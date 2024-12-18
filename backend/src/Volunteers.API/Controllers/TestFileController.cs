@@ -4,7 +4,7 @@ using Volunteers.Application.Providers.Models;
 
 namespace Volunteers.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/test-file")]
 [ApiController]
 public class TestFileController : ControllerBase
 {
@@ -19,10 +19,11 @@ public class TestFileController : ControllerBase
     public async Task<IActionResult> Get(
         string bucket,
         string fileName,
+        int expiry = 60 * 60 * 24,
         CancellationToken cancellationToken = default)
     {
 
-        var fileData = new FileData(null, bucket, fileName, 60 * 60 * 24);
+        var fileData = new FileData(null, bucket, fileName, expiry);
         var result = await _minioProvider.GetPresignedAsync(fileData, cancellationToken);
 
         return Ok(result);
@@ -31,11 +32,12 @@ public class TestFileController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post(
         IFormFile file,
+        string bucket,
         CancellationToken cancellationToken = default)
     {
         await using var stream = file.OpenReadStream();
 
-        var fileData = new FileData(stream, "photos", file.FileName);
+        var fileData = new FileData(stream, bucket, file.FileName);
         var result = await _minioProvider.UploadAsync(fileData, cancellationToken);
 
         return Ok(result);
