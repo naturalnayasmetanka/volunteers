@@ -21,6 +21,12 @@ public class PetConfigurations : IEntityTypeConfiguration<Pet>
                 value => PetId.Create(value)
             );
 
+        builder.Property(x => x.VolunteerId)
+            .HasConversion(
+                id => id.Value,
+                value => VolunteerId.Create(value)
+            );
+
         builder.Property(x => x.Nickname)
             .HasConversion(
                 nickname => nickname.Value,

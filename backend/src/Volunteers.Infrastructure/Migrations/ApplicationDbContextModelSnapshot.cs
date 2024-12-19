@@ -71,18 +71,18 @@ namespace Volunteers.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("species_breed");
 
+                    b.Property<Guid>("VolunteerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("volunteer_id");
+
                     b.Property<bool>("_isDeleted")
                         .HasColumnType("boolean")
                         .HasColumnName("is_deleted");
 
-                    b.Property<Guid>("volunteer_id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("volunteer_id");
-
                     b.HasKey("Id")
                         .HasName("pk_pets");
 
-                    b.HasIndex("volunteer_id")
+                    b.HasIndex("VolunteerId")
                         .HasDatabaseName("ix_pets_volunteer_id");
 
                     b.ToTable("pets", (string)null);
@@ -185,7 +185,7 @@ namespace Volunteers.Infrastructure.Migrations
                 {
                     b.HasOne("Volunteers.Domain.PetManagment.Volunteer.AggregateRoot.Volunteer", "Volunteer")
                         .WithMany("Pets")
-                        .HasForeignKey("volunteer_id")
+                        .HasForeignKey("VolunteerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_pets_volunteers_volunteer_id");

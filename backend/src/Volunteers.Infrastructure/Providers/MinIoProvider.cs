@@ -48,12 +48,14 @@ public class MinIoProvider : IMinIoProvider
                     .WithObjectSize(fileData.Stream.Length)
                     .WithObject(Guid.NewGuid().ToString() + "_" + fileData.FileName);
 
-                var result = await _minioClient
+                await _minioClient
                     .PutObjectAsync(putObjectArgs, cancellationToken);
+
+                var fileUrl = await GetPresignedAsync(fileData, cancellationToken);
 
                 _logger.LogInformation($"MINIO:File {fileData.FileName} was added to busket {fileData.BucketName}");
 
-                return result.ObjectName;
+                return fileUrl;
             }
             else
             {

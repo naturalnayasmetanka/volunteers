@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Volunteers.Application.Volunteer.CreateVolunteer;
+using Volunteers.Application.Volunteers.AddPet;
 using Volunteers.Application.Volunteers.Delete;
 using Volunteers.Application.Volunteers.Restore;
 using Volunteers.Application.Volunteers.UpdateMainInfo;
@@ -21,6 +22,8 @@ public static class ApplicationInjector
         services.AddScoped<UpdateMainInfoHandler>();
         services.AddScoped<UpdateSotialNetworksHandler>();
         services.AddScoped<UpdateRequisitesHandler>();
+
+        services.AddScoped<AddPetVolunteerHandler>();
 
         services.AddValidatorsFromAssembly(typeof(ApplicationInjector).Assembly);
 

@@ -9,7 +9,7 @@ public class MockDataPets
 {
     public Pet GetSinglePet()
     {
-        var petId = PetId.NewModuleId();
+        var petId = PetId.NewPetId();
         var nickName = Nickname.Create("keksik").Value;
         var commonDescription = CommonDescription.Create("great keksik").Value;
         var helthDescription = HelthDescription.Create("fine").Value;
@@ -17,6 +17,7 @@ public class MockDataPets
         var petStatus = PetStatus.LookingHome;
         var birthDate = DateTime.UtcNow.AddYears(-1);
         var creationDate = DateTime.UtcNow;
+        var volunteerId = VolunteerId.Create(Guid.NewGuid());
 
         var mockPet = Pet.Create(
             id: petId,
@@ -26,7 +27,8 @@ public class MockDataPets
             phoneNumber: petPhoneNumber,
             helpStatus: petStatus,
             birthDate: birthDate,
-            creationDate: creationDate
+            creationDate: creationDate,
+            volunteerId: volunteerId
             );
 
         return mockPet.Value;

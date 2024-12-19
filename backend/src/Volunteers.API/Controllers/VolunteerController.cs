@@ -1,9 +1,11 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Volunteers.API.Contracts.Volunteers;
 using Volunteers.API.Extentions;
 using Volunteers.Application.Volunteer.CreateVolunteer;
 using Volunteers.Application.Volunteer.CreateVolunteer.DTO;
 using Volunteers.Application.Volunteers.AddPet;
+using Volunteers.Application.Volunteers.AddPet.Commands;
 using Volunteers.Application.Volunteers.CreateVolunteer.RequestModels;
 using Volunteers.Application.Volunteers.Delete;
 using Volunteers.Application.Volunteers.Delete.RequestModels;
@@ -51,10 +53,46 @@ public class VolunteerController : ControllerBase
     [HttpPost("{volunteerId:guid}/pet")]
     public async Task<IActionResult> Create(
         [FromRoute] Guid volunteerId,
+        [FromForm] AddPetRequest request,
         [FromServices] AddPetVolunteerHandler handler,
         CancellationToken cancellationToken = default)
     {
-        return Ok();
+        List<FileSignature> files = [];
+
+        try
+        {
+            foreach (var file in request.Files)
+            {
+                var stream = file.OpenReadStream();
+                files.Add(new FileSignature(stream, file.ContentType, file.FileName));
+            }
+
+            var command = new AddPetCommand(
+               volunteerId,
+               request.Nickname,
+               request.CommonDescription,
+               request.HelthDescription,
+               request.PetPhoneNumber,
+               request.PetStatus,
+               request.BirthDate,
+               request.CreationDate,
+               files);
+
+            var addPetResult = await handler.Handle(command, cancellationToken);
+
+            if (addPetResult.IsFailure)
+                return addPetResult.Error
+                    .ToErrorResponse();
+
+            return Ok(addPetResult.Value);
+        }
+        finally
+        {
+            foreach(var file in files)
+            {
+                await file.FileStream.DisposeAsync();
+            }
+        }
     }
 
     [HttpPatch("{id:guid}/main-info")]
