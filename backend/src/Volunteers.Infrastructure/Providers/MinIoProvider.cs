@@ -11,6 +11,9 @@ namespace Volunteers.Infrastructure.Providers;
 
 public class MinIoProvider : IMinIoProvider
 {
+    private const int MAX_COUNT_FILE_TASKS = 5;
+
+    private List<Error> _errors = [];
     private readonly IMinioClient _minioClient;
     private readonly ILogger<MinIoProvider> _logger;
 
@@ -20,54 +23,81 @@ public class MinIoProvider : IMinIoProvider
         _logger = logger;
     }
 
-    public async Task<Result<string, Error>> UploadAsync(
-        FileData fileData,
+    public async Task<Result<List<string>, List<Error>>> UploadAsync(
+        List<FileData> filesData,
         CancellationToken cancellationToken = default)
     {
         try
         {
-            if (fileData.Stream != null)
+            var semaphoreSlim = new SemaphoreSlim(MAX_COUNT_FILE_TASKS);
+
+            List<string> urls = [];
+
+            if (filesData.Any())
             {
-                var bucket = new BucketExistsArgs()
-                    .WithBucket(fileData.BucketName);
+                List<Task> fileTasks = [];
 
-                var bucketExist = await _minioClient
-                    .BucketExistsAsync(bucket, cancellationToken);
-
-                if (!bucketExist)
+                foreach (var fileData in filesData)
                 {
-                    var makeBucket = new MakeBucketArgs()
-                        .WithBucket(fileData.BucketName);
+                    await semaphoreSlim.WaitAsync(cancellationToken);
 
-                    await _minioClient.MakeBucketAsync(makeBucket, cancellationToken);
+                    if (fileData.Stream != null)
+                    {
+                        var bucket = new BucketExistsArgs()
+                            .WithBucket(fileData.BucketName);
+
+                        var bucketExist = await _minioClient
+                            .BucketExistsAsync(bucket, cancellationToken);
+
+                        if (!bucketExist)
+                        {
+                            var makeBucket = new MakeBucketArgs()
+                                .WithBucket(fileData.BucketName);
+
+                            await _minioClient.MakeBucketAsync(makeBucket, cancellationToken);
+                        }
+
+                        var putObjectArgs = new PutObjectArgs()
+                            .WithBucket(fileData.BucketName)
+                            .WithStreamData(fileData.Stream)
+                            .WithObjectSize(fileData.Stream.Length)
+                            .WithObject(Guid.NewGuid().ToString() + "_" + fileData.FileName);
+
+                        var task = _minioClient.PutObjectAsync(putObjectArgs, cancellationToken);
+
+                        semaphoreSlim.Release();
+
+                        fileTasks.Add(task);
+
+                        _logger.LogInformation($"MINIO:File {fileData.FileName} was added to busket {fileData.BucketName}");
+                    }
+                    else
+                    {
+                        _errors.Add(Error.Failure("MINIO: Stream is null", "file.upload"));
+                    }
                 }
 
-                var putObjectArgs = new PutObjectArgs()
-                    .WithBucket(fileData.BucketName)
-                    .WithStreamData(fileData.Stream)
-                    .WithObjectSize(fileData.Stream.Length)
-                    .WithObject(Guid.NewGuid().ToString() + "_" + fileData.FileName);
-
-                await _minioClient
-                    .PutObjectAsync(putObjectArgs, cancellationToken);
-
-                var fileUrl = await GetPresignedAsync(fileData, cancellationToken);
-
-                _logger.LogInformation($"MINIO:File {fileData.FileName} was added to busket {fileData.BucketName}");
-
-                return fileUrl;
+                await Task.WhenAll(fileTasks);
             }
             else
             {
-                return Error.Failure("MINIO: Stream is null", "file.upload");
+                _errors.Add(Error.Failure("MINIO: There aren`t any files", "file.upload"));
             }
 
+            if (_errors.Any())
+            {
+                return _errors;
+            }
+
+            return urls;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"MINIO:{ex.GetType().Name}:Fail to upload file {fileData.FileName} in bucket {fileData.BucketName}.");
 
-            return Error.Failure($"MINIO:{ex.GetType().Name}:Fail to upload file {fileData.FileName} in bucket {fileData.BucketName}.", "file.upload");
+            _logger.LogError(ex, $"MINIO:{ex.GetType().Name}:Fail to upload file in bucket.");
+            _errors.Add(Error.Failure($"MINIO:{ex.GetType().Name}:Fail to upload file in bucket.", "file.upload"));
+
+            return _errors;
         }
     }
 
