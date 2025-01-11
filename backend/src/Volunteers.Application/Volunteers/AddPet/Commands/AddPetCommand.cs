@@ -13,4 +13,7 @@ public record AddPetCommand(
     DateTime CreationDate,
     List<FileSignature> Files);
 
-public record FileSignature(Stream FileStream, string ContentType, string FileName);
+public record FileSignature(
+    Stream FileStream,
+    string ContentType,
+    string FileName);

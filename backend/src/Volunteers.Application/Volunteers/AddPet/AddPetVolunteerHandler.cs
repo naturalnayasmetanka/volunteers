@@ -56,17 +56,15 @@ public class AddPetVolunteerHandler
         var birthDate = command.BirthDate;
         var creationDate = command.CreationDate;
 
+        List<FileData> fileData = [];
+        command.Files.ForEach(file => fileData.Add(new FileData(
+                                            file.FileStream,
+                                            BUCKET_NAME,
+                                            Guid.NewGuid().ToString() + Path.GetExtension(file.FileName))));
+
         List<PetPhoto> urls = [];
-
-        foreach (var file in command.Files)
-        {
-            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-            var fileData = new FileData(file.FileStream, BUCKET_NAME, fileName);
-
-            var urlResult = await _minIoProvider.UploadAsync(fileData, cancellationToken);
-
-            urls.Add(PetPhoto.Create(urlResult.Value).Value);
-        }
+        var urlResult = await _minIoProvider.UploadAsync(fileData, cancellationToken);
+        urlResult.Value.ForEach(url => urls.Add(PetPhoto.Create(url).Value));
 
         var pet = Pet.Create(
             id: petId,
