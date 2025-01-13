@@ -11,5 +11,4 @@ public record AddPetCommand(
     int PetPhoneNumber,
     PetStatus PetStatus,
     DateTime BirthDate,
-    DateTime CreationDate,
-    List<FileDTO> Photo);
+    DateTime CreationDate);

@@ -44,7 +44,7 @@ public class TestFileController : ControllerBase
         try
         {
             foreach (var file in fileCollection)
-            {
+            {       
                 await using var stream = file.OpenReadStream();
                 fileData.Add(new FileDTO(
                     Stream: stream,

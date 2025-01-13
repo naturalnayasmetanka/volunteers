@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
 using Volunteers.Application.Volunteer;
-using Volunteers.Application.Volunteers.UpdateSotialNetworks.RequestModels;
+using Volunteers.Application.Volunteers.UpdateSotialNetworks.Commands;
 using Volunteers.Domain.PetManagment.Volunteer.ValueObjects;
 using Volunteers.Domain.Shared.CustomErrors;
 using Volunteers.Domain.Shared.Ids;
@@ -23,27 +23,28 @@ public class UpdateSotialNetworksHandler
     }
 
     public async Task<Result<Guid, List<Error>>> Handle(
-        UpdateSocialRequest request,
+        UpdateSocialNetworksCommand command,
         CancellationToken cancellationToken = default)
     {
-        var id = VolunteerId.Create(request.Id);
+        var id = VolunteerId.Create(command.Id);
         var volunteer = await _repository.GetByIdAsync(id, cancellationToken);
 
         if (volunteer is null)
         {
-            _errors.Add(Errors.General.NotFound(request.Id));
+            _errors.Add(Errors.General.NotFound(command.Id));
+
             return _errors;
         }
 
         List<SocialNetwork> newSocials = new List<SocialNetwork>();
-        request.SocialListDto.ListSocial.ForEach(x => newSocials.Add(SocialNetwork.Create(x.Title,x.Link).Value));
+        command.SocialListDto.ListSocial.ForEach(x => newSocials.Add(SocialNetwork.Create(x.Title, x.Link).Value));
 
         volunteer.UpdateSocial(newSocials);
 
         await _repository.UpdateAsync(volunteer, cancellationToken);
 
-        _logger.LogInformation("id: {0} Volunteer social networks info was updated", request.Id);
+        _logger.LogInformation("id: {0} Volunteer social networks info was updated", command.Id);
 
-        return (Guid)request.Id;
+        return (Guid)command.Id;
     }
 }
