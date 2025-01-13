@@ -10,4 +10,4 @@ public record AddPetRequest(
     PetStatus PetStatus,
     DateTime BirthDate,
     DateTime CreationDate,
-    IFormFileCollection Files);
+    IFormFileCollection Photo);

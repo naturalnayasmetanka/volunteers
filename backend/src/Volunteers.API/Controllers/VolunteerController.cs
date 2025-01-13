@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Volunteers.API.Contracts.Volunteers;
 using Volunteers.API.Extentions;
+using Volunteers.Application.DTO;
 using Volunteers.Application.Volunteer.CreateVolunteer;
 using Volunteers.Application.Volunteer.CreateVolunteer.DTO;
 using Volunteers.Application.Volunteers.AddPet;
@@ -57,14 +58,19 @@ public class VolunteerController : ControllerBase
         [FromServices] AddPetVolunteerHandler handler,
         CancellationToken cancellationToken = default)
     {
-        List<FileSignature> files = [];
+        List<FileDTO> files = [];
 
         try
         {
-            foreach (var file in request.Files)
+            foreach (var file in request.Photo)
             {
                 var stream = file.OpenReadStream();
-                files.Add(new FileSignature(stream, file.ContentType, file.FileName));
+
+                files.Add(new FileDTO(
+                    Stream: stream, 
+                    BucketName: null, 
+                    FileName: file.FileName, 
+                    ContentType: file.ContentType));
             }
 
             var command = new AddPetCommand(
@@ -88,9 +94,10 @@ public class VolunteerController : ControllerBase
         }
         finally
         {
-            foreach(var file in files)
+            foreach (var file in files)
             {
-                await file.FileStream.DisposeAsync();
+                if (file.Stream is not null)
+                    await file.Stream.DisposeAsync();
             }
         }
     }

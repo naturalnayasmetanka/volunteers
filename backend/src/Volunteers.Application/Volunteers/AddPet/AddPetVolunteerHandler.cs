@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
+using Volunteers.Application.DTO;
 using Volunteers.Application.Providers;
-using Volunteers.Application.Providers.Models;
 using Volunteers.Application.Volunteer;
 using Volunteers.Application.Volunteers.AddPet.Commands;
 using Volunteers.Domain.PetManagment.Pet.Entities;
@@ -14,8 +14,6 @@ namespace Volunteers.Application.Volunteers.AddPet;
 public class AddPetVolunteerHandler
 {
     private const string BUCKET_NAME = "photos";
-
-    private List<Error> _errors = [];
 
     private readonly ILogger<AddPetVolunteerHandler> _logger;
     private readonly IVolunteerRepository _volunteerRepository;
@@ -30,7 +28,7 @@ public class AddPetVolunteerHandler
         _minIoProvider = minIoProvider;
     }
 
-    public async Task<Result<VolunteerModel, List<Error>>> Handle(
+    public async Task<Result<VolunteerModel, Error>> Handle(
         AddPetCommand command,
         CancellationToken cancellationToken = default)
     {
@@ -39,10 +37,9 @@ public class AddPetVolunteerHandler
 
         if (volunteer is null)
         {
-            _errors.Add(Errors.General.NotFound(command.VolunteerId));
             _logger.LogInformation("Volunteer was not found with id: {0}", command.VolunteerId);
 
-            return _errors;
+            return Errors.General.NotFound(command.VolunteerId);
         }
 
         var petId = PetId.NewPetId();
@@ -56,11 +53,12 @@ public class AddPetVolunteerHandler
         var birthDate = command.BirthDate;
         var creationDate = command.CreationDate;
 
-        List<FileData> fileData = [];
-        command.Files.ForEach(file => fileData.Add(new FileData(
-                                            file.FileStream,
-                                            BUCKET_NAME,
-                                            Guid.NewGuid().ToString() + Path.GetExtension(file.FileName))));
+        List<FileDTO> fileData = [];
+        command.Photo.ForEach(file => fileData.Add(new FileDTO(
+                                            Stream: file.Stream,
+                                            BucketName: BUCKET_NAME,
+                                            FileName: Guid.NewGuid().ToString() + Path.GetExtension(file.FileName),
+                                            ContentType: null)));
 
         List<PetPhoto> urls = [];
         var urlResult = await _minIoProvider.UploadAsync(fileData, cancellationToken);
@@ -83,10 +81,9 @@ public class AddPetVolunteerHandler
 
         if (result.IsFailure)
         {
-            _errors.Add(result.Error);
             _logger.LogInformation("Pet with id {0} was not added to volunteer with id: {1}", petId, command.VolunteerId);
 
-            return _errors;
+            return result.Error;
         }
 
         await _volunteerRepository.SaveAsync();

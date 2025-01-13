@@ -3,8 +3,8 @@ using Microsoft.Extensions.Logging;
 using Minio;
 using Minio.DataModel.Args;
 using Minio.Exceptions;
+using Volunteers.Application.DTO;
 using Volunteers.Application.Providers;
-using Volunteers.Application.Providers.Models;
 using Volunteers.Domain.Shared.CustomErrors;
 
 namespace Volunteers.Infrastructure.Providers;
@@ -23,9 +23,8 @@ public class MinIoProvider : IMinIoProvider
         _logger = logger;
     }
 
-
     public async Task<Result<List<string>, List<Error>>> UploadAsync(
-        List<FileData> filesData,
+        List<FileDTO> filesData,
         CancellationToken cancellationToken = default)
     {
         var semaphoreSlim = new SemaphoreSlim(MAX_COUNT_FILE_TASKS);
@@ -68,7 +67,7 @@ public class MinIoProvider : IMinIoProvider
     }
 
     private async Task<Result<string, List<Error>>> PutObject(
-        FileData fileData,
+        FileDTO fileData,
         SemaphoreSlim semaphoreSlim,
         CancellationToken cancellationToken)
     {
@@ -111,11 +110,10 @@ public class MinIoProvider : IMinIoProvider
         {
             semaphoreSlim.Release();
         }
-
     }
 
     private async Task MakeBucketIsItNull(
-        List<FileData> filesData,
+        List<FileDTO> filesData,
         CancellationToken cancellationToken = default)
     {
         HashSet<string> bucketNames = [.. filesData.Select(file => file.BucketName)];
@@ -126,17 +124,19 @@ public class MinIoProvider : IMinIoProvider
                 .WithBucket(bucketName);
             var bucketExist = await _minioClient
                 .BucketExistsAsync(bucketExistArgs, cancellationToken);
+
             if (bucketExist == false)
             {
                 var makeBucketArgs = new MakeBucketArgs()
                     .WithBucket(bucketName);
+
                 await _minioClient.MakeBucketAsync(makeBucketArgs, cancellationToken);
             }
         }
     }
 
     public async Task<Result<string, Error>> GetPresignedAsync(
-        FileData fileData,
+        FileDTO fileData,
         CancellationToken cancellationToken)
     {
         try
@@ -148,9 +148,7 @@ public class MinIoProvider : IMinIoProvider
             var statObject = await _minioClient.StatObjectAsync(statArgs, cancellationToken);
 
             if (statObject is null)
-            {
                 throw new InvalidObjectNameException($"Object {fileData.FileName} was not found");
-            }
 
             var presignetArgs = new PresignedGetObjectArgs()
                 .WithBucket(fileData.BucketName)
@@ -169,7 +167,7 @@ public class MinIoProvider : IMinIoProvider
         }
     }
 
-    public async Task<Result<string, Error>> DeleteAsync(FileData fileData, CancellationToken cancellationToken)
+    public async Task<Result<string, Error>> DeleteAsync(FileDTO fileData, CancellationToken cancellationToken)
     {
         try
         {
@@ -180,9 +178,7 @@ public class MinIoProvider : IMinIoProvider
             var statObject = await _minioClient.StatObjectAsync(statArgs, cancellationToken);
 
             if (statObject is null)
-            {
                 throw new InvalidObjectNameException($"Object {fileData.FileName} was not found");
-            }
 
             var presignetArgs = new RemoveObjectArgs()
                        .WithBucket(fileData.BucketName)

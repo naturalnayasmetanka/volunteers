@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Volunteers.Application.DTO;
 using Volunteers.Application.Providers;
-using Volunteers.Application.Providers.Models;
-using Volunteers.Application.Volunteers.AddPet.Commands;
 
 namespace Volunteers.API.Controllers;
 
@@ -23,8 +22,13 @@ public class TestFileController : ControllerBase
         int expiry = 60 * 60 * 24,
         CancellationToken cancellationToken = default)
     {
+        var fileData = new FileDTO(
+            Stream: null,
+            BucketName: BUCKET_NAME,
+            FileName: fileName,
+            ContentType: null,
+            Expiry: expiry);
 
-        var fileData = new FileData(null, BUCKET_NAME, fileName, expiry);
         var result = await _minioProvider.GetPresignedAsync(fileData, cancellationToken);
 
         return Ok(result);
@@ -35,15 +39,18 @@ public class TestFileController : ControllerBase
         IFormFileCollection fileCollection,
         CancellationToken cancellationToken = default)
     {
-        List<FileSignature> files = [];
-        List<FileData> fileData = [];
+        List<FileDTO> fileData = [];
 
         try
         {
             foreach (var file in fileCollection)
             {
                 await using var stream = file.OpenReadStream();
-                fileData.Add(new FileData(stream, BUCKET_NAME, Guid.NewGuid().ToString() + Path.GetExtension(file.FileName)));
+                fileData.Add(new FileDTO(
+                    Stream: stream,
+                    BucketName: BUCKET_NAME,
+                    FileName: Guid.NewGuid().ToString() + Path.GetExtension(file.FileName),
+                    ContentType: null));
             }
 
             var result = await _minioProvider.UploadAsync(fileData, cancellationToken);
@@ -52,9 +59,10 @@ public class TestFileController : ControllerBase
         }
         finally
         {
-            foreach (var file in files)
+            foreach (var file in fileData)
             {
-                await file.FileStream.DisposeAsync();
+                if (file.Stream is not null)
+                    await file.Stream.DisposeAsync();
             }
         }
     }
@@ -64,9 +72,14 @@ public class TestFileController : ControllerBase
         string fileName,
         CancellationToken cancellationToken = default)
     {
-        var fileData = new FileData(null, BUCKET_NAME, fileName);
+        var fileData = new FileDTO(
+            Stream: null,
+            BucketName: BUCKET_NAME,
+            FileName: fileName,
+            ContentType: null);
+
         var result = await _minioProvider.DeleteAsync(fileData, cancellationToken);
-          
+
         return Ok(result.Value);
     }
 }

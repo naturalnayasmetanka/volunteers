@@ -1,4 +1,5 @@
-﻿using Volunteers.Domain.PetManagment.Pet.Enums;
+﻿using Volunteers.Application.DTO;
+using Volunteers.Domain.PetManagment.Pet.Enums;
 
 namespace Volunteers.Application.Volunteers.AddPet.Commands;
 
@@ -11,9 +12,4 @@ public record AddPetCommand(
     PetStatus PetStatus,
     DateTime BirthDate,
     DateTime CreationDate,
-    List<FileSignature> Files);
-
-public record FileSignature(
-    Stream FileStream,
-    string ContentType,
-    string FileName);
+    List<FileDTO> Photo);
