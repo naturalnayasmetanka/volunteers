@@ -128,6 +128,23 @@ public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
         PhotoDetails.PetPhoto.Add(photo);
     }
 
+    public void UpdatePhoto(List<PetPhoto> photo)
+    {
+        if (PhotoDetails is null)
+            PhotoDetails = new PhotoDetails();
+
+        PhotoDetails.PetPhoto.Clear();
+
+        if (photo.Any())
+        {
+            PhotoDetails.PetPhoto.AddRange(photo);
+        }
+        else
+        {
+            PhotoDetails = null;
+        }
+    }
+
     public Result<Position, Error> MoveForward()
     {
         var newPosition = Position.Forward();

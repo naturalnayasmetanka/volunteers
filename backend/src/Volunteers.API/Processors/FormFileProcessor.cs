@@ -5,8 +5,8 @@ namespace Volunteers.API.Processors
     public class FormFileProcessor
     {
         private readonly List<FileDTO> _listFileDto = [];
-        private const string BUCKET_NAME = "photos";
-        public List<FileDTO> Process(IFormFileCollection files)
+
+        public List<FileDTO> Process(string BUCKET_NAME, IFormFileCollection files)
         {
             foreach (var file in files)
             {
@@ -15,11 +15,12 @@ namespace Volunteers.API.Processors
                 var fileDto = new FileDTO(
                     Stream: stream,
                     BucketName: BUCKET_NAME,
-                    FileName: file.FileName,
+                    FileName: Guid.NewGuid() + Path.GetExtension(file.FileName),
                     ContentType: null);
 
                 _listFileDto.Add(fileDto);
             }
+
             return _listFileDto;
         }
 

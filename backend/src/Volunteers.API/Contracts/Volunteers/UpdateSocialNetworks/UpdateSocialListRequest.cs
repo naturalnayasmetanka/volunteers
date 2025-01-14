@@ -5,7 +5,7 @@ namespace Volunteers.API.Contracts.Volunteers.UpdateSocialNetworks;
 
 public record UpdateSocialListRequest
 {
-    List<UpdateSocialRequest> Socials { get; set; } = new List<UpdateSocialRequest>();
+    public List<UpdateSocialRequest> Socials { get; set; } = new List<UpdateSocialRequest>();
 
     public static UpdateSocialNetworksCommand ToCommand(
         Guid volunteerId, 

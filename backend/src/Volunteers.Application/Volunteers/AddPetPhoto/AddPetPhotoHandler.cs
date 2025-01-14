@@ -55,6 +55,8 @@ public class AddPetPhotoHandler
                     _logger.LogInformation("Pet with id {0} was added to volunteer with id: {1}", petId, command.VolunteerId);
                 });
 
+                await _volunteerRepository.UpdateAsync(volunteer, cancellationToken:cancellationToken);
+
                 return volunteer;
             }
         }

@@ -12,7 +12,10 @@ public static class ApiInjector
                     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                 });
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+        services.AddSwaggerGen(x =>
+        {
+            x.EnableAnnotations();
+        });
 
         return services;
     }

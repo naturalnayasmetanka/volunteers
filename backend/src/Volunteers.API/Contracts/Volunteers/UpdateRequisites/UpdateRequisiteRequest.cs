@@ -5,7 +5,7 @@ namespace Volunteers.API.Contracts.Volunteers.UpdateRequisites;
 
 public record UpdateRequisiteRequest
 {
-    List<UpdateRequisiteDTO> RequisiteList { get; set; } = new List<UpdateRequisiteDTO>();
+    public List<UpdateRequisiteDTO> RequisiteList { get; set; } = new List<UpdateRequisiteDTO>();
 
     public static UpdateRequisiteCommand ToCommand(
         Guid volunteerId,
