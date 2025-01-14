@@ -7,7 +7,6 @@ using Volunteers.Domain.PetManagment.Pet.Entities;
 using Volunteers.Domain.PetManagment.Pet.ValueObjects;
 using Volunteers.Domain.Shared.CustomErrors;
 using Volunteers.Domain.Shared.Ids;
-using VolunteerModel = Volunteers.Domain.PetManagment.Volunteer.AggregateRoot.Volunteer;
 
 namespace Volunteers.Application.Volunteers.AddPet;
 
@@ -25,7 +24,7 @@ public class AddPetVolunteerHandler
         _volunteerRepository = volunteerRepository;
     }
 
-    public async Task<Result<VolunteerModel, Error>> Handle(
+    public async Task<Result<Guid, Error>> Handle(
         AddPetCommand command,
         CancellationToken cancellationToken = default)
     {
@@ -74,6 +73,6 @@ public class AddPetVolunteerHandler
 
         _logger.LogInformation("Pet with id {0} was added to volunteer with id: {1}", petId, command.VolunteerId);
 
-        return volunteer;
+        return (Guid)pet.Id;
     }
 }

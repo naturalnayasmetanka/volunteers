@@ -6,11 +6,7 @@ public static class ApiInjector
 {
     public static IServiceCollection AddApi(this IServiceCollection services, WebApplicationBuilder builder)
     {
-        services.AddControllers()
-            .AddJsonOptions(options =>
-                {
-                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-                });
+        services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(x =>
         {
