@@ -31,19 +31,6 @@ public class VolunteerController : ControllerBase
 {
     private const string BUCKET_NAME = "photos";
 
-    [HttpGet("presigned")]
-    [SwaggerOperation(Tags = ["Pet"])]
-    public async Task<IActionResult> Get(
-        [FromQuery] GetPresignedLinkPhotoRequest request,
-        [FromServices] GetPresignedLinkPhotoHandler handler,
-        CancellationToken cancellationToken = default)
-    {
-        var getPresignedcommand = GetPresignedLinkPhotoRequest.ToCommand(BUCKET_NAME, request);
-        var result = await handler.Handle(getPresignedcommand, cancellationToken);
-
-        return Ok(result);
-    }
-
     [HttpPost]
     [SwaggerOperation(Tags = ["Volunteer"])]
     public async Task<IActionResult> Create(
@@ -54,7 +41,7 @@ public class VolunteerController : ControllerBase
         var createVolunteerCommand = CreateVolunteerRequest.ToCommand(request);
         var createResult = await handler.Handle(createVolunteerCommand, cancellationToken);
 
-        if (createResult.IsFailure)
+        if (createResult.IsFailure) 
             return createResult.Error
                 .ToErrorResponse();
 
