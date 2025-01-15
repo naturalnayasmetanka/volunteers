@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
 using Volunteers.Application.Volunteer;
-using Volunteers.Application.Volunteers.UpdateRequisites.RequestModels;
+using Volunteers.Application.Volunteers.UpdateRequisites.Commands;
 using Volunteers.Domain.PetManagment.Volunteer.ValueObjects;
 using Volunteers.Domain.Shared.CustomErrors;
 using Volunteers.Domain.Shared.Ids;
@@ -23,27 +23,27 @@ public class UpdateRequisitesHandler
     }
 
     public async Task<Result<Guid, List<Error>>> Handle(
-        UpdateRequisiteRequest request,
+        UpdateRequisiteCommand command,
         CancellationToken cancellationToken = default)
     {
-        var id = VolunteerId.Create(request.Id);
+        var id = VolunteerId.Create(command.Id);
         var volunteer = await _repository.GetByIdAsync(id, cancellationToken);
 
         if (volunteer is null)
         {
-            _errors.Add(Errors.General.NotFound(request.Id));
+            _errors.Add(Errors.General.NotFound(command.Id));
             return _errors;
         }
 
         List<VolunteerRequisite> newRequisites = new List<VolunteerRequisite>();
-        request.RequisitesDTO.RequisiteList.ForEach(x => newRequisites.Add(VolunteerRequisite.Create(x.Title, x.Description).Value));
+        command.RequisitesDTO.RequisiteList.ForEach(x => newRequisites.Add(VolunteerRequisite.Create(x.Title, x.Description).Value));
 
         volunteer.UpdateRequisites(newRequisites);
 
         await _repository.UpdateAsync(volunteer, cancellationToken);
 
-        _logger.LogInformation("id: {0} Volunteer requisites info was updated", request.Id);
+        _logger.LogInformation("id: {0} Volunteer requisites info was updated", command.Id);
 
-        return (Guid)request.Id;
+        return (Guid)command.Id;
     }
 }

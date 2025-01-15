@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
 using Volunteers.Application.Volunteer;
-using Volunteers.Application.Volunteers.UpdateMainInfo.RequestModels;
+using Volunteers.Application.Volunteers.UpdateMainInfo.Commands;
 using Volunteers.Domain.PetManagment.Volunteer.ValueObjects;
 using Volunteers.Domain.Shared.CustomErrors;
 using Volunteers.Domain.Shared.Ids;
@@ -22,22 +22,22 @@ public class UpdateMainInfoHandler
     }
 
     public async Task<Result<Guid, List<Error>>> Handle(
-        UpdateMainInfoRequest request,
+        UpdateMainInfoCommand command,
         CancellationToken cancellationToken = default)
     {
-        var id = VolunteerId.Create(request.Id);
+        var id = VolunteerId.Create(command.VolunteerId);
         var volunteer = await _repository.GetByIdAsync(id, cancellationToken);
 
         if (volunteer is null)
         {
-            _errors.Add(Errors.General.NotFound(request.Id));
+            _errors.Add(Errors.General.NotFound(command.VolunteerId));
             return _errors;
         }
 
-        var name = Name.Create(request.MainInfoDto.Name).Value;
-        var email = Email.Create(request.MainInfoDto.Email).Value;
-        var experienceInYears = ExperienceInYears.Create(request.MainInfoDto.ExperienceInYears).Value;
-        var phoneNumber = PhoneNumber.Create(request.MainInfoDto.PhoneNumber).Value;
+        var name = Name.Create(command.MainInfoDto.Name).Value;
+        var email = Email.Create(command.MainInfoDto.Email).Value;
+        var experienceInYears = ExperienceInYears.Create(command.MainInfoDto.ExperienceInYears).Value;
+        var phoneNumber = PhoneNumber.Create(command.MainInfoDto.PhoneNumber).Value;
 
         volunteer.UpdateMainInfo(
             name: name,
@@ -49,6 +49,6 @@ public class UpdateMainInfoHandler
 
         _logger.LogInformation("id: {0} Volunteer main info was updated", id);
 
-        return (Guid)request.Id;
+        return (Guid)command.VolunteerId;
     }
 }

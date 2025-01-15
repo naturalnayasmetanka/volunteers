@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Volunteers.Application.Volunteer;
 using Volunteers.Application.Volunteers.Delete;
-using Volunteers.Application.Volunteers.Restore.RequestModels;
+using Volunteers.Application.Volunteers.Restore.Commands;
 using Volunteers.Domain.Shared.CustomErrors;
 using Volunteers.Domain.Shared.Ids;
 
@@ -23,15 +23,15 @@ public class RestoreVolunteerHandler
     }
 
     public async Task<Result<Guid, List<Error>>> Handle(
-        RestoreRequest request,
+        RestoreCommand command,
         CancellationToken cancellationToken = default)
     {
-        var id = VolunteerId.Create(request.Id);
+        var id = VolunteerId.Create(command.Id);
         var volunteer = await _repository.GetByIdAsync(id, cancellationToken);
 
         if (volunteer is null)
         {
-            _errors.Add(Errors.General.NotFound(request.Id));
+            _errors.Add(Errors.General.NotFound(command.Id));
             return _errors;
         }
 
@@ -39,8 +39,8 @@ public class RestoreVolunteerHandler
 
         await _repository.SaveAsync();
 
-        _logger.LogInformation("Volunteer was restored with id: {0}", request.Id);
+        _logger.LogInformation("Volunteer was restored with id: {0}", command.Id);
 
-        return request.Id;
+        return command.Id;
     }
 }

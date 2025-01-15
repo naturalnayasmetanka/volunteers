@@ -23,7 +23,8 @@ public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
         PetPhoneNumber phoneNumber,
         PetStatus helpStatus,
         DateTime birthDate,
-        DateTime creationDate
+        DateTime creationDate,
+        VolunteerId volunteerId
         ) : base(id)
     {
         Nickname = nickname;
@@ -33,6 +34,7 @@ public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
         HelpStatus = helpStatus;
         BirthDate = birthDate;
         CreationDate = creationDate;
+        VolunteerId = volunteerId;
     }
 
     public Nickname Nickname { get; private set; } = default!;
@@ -44,6 +46,7 @@ public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
     public DateTime CreationDate { get; private set; }
     public Position Position { get; private set; } = default!;
 
+    public VolunteerId VolunteerId { get; private set; } = default!;
     public VolunteerModel Volunteer { get; private set; } = default!;
 
     public LocationDetails? LocationDetails { get; private set; }
@@ -61,8 +64,8 @@ public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
         PetPhoneNumber phoneNumber,
         PetStatus helpStatus,
         DateTime birthDate,
-        DateTime creationDate
-    )
+        DateTime creationDate,
+        VolunteerId volunteerId)
     {
         var newPet = new Pet(
             id: id,
@@ -72,7 +75,8 @@ public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
             phoneNumber: phoneNumber,
             helpStatus: helpStatus,
             birthDate: birthDate,
-            creationDate: creationDate);
+            creationDate: creationDate,
+            volunteerId: volunteerId);
 
         return Result.Success(newPet);
     }
@@ -122,6 +126,23 @@ public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
             PhotoDetails = new PhotoDetails();
 
         PhotoDetails.PetPhoto.Add(photo);
+    }
+
+    public void UpdatePhoto(List<PetPhoto> photo)
+    {
+        if (PhotoDetails is null)
+            PhotoDetails = new PhotoDetails();
+
+        PhotoDetails.PetPhoto.Clear();
+
+        if (photo.Any())
+        {
+            PhotoDetails.PetPhoto.AddRange(photo);
+        }
+        else
+        {
+            PhotoDetails = null;
+        }
     }
 
     public Result<Position, Error> MoveForward()
