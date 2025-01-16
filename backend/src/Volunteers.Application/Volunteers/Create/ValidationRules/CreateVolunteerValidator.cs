@@ -5,9 +5,9 @@ using Volunteers.Domain.PetManagment.Volunteer.ValueObjects;
 
 namespace Volunteers.Application.Volunteer.CreateVolunteer.ValidatorRules;
 
-public class CreateVolunteerRequestValidator : AbstractValidator<CreateVolunteerDto>
+public class CreateVolunteerValidator : AbstractValidator<CreateVolunteerDto>
 {
-    public CreateVolunteerRequestValidator()
+    public CreateVolunteerValidator()
     {
         RuleFor(c => c.Name)
             .MustBeValueObject(Name.Create);

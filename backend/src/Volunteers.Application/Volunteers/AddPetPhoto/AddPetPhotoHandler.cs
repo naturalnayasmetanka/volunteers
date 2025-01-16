@@ -20,7 +20,6 @@ public class AddPetPhotoHandler
     private readonly IVolunteerRepository _volunteerRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-
     public AddPetPhotoHandler(
         ILogger<AddPetVolunteerHandler> logger,
         IVolunteerRepository volunteerRepository,

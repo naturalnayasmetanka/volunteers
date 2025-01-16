@@ -1,5 +1,4 @@
-﻿using Volunteers.Application.DTO;
-using Volunteers.Domain.PetManagment.Pet.Enums;
+﻿using Volunteers.Domain.PetManagment.Pet.Enums;
 
 namespace Volunteers.Application.Volunteers.AddPet.Commands;
 
