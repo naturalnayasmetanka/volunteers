@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
+using Volunteers.Application.Database;
 using Volunteers.Application.Providers;
 using Volunteers.Application.Volunteer;
 using Volunteers.Application.Volunteers.AddPet;
@@ -17,52 +18,74 @@ public class AddPetPhotoHandler
     private readonly IMinIoProvider _minIoProvider;
     private readonly ILogger<AddPetVolunteerHandler> _logger;
     private readonly IVolunteerRepository _volunteerRepository;
+    private readonly IUnitOfWork _unitOfWork;
+
 
     public AddPetPhotoHandler(
         ILogger<AddPetVolunteerHandler> logger,
         IVolunteerRepository volunteerRepository,
-        IMinIoProvider minIoProvider)
+        IMinIoProvider minIoProvider,
+        IUnitOfWork unitOfWork)
     {
         _logger = logger;
         _volunteerRepository = volunteerRepository;
         _minIoProvider = minIoProvider;
+        _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result<VolunteerModel, Error>> Handle(
+    public async Task<Result<Guid, Error>> Handle(
     AddPetPhotoCommand command,
     CancellationToken cancellationToken = default)
     {
-        var volunteerId = VolunteerId.Create(command.VolunteerId);
-        var petId = PetId.Create(command.PetId);
+        var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
 
-        VolunteerModel? volunteer = await _volunteerRepository.GetByIdAsync(volunteerId);
-        Pet? pet = default;
-
-        if (volunteer is not null)
+        try
         {
-            pet = volunteer.Pets.Where(x => x.Id.Value == petId.Value).FirstOrDefault();
+            var volunteerId = VolunteerId.Create(command.VolunteerId);
+            var petId = PetId.Create(command.PetId);
 
-            if (pet is not null)
+            VolunteerModel? volunteer = await _volunteerRepository.GetByIdAsync(volunteerId);
+            Pet? pet = default;
+
+            if (volunteer is not null)
             {
-                List<PetPhoto> urls = [];
-                var urlResult = await _minIoProvider.UploadAsync(command.Photo, cancellationToken);
-                urlResult.Value.ForEach(url => urls.Add(PetPhoto.Create(url).Value));
+                pet = volunteer.Pets.Where(x => x.Id.Value == petId.Value).FirstOrDefault();
 
-                urls.ForEach(url =>
+                if (pet is not null)
                 {
-                    pet.AddPhoto(url);
+                    command.Photo.ForEach(photo =>
+                    {
+                        pet.AddPhoto(PetPhoto.Create(photo.FileName).Value);
 
-                    _logger.LogInformation("Pet with id {0} was added to volunteer with id: {1}", petId, command.VolunteerId);
-                });
+                        _logger.LogInformation("Pet with id {0} was added to volunteer with id: {1}", petId, command.VolunteerId);
+                    });
 
-                await _volunteerRepository.UpdateAsync(volunteer, cancellationToken:cancellationToken);
+                    _volunteerRepository.Attach(volunteer);
+                    await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-                return volunteer;
+                    var urlResult = await _minIoProvider.UploadAsync(command.Photo, cancellationToken);
+
+                    if (urlResult.IsFailure)
+                        return urlResult.Error.First();
+
+                    transaction.Commit();
+
+                    return (Guid)volunteer.Id;
+                }
             }
+
+            _logger.LogInformation("Volunteer was not found with id: {0}", command.VolunteerId);
+
+            return Errors.General.NotFound(command.VolunteerId);
+        }
+        catch (Exception ex)
+        {
+            transaction.Rollback();
+
+            _logger.LogError(ex.Message);
+
+            return Error.Failure(ex.Message, "upload.file");
         }
 
-        _logger.LogInformation("Volunteer was not found with id: {0}", command.VolunteerId);
-
-        return Errors.General.NotFound(command.VolunteerId);
     }
 }

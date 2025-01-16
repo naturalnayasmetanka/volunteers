@@ -42,8 +42,6 @@ public class MinIoProvider : IMinIoProvider
 
                 var pathsResult = await Task.WhenAll(tasksResult);
                 urls = pathsResult.Select(p => p.Value).ToList();
-
-
             }
             else
             {

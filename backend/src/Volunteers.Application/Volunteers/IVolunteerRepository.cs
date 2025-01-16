@@ -5,9 +5,10 @@ namespace Volunteers.Application.Volunteer;
 
 public interface IVolunteerRepository
 {
-    public Task<VolunteerModel> CreateAsync(VolunteerModel newVolunteer, CancellationToken cancellationToken = default);
-    public Task<VolunteerModel?> GetByIdAsync(VolunteerId id, CancellationToken cancellationToken = default);
-    public Task<Guid> UpdateAsync(VolunteerModel volunteer, CancellationToken cancellationToken = default);
-    public Task<Guid> DeleteAsync(VolunteerModel volunteer, CancellationToken cancellationToken = default);
-    public Task SaveAsync(CancellationToken cancellationToken = default);
+    Task<VolunteerModel> CreateAsync(VolunteerModel newVolunteer, CancellationToken cancellationToken = default);
+    Task<VolunteerModel?> GetByIdAsync(VolunteerId id, CancellationToken cancellationToken = default);
+    Task<Guid> UpdateAsync(VolunteerModel volunteer, CancellationToken cancellationToken = default);
+    Task<Guid> DeleteAsync(VolunteerModel volunteer, CancellationToken cancellationToken = default);
+    Task SaveAsync(CancellationToken cancellationToken = default);
+    void Attach(VolunteerModel volunteer);
 }
