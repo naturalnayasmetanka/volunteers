@@ -2,7 +2,7 @@
 
 namespace Volunteers.API.Processors
 {
-    public class FormFileProcessor
+    public class FormFileProcessor : IAsyncDisposable
     {
         private readonly List<FileDTO> _listFileDto = [];
 

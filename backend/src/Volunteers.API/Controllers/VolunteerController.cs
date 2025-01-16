@@ -4,7 +4,6 @@ using Volunteers.API.Contracts.Volunteers.AddPet;
 using Volunteers.API.Contracts.Volunteers.AddPetPhoto;
 using Volunteers.API.Contracts.Volunteers.Create;
 using Volunteers.API.Contracts.Volunteers.DeletePetPhoto;
-using Volunteers.API.Contracts.Volunteers.GetPresignedLinkPhoto;
 using Volunteers.API.Contracts.Volunteers.UpdateMainInfo;
 using Volunteers.API.Contracts.Volunteers.UpdateRequisites;
 using Volunteers.API.Contracts.Volunteers.UpdateSocialNetworks;
@@ -16,7 +15,6 @@ using Volunteers.Application.Volunteers.AddPetPhoto;
 using Volunteers.Application.Volunteers.Delete;
 using Volunteers.Application.Volunteers.Delete.Commands;
 using Volunteers.Application.Volunteers.DeletePetPhoto;
-using Volunteers.Application.Volunteers.GetPresignedLinkPhoto;
 using Volunteers.Application.Volunteers.Restore;
 using Volunteers.Application.Volunteers.Restore.Commands;
 using Volunteers.Application.Volunteers.UpdateMainInfo;
@@ -41,7 +39,7 @@ public class VolunteerController : ControllerBase
         var createVolunteerCommand = CreateVolunteerRequest.ToCommand(request);
         var createResult = await handler.Handle(createVolunteerCommand, cancellationToken);
 
-        if (createResult.IsFailure) 
+        if (createResult.IsFailure)
             return createResult.Error
                 .ToErrorResponse();
 
@@ -79,10 +77,10 @@ public class VolunteerController : ControllerBase
         var petPhoto = fileProcessor.Process(BUCKET_NAME, request.Photo);
 
         var addPetPhotoCommand = AddPetPhotoRequest.ToCommand(
-            volunteerId:volunteerId,
-            petId:petId,
-            request:request,
-            petPhoto:petPhoto);
+            volunteerId: volunteerId,
+            petId: petId,
+            request: request,
+            petPhoto: petPhoto);
 
         var addPhotoResult = await handler.Handle(addPetPhotoCommand, cancellationToken);
 
@@ -213,12 +211,12 @@ public class VolunteerController : ControllerBase
             BUCKET_NAME: BUCKET_NAME,
             request: request);
 
-        var result = await handler.Handle(deletePetPhotoCommand, cancellationToken);
+        var deleteResult = await handler.Handle(deletePetPhotoCommand, cancellationToken);
 
-        if (result.IsFailure)
-            return result.Error
+        if (deleteResult.IsFailure)
+            return deleteResult.Error
                 .ToErrorResponse();
 
-        return Ok(result.Value);
+        return Ok(deleteResult.Value);
     }
 }

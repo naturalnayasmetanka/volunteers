@@ -45,6 +45,11 @@ public class VolunteerRepository : IVolunteerRepository
         return volunteer.Id;
     }
 
+    public void Attach(Volunteer volunteer)
+    {
+        _context.Volunteers.Attach(volunteer);
+    }
+
     public async Task<Guid> DeleteAsync(
         Volunteer volunteer,
         CancellationToken cancellationToken = default)
