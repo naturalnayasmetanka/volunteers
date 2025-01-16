@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Volunteers.API.Extentions.DI;
+﻿namespace Volunteers.API.Extentions.DI;
 
 public static class ApiInjector
 {

@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Volunteers.Infrastructure.Contexts;
+﻿using Volunteers.Infrastructure.Contexts;
 
 namespace Volunteers.API.Extentions.WebApp;
 
@@ -9,7 +8,5 @@ public static class AppExtentions
     {
         using var scope = app.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-        //dbContext.Database.Migrate();
     }
 }
