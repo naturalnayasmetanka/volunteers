@@ -10,6 +10,7 @@ using MinIO = Volunteers.Infrastructure.Options.Minio;
 using Volunteers.Infrastructure.Options;
 using Volunteers.Application.Providers;
 using Volunteers.Infrastructure.Providers;
+using Volunteers.Application.Database;
 
 namespace Volunteers.Infrastructure.Extentions.DI;
 
@@ -20,6 +21,8 @@ public static class InfractructureInjector
         services.AddScoped<ApplicationDbContext>();
 
         services.AddScoped<IVolunteerRepository, VolunteerRepository>();
+
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddLogger(builder);
         services.AddMinIO(builder);

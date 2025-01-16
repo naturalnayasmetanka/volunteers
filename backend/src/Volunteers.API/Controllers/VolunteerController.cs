@@ -4,6 +4,7 @@ using Volunteers.API.Contracts.Volunteers.AddPet;
 using Volunteers.API.Contracts.Volunteers.AddPetPhoto;
 using Volunteers.API.Contracts.Volunteers.Create;
 using Volunteers.API.Contracts.Volunteers.DeletePetPhoto;
+using Volunteers.API.Contracts.Volunteers.MovePet;
 using Volunteers.API.Contracts.Volunteers.UpdateMainInfo;
 using Volunteers.API.Contracts.Volunteers.UpdateRequisites;
 using Volunteers.API.Contracts.Volunteers.UpdateSocialNetworks;
@@ -15,6 +16,8 @@ using Volunteers.Application.Volunteers.AddPetPhoto;
 using Volunteers.Application.Volunteers.Delete;
 using Volunteers.Application.Volunteers.Delete.Commands;
 using Volunteers.Application.Volunteers.DeletePetPhoto;
+using Volunteers.Application.Volunteers.MovePet;
+using Volunteers.Application.Volunteers.MovePet.Commands;
 using Volunteers.Application.Volunteers.Restore;
 using Volunteers.Application.Volunteers.Restore.Commands;
 using Volunteers.Application.Volunteers.UpdateMainInfo;
@@ -143,6 +146,25 @@ public class VolunteerController : ControllerBase
                 .ToErrorResponse();
 
         return Ok(requisitesUpdateResult);
+    }
+
+    [HttpPatch("{volunteerId:guid}/pet-position")]
+    [SwaggerOperation(Tags = ["Pet"])]
+    public async Task<IActionResult> Update(
+        [FromServices] MovePetHandler handler,
+        [FromBody] MovePetRequest request,
+        [FromRoute] Guid volunteerId,
+        CancellationToken cancellationToken = default)
+        
+    {
+        var command = MovePetRequest.ToCommand(volunteerId, request);
+        var movePetHandle = await handler.Handle(command, cancellationToken);
+
+        if (movePetHandle.IsFailure)
+            return movePetHandle.Error
+                .ToErrorResponse();
+
+        return Ok(movePetHandle.Value);
     }
 
     [HttpPatch("{volunteerId:guid}/restore")]
