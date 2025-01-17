@@ -48,6 +48,7 @@ public class MovePetHandler
 
         volunteer.MovePetPosition(pet, Position.Create(command.NewPosition).Value);
 
+        await _repository.SaveAsync(cancellationToken);
 
         return (Guid)volunteer.Id;
     }
