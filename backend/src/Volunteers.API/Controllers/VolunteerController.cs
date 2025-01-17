@@ -17,7 +17,6 @@ using Volunteers.Application.Volunteers.Delete;
 using Volunteers.Application.Volunteers.Delete.Commands;
 using Volunteers.Application.Volunteers.DeletePetPhoto;
 using Volunteers.Application.Volunteers.MovePet;
-using Volunteers.Application.Volunteers.MovePet.Commands;
 using Volunteers.Application.Volunteers.Restore;
 using Volunteers.Application.Volunteers.Restore.Commands;
 using Volunteers.Application.Volunteers.UpdateMainInfo;
@@ -31,7 +30,7 @@ namespace Volunteers.API.Controllers;
 public class VolunteerController : ControllerBase
 {
     private const string BUCKET_NAME = "photos";
-
+     
     [HttpPost]
     [SwaggerOperation(Tags = ["Volunteer"])]
     public async Task<IActionResult> Create(
@@ -45,7 +44,7 @@ public class VolunteerController : ControllerBase
         if (createResult.IsFailure)
             return createResult.Error
                 .ToErrorResponse();
-         
+
         return Created();
     }
 
@@ -155,7 +154,7 @@ public class VolunteerController : ControllerBase
         [FromBody] MovePetRequest request,
         [FromRoute] Guid volunteerId,
         CancellationToken cancellationToken = default)
-        
+
     {
         var command = MovePetRequest.ToCommand(volunteerId, request);
         var movePetHandle = await handler.Handle(command, cancellationToken);
