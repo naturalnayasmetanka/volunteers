@@ -12,6 +12,9 @@ using Volunteers.Application.Providers;
 using Volunteers.Infrastructure.Providers;
 using Volunteers.Application.Database;
 using Volunteers.Infrastructure.BackgroundServices;
+using Volunteers.Application.MessageQueues;
+using Volunteers.Infrastructure.MessageQueues;
+using Volunteers.Application.DTO;
 
 namespace Volunteers.Infrastructure.Extentions.DI;
 
@@ -25,10 +28,11 @@ public static class InfractructureInjector
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-
         services.AddLogger(builder);
         services.AddMinIO(builder);
         services.AddSerilog();
+
+        services.AddMessageQueues(builder);
 
         services.AddBackgroundServices(builder);
 
@@ -77,6 +81,13 @@ public static class InfractructureInjector
     private static IServiceCollection AddBackgroundServices(this IServiceCollection services, WebApplicationBuilder builder)
     {
         services.AddHostedService<FilesCleanerBackgroundService>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddMessageQueues(this IServiceCollection services, WebApplicationBuilder builder)
+    {
+        services.AddSingleton<IMessageQueue<List<FileDTO>>, FilesCleanerMessageQueue>();
 
         return services;
     }

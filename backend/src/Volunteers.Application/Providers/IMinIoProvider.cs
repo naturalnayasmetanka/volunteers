@@ -6,7 +6,7 @@ namespace Volunteers.Application.Providers;
 
 public interface IMinIoProvider
 {
-    Task<Result<List<string>, List<Error>>> UploadAsync(List<FileDTO> filesData, CancellationToken cancellationToken = default);
+    Task<Result<List<FileDTO>, List<Error>>> UploadAsync(List<FileDTO> filesData, CancellationToken cancellationToken = default);
     Task<Result<string, Error>> GetPresignedAsync(FileDTO fileData, CancellationToken cancellationToken = default);
     Task<Result<string, Error>> DeleteAsync(FileDTO fileData, CancellationToken cancellationToken = default);
 }

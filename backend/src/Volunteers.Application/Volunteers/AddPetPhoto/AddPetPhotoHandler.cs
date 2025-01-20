@@ -1,6 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
 using Volunteers.Application.Database;
+using Volunteers.Application.DTO;
+using Volunteers.Application.MessageQueues;
 using Volunteers.Application.Providers;
 using Volunteers.Application.Volunteer;
 using Volunteers.Application.Volunteers.AddPet;
@@ -19,17 +21,20 @@ public class AddPetPhotoHandler
     private readonly ILogger<AddPetVolunteerHandler> _logger;
     private readonly IVolunteerRepository _volunteerRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMessageQueue<List<FileDTO>> _messageQueue;
 
     public AddPetPhotoHandler(
         ILogger<AddPetVolunteerHandler> logger,
         IVolunteerRepository volunteerRepository,
         IMinIoProvider minIoProvider,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        IMessageQueue<List<FileDTO>> messageQueue)
     {
         _logger = logger;
         _volunteerRepository = volunteerRepository;
         _minIoProvider = minIoProvider;
         _unitOfWork = unitOfWork;
+        _messageQueue = messageQueue;
     }
 
     public async Task<Result<Guid, Error>> Handle(
@@ -65,8 +70,12 @@ public class AddPetPhotoHandler
                     var urlResult = await _minIoProvider.UploadAsync(command.Photo, cancellationToken);
 
                     if (urlResult.IsFailure)
-                        return urlResult.Error.First();
+                    {
+                        await _messageQueue.WriteAsync(urlResult.Value, cancellationToken);
 
+                        return urlResult.Error.First();
+                    }
+                   
                     transaction.Commit();
 
                     return (Guid)volunteer.Id;

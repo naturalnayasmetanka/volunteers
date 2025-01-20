@@ -1,21 +1,43 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Volunteers.Application.DTO;
+using Volunteers.Application.MessageQueues;
+using Volunteers.Application.Providers;
 
 namespace Volunteers.Infrastructure.BackgroundServices;
 
 public class FilesCleanerBackgroundService : BackgroundService
 {
-    ILogger<FilesCleanerBackgroundService> _logger;
+    private readonly ILogger<FilesCleanerBackgroundService> _logger;
+    private readonly IMessageQueue<List<FileDTO>> _messageQueue;
+    private readonly IServiceScopeFactory _serviceScopeFactory;
 
-    public FilesCleanerBackgroundService(ILogger<FilesCleanerBackgroundService> logger)
+    public FilesCleanerBackgroundService(
+        ILogger<FilesCleanerBackgroundService> logger,
+        IMessageQueue<List<FileDTO>> messageQueue,
+        IServiceScopeFactory serviceScopeFactory)
     {
         _logger = logger;
+        _messageQueue = messageQueue;
+        _serviceScopeFactory = serviceScopeFactory;
     }
 
-    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-          
-        _logger.LogInformation("{0} started", nameof(FilesCleanerBackgroundService));
-        throw new NotImplementedException();
+        using var scope = _serviceScopeFactory.CreateAsyncScope();
+        var minIoProvider = scope.ServiceProvider.GetRequiredService<IMinIoProvider>();
+
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            var fileInfo = await _messageQueue.ReadAsync(stoppingToken);
+
+            if (fileInfo is not null)
+                fileInfo.ForEach(async fileData => await minIoProvider.DeleteAsync(fileData: fileData, cancellationToken: stoppingToken));
+
+            _logger.LogInformation("{0} executed", nameof(FilesCleanerBackgroundService));
+        }
+
+        await Task.CompletedTask;
     }
 }

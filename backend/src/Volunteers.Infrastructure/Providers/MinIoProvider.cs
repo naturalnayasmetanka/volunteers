@@ -23,7 +23,7 @@ public class MinIoProvider : IMinIoProvider
         _logger = logger;
     }
 
-    public async Task<Result<List<string>, List<Error>>> UploadAsync(
+    public async Task<Result<List<FileDTO>, List<Error>>> UploadAsync(
         List<FileDTO> filesData,
         CancellationToken cancellationToken = default)
     {
@@ -51,7 +51,7 @@ public class MinIoProvider : IMinIoProvider
             if (_errors.Any())
                 return _errors;
 
-            return urls;
+            return filesData;
         }
         catch (Exception ex)
         {
@@ -91,6 +91,7 @@ public class MinIoProvider : IMinIoProvider
             }
             else
             {
+                _logger.LogError("MINIO: Stream is null");
                 _errors.Add(Error.Failure("MINIO: Stream is null", "file.upload"));
 
                 return _errors;
@@ -98,7 +99,6 @@ public class MinIoProvider : IMinIoProvider
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Fail to upload file in minio");
             _logger.LogError(ex,
                 "Fail to upload file in minio with path {path} in bucket {bucket}",
                 fileData.FileName,
