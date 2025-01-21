@@ -6,6 +6,7 @@ using Volunteers.Application.Volunteers.AddPetPhoto;
 using Volunteers.Application.Volunteers.Delete;
 using Volunteers.Application.Volunteers.DeletePetPhoto;
 using Volunteers.Application.Volunteers.GetPresignedLinkPhoto;
+using Volunteers.Application.Volunteers.MovePet;
 using Volunteers.Application.Volunteers.Restore;
 using Volunteers.Application.Volunteers.UpdateMainInfo;
 using Volunteers.Application.Volunteers.UpdateRequisites;
@@ -30,6 +31,7 @@ public static class ApplicationInjector
         services.AddScoped<AddPetPhotoHandler>();
         services.AddScoped<GetPresignedLinkPhotoHandler>();
         services.AddScoped<DeletePetPhotoHandler>();
+        services.AddScoped<MovePetHandler>();
 
         services.AddValidatorsFromAssembly(typeof(ApplicationInjector).Assembly);
 

@@ -24,10 +24,17 @@ public class GetPresignedLinkPhotoHandler
         GetPresignedLinkPhotoCommand command,
         CancellationToken cancellationToken = default)
     {
-        var result = await _minIoProvider.GetPresignedAsync(command.FileData, cancellationToken);
+        var resultPresignedLink = await _minIoProvider.GetPresignedAsync(command.FileData, cancellationToken);
 
-        _logger.LogInformation("Presigned Link was getted: {0}", result.Value);
+        if (resultPresignedLink.IsFailure)
+        {
+            _logger.LogError("Presigned Link {0} was getted with error into {1}", resultPresignedLink.Value, nameof(GetPresignedLinkPhotoHandler));
 
-        return result;
+            return Error.Failure("Presigned Link was getted with error", "minio.presigned");
+        }
+
+        _logger.LogInformation("Presigned Link {0} was getted into {1}", resultPresignedLink.Value, nameof(GetPresignedLinkPhotoHandler));
+
+        return resultPresignedLink;
     }
 }

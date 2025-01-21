@@ -19,9 +19,9 @@ public record Position
         if (value <= 0)
             return Errors.General.ValueIsInvalid("SerialNumber");
 
-        var nickname = new Position(value: value);
+        var position = new Position(value: value);
 
-        return nickname;
+        return position;
     }
 
     public Result<Position, Error> Forward()

@@ -1,5 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
+using Volunteers.Application.Volunteer.CreateVolunteer.DTO;
 using Volunteers.Application.Volunteers.CreateVolunteer.Commands;
 using Volunteers.Domain.PetManagment.Volunteer.ValueObjects;
 using Volunteers.Domain.Shared.CustomErrors;
@@ -13,13 +15,16 @@ public class CreateVolunteerHandler
     private List<Error> _errors = [];
     private readonly IVolunteerRepository _repository;
     private readonly ILogger<CreateVolunteerHandler> _logger;
+    private readonly IValidator<CreateVolunteerDto> _validator;
 
     public CreateVolunteerHandler(
         IVolunteerRepository repository,
-        ILogger<CreateVolunteerHandler> logger)
+        ILogger<CreateVolunteerHandler> logger,
+        IValidator<CreateVolunteerDto> validator)
     {
         _repository = repository;
         _logger = logger;
+        _validator = validator;
     }
 
     public async Task<Result<Guid, List<Error>>> Handle(
@@ -27,20 +32,15 @@ public class CreateVolunteerHandler
         CancellationToken cancellationToken = default)
     {
         var volunteerId = VolunteerId.NewVolunteerId();
-        var name = Name.Create(command.VolunteerDto.Name).Value;
-        var email = Email.Create(command.VolunteerDto.Email).Value;
-        var experienceInYears = ExperienceInYears.Create(command.VolunteerDto.ExperienceInYears).Value;
-        var phoneNumber = PhoneNumber.Create(command.VolunteerDto.PhoneNumber).Value;
-
-        var socialNetworks = command.VolunteerDto.SocialNetworks;
-        var requisites = command.VolunteerDto.VolunteerRequisites;
 
         var volunteerResult = VolunteerModel.Create(
             volunteerId,
-            name,
-            email,
-            experienceInYears,
-            phoneNumber).Value;
+            Name.Create(command.VolunteerDto.Name).Value,
+            Email.Create(command.VolunteerDto.Email).Value,
+            ExperienceInYears.Create(command.VolunteerDto.ExperienceInYears).Value,
+            PhoneNumber.Create(command.VolunteerDto.PhoneNumber).Value).Value;
+
+        var socialNetworks = command.VolunteerDto.SocialNetworks;
 
         if (socialNetworks is not null)
             socialNetworks
@@ -50,6 +50,8 @@ public class CreateVolunteerHandler
                             x.Title,
                             x.Link
                         ).Value));
+
+        var requisites = command.VolunteerDto.VolunteerRequisites;
 
         if (requisites is not null)
             requisites
@@ -63,7 +65,7 @@ public class CreateVolunteerHandler
         var createResult = await _repository
             .CreateAsync(volunteerResult, cancellationToken);
 
-        _logger.LogInformation("Volunteer was created with id: {0}", volunteerId.Value);
+        _logger.LogInformation("Volunteer {0} was created into {1}", volunteerId.Value, nameof(CreateVolunteerHandler));
 
         return (Guid)createResult.Id;
     }
