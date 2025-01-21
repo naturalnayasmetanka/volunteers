@@ -31,12 +31,14 @@ public class HardDeleteVolunteerHandler
         if (volunteer is null)
         {
             _errors.Add(Errors.General.NotFound(command.Id));
+            _logger.LogError("Volunteer {0} was not found into {1}", id.Value, nameof(HardDeleteVolunteerHandler));
+
             return _errors;
         }
 
         await _repository.DeleteAsync(volunteer);
 
-        _logger.LogInformation("Volunteer was deleted with id (hard delete): {0}", command.Id);
+        _logger.LogInformation("Volunteer {0} was deleted(hard delete) into {1}", command.Id, nameof(HardDeleteVolunteerHandler));
 
         return command.Id;
     }

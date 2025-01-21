@@ -30,8 +30,8 @@ public class MovePetHandler
 
         if (volunteer is null)
         {
-            _errors.Add(Error.NotFound("Volunteer not found", "not.found"));
-            _logger.LogInformation("Volunteer was not found with id: {0}", command.VolunteerId);
+            _errors.Add(Errors.General.NotFound(command.VolunteerId));
+            _logger.LogError("Volunteer {0} was not found into {1}", command.VolunteerId, nameof(MovePetHandler));
 
             return _errors;
         }
@@ -41,14 +41,15 @@ public class MovePetHandler
         if (pet is null)
         {
             _errors.Add(Error.NotFound("Pet not found", "not.found"));
-            _logger.LogInformation("Pet was not found with id: {0} in the volunteer: {1}", command.PetId, command.VolunteerId);
+            _logger.LogError("Pet {0} was not found in the volunteer {1} into {2}", command.PetId, command.VolunteerId, nameof(MovePetHandler));
 
             return _errors;
         }
 
         volunteer.MovePetPosition(pet, Position.Create(command.NewPosition).Value);
-
         await _repository.SaveAsync(cancellationToken);
+
+        _logger.LogInformation("Pet {0} was moved in the volunteer {1} into {2}", command.PetId, command.VolunteerId, nameof(MovePetHandler));
 
         return (Guid)volunteer.Id;
     }
