@@ -30,7 +30,16 @@ namespace Volunteers.API.Controllers;
 public class VolunteerController : ControllerBase
 {
     private const string BUCKET_NAME = "photos";
-     
+
+    [HttpGet]
+    [SwaggerOperation(Tags = ["Volunteer"])]
+    public async Task<IActionResult> Get(
+        CancellationToken cancellationToken = default)
+    {
+
+        return Ok();
+    }
+
     [HttpPost]
     [SwaggerOperation(Tags = ["Volunteer"])]
     public async Task<IActionResult> Create(
