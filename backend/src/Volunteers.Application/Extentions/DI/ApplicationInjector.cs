@@ -1,16 +1,16 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using Volunteers.Application.Volunteer.CreateVolunteer;
-using Volunteers.Application.Volunteers.AddPet;
-using Volunteers.Application.Volunteers.AddPetPhoto;
-using Volunteers.Application.Volunteers.Delete;
-using Volunteers.Application.Volunteers.DeletePetPhoto;
-using Volunteers.Application.Volunteers.GetPresignedLinkPhoto;
-using Volunteers.Application.Volunteers.MovePet;
-using Volunteers.Application.Volunteers.Restore;
-using Volunteers.Application.Volunteers.UpdateMainInfo;
-using Volunteers.Application.Volunteers.UpdateRequisites;
-using Volunteers.Application.Volunteers.UpdateSotialNetworks;
+using Volunteers.Application.Volunteers.Commands.AddPet;
+using Volunteers.Application.Volunteers.Commands.AddPetPhoto;
+using Volunteers.Application.Volunteers.Commands.Create;
+using Volunteers.Application.Volunteers.Commands.Delete;
+using Volunteers.Application.Volunteers.Commands.DeletePetPhoto;
+using Volunteers.Application.Volunteers.Commands.GetPresignedLinkPhoto;
+using Volunteers.Application.Volunteers.Commands.MovePet;
+using Volunteers.Application.Volunteers.Commands.Restore;
+using Volunteers.Application.Volunteers.Commands.UpdateMainInfo;
+using Volunteers.Application.Volunteers.Commands.UpdateRequisites;
+using Volunteers.Application.Volunteers.Commands.UpdateSotialNetworks;
 
 namespace Volunteers.Application.Extentions.DI;
 

@@ -1,5 +1,5 @@
 ﻿using Volunteers.Application.DTO;
-using Volunteers.Application.Volunteers.DeletePetPhoto.Commands;
+using Volunteers.Application.Volunteers.Commands.DeletePetPhoto.Commands;
 
 namespace Volunteers.API.Contracts.Volunteers.DeletePetPhoto;
 

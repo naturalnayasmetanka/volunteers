@@ -10,18 +10,18 @@ using Volunteers.API.Contracts.Volunteers.UpdateRequisites;
 using Volunteers.API.Contracts.Volunteers.UpdateSocialNetworks;
 using Volunteers.API.Extentions;
 using Volunteers.API.Processors;
-using Volunteers.Application.Volunteer.CreateVolunteer;
-using Volunteers.Application.Volunteers.AddPet;
-using Volunteers.Application.Volunteers.AddPetPhoto;
-using Volunteers.Application.Volunteers.Delete;
-using Volunteers.Application.Volunteers.Delete.Commands;
-using Volunteers.Application.Volunteers.DeletePetPhoto;
-using Volunteers.Application.Volunteers.MovePet;
-using Volunteers.Application.Volunteers.Restore;
-using Volunteers.Application.Volunteers.Restore.Commands;
-using Volunteers.Application.Volunteers.UpdateMainInfo;
-using Volunteers.Application.Volunteers.UpdateRequisites;
-using Volunteers.Application.Volunteers.UpdateSotialNetworks;
+using Volunteers.Application.Volunteers.Commands.AddPet;
+using Volunteers.Application.Volunteers.Commands.AddPetPhoto;
+using Volunteers.Application.Volunteers.Commands.Create;
+using Volunteers.Application.Volunteers.Commands.Delete;
+using Volunteers.Application.Volunteers.Commands.DeletePetPhoto;
+using Volunteers.Application.Volunteers.Commands.MovePet;
+using Volunteers.Application.Volunteers.Commands.Restore;
+using Volunteers.Application.Volunteers.Commands.UpdateMainInfo;
+using Volunteers.Application.Volunteers.Commands.UpdateRequisites;
+using Volunteers.Application.Volunteers.Commands.UpdateSotialNetworks;
+using Volunteers.Application.Volunteers.Commands.Delete.Commands;
+using Volunteers.Application.Volunteers.Commands.Restore.Commands;
 
 namespace Volunteers.API.Controllers;
 
@@ -36,7 +36,6 @@ public class VolunteerController : ControllerBase
     public async Task<IActionResult> Get(
         CancellationToken cancellationToken = default)
     {
-
         return Ok();
     }
 
@@ -47,7 +46,7 @@ public class VolunteerController : ControllerBase
         [FromBody] CreateVolunteerRequest request,
         CancellationToken cancellationToken = default)
     {
-        var createVolunteerCommand = CreateVolunteerRequest.ToCommand(request);
+        var createVolunteerCommand = CreateVolunteerRequest.ToCommand(request); 
         var createResult = await handler.Handle(createVolunteerCommand, cancellationToken);
 
         if (createResult.IsFailure)

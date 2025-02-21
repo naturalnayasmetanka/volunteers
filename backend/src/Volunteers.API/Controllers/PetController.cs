@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using Volunteers.API.Contracts.Volunteers.GetPresignedLinkPhoto;
-using Volunteers.Application.Volunteers.GetPresignedLinkPhoto;
+using Volunteers.Application.Volunteers.Commands.GetPresignedLinkPhoto;
 
 namespace Volunteers.API.Controllers
 {

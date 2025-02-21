@@ -1,4 +1,4 @@
-﻿using Volunteers.Application.Volunteers.AddPet.Commands;
+﻿using Volunteers.Application.Volunteers.Commands.AddPet.Commands;
 using Volunteers.Domain.PetManagment.Pet.Enums;
 
 namespace Volunteers.API.Contracts.Volunteers.AddPet;
