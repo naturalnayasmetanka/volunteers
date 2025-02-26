@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
+using Volunteers.Application.Abstractions;
 using Volunteers.Application.Volunteer;
 using Volunteers.Application.Volunteers.Commands.Delete.Commands;
 using Volunteers.Domain.Shared.CustomErrors;
@@ -7,7 +8,7 @@ using Volunteers.Domain.Shared.Ids;
 
 namespace Volunteers.Application.Volunteers.Commands.Delete;
 
-public class SoftDeleteVolunteerHandler
+public class SoftDeleteVolunteerHandler : ICommandHandler<Guid, DeleteCommand>
 {
     private List<Error> _errors = [];
     private readonly IVolunteerRepository _repository;
@@ -21,7 +22,7 @@ public class SoftDeleteVolunteerHandler
         _logger = logger;
     }
 
-    public async Task<Result<Guid, List<Error>>> Handle(
+    public async Task<Result<Guid, Error>> Handle(
         DeleteCommand command,
         CancellationToken cancellationToken = default)
     {
@@ -30,10 +31,9 @@ public class SoftDeleteVolunteerHandler
 
         if (volunteer is null)
         {
-            _errors.Add(Errors.General.NotFound(command.Id));
             _logger.LogError("Volunteer {0} was not found into {1}", id.Value, nameof(SoftDeleteVolunteerHandler));
 
-            return _errors;
+            return Errors.General.NotFound(command.Id);
         }
 
         volunteer.SoftDelete();

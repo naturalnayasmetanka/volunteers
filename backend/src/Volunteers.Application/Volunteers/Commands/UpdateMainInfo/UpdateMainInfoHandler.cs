@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using Volunteers.Application.Abstractions;
 using Volunteers.Application.Volunteer;
 using Volunteers.Application.Volunteers.Commands.UpdateMainInfo.Commands;
 using Volunteers.Application.Volunteers.Commands.UpdateMainInfo.DTO;
@@ -10,7 +11,7 @@ using Volunteers.Domain.Shared.Ids;
 
 namespace Volunteers.Application.Volunteers.Commands.UpdateMainInfo;
 
-public class UpdateMainInfoHandler
+public class UpdateMainInfoHandler : ICommandHandler<Guid, UpdateMainInfoCommand>
 {
     private List<Error> _errors = [];
     private readonly IVolunteerRepository _repository;
@@ -27,7 +28,7 @@ public class UpdateMainInfoHandler
         _validator = validator;
     }
 
-    public async Task<Result<Guid, List<Error>>> Handle(
+    public async Task<Result<Guid, Error>> Handle(
         UpdateMainInfoCommand command,
         CancellationToken cancellationToken = default)
     {
@@ -38,7 +39,7 @@ public class UpdateMainInfoHandler
             validationResult.Errors.ForEach(error => _errors.Add(Error.Validation(error.ErrorMessage, error.ErrorCode)));
             _logger.LogError("Validation is failed into {0}", nameof(UpdateMainInfoHandler));
 
-            return _errors;
+            return _errors[0];
         }
 
         var id = VolunteerId.Create(command.VolunteerId);
@@ -46,10 +47,9 @@ public class UpdateMainInfoHandler
 
         if (volunteer is null)
         {
-            _errors.Add(Errors.General.NotFound(command.VolunteerId));
             _logger.LogError("Volunteer {0} was not found into {1}", id.Value, nameof(UpdateMainInfoHandler));
 
-            return _errors;
+            return Errors.General.NotFound(command.VolunteerId);
         }
 
         volunteer.UpdateMainInfo(

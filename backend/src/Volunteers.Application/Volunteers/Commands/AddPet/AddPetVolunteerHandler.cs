@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using Volunteers.Application.Abstractions;
 using Volunteers.Application.Providers;
 using Volunteers.Application.Volunteer;
 using Volunteers.Application.Volunteers.Commands.AddPet.Commands;
@@ -12,7 +13,7 @@ using Volunteers.Domain.Shared.Ids;
 
 namespace Volunteers.Application.Volunteers.Commands.AddPet;
 
-public class AddPetVolunteerHandler
+public class AddPetVolunteerHandler : ICommandHandler<Guid, AddPetCommand>
 {
     private readonly ILogger<AddPetVolunteerHandler> _logger;
     private readonly IVolunteerRepository _volunteerRepository;

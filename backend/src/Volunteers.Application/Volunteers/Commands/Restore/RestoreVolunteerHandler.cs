@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
+using Volunteers.Application.Abstractions;
 using Volunteers.Application.Volunteer;
 using Volunteers.Application.Volunteers.Commands.Delete;
 using Volunteers.Application.Volunteers.Commands.Restore.Commands;
@@ -8,7 +9,7 @@ using Volunteers.Domain.Shared.Ids;
 
 namespace Volunteers.Application.Volunteers.Commands.Restore;
 
-public class RestoreVolunteerHandler
+public class RestoreVolunteerHandler : ICommandHandler<Guid, RestoreCommand>
 {
     private List<Error> _errors = [];
     private readonly IVolunteerRepository _repository;
@@ -22,7 +23,7 @@ public class RestoreVolunteerHandler
         _logger = logger;
     }
 
-    public async Task<Result<Guid, List<Error>>> Handle(
+    public async Task<Result<Guid, Error>> Handle(
         RestoreCommand command,
         CancellationToken cancellationToken = default)
     {
@@ -31,10 +32,9 @@ public class RestoreVolunteerHandler
 
         if (volunteer is null)
         {
-            _errors.Add(Errors.General.NotFound(command.Id));
             _logger.LogError("Volunteer {0} was not found into {1}", id.Value, nameof(RestoreVolunteerHandler));
 
-            return _errors;
+            return Errors.General.NotFound(command.Id);
         }
 
         volunteer.Restore();

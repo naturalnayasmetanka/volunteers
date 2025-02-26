@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
+using Volunteers.Application.Abstractions;
 using Volunteers.Application.Database;
 using Volunteers.Application.DTO;
 using Volunteers.Application.MessageQueues;
@@ -13,7 +14,7 @@ using Volunteers.Domain.Shared.Ids;
 
 namespace Volunteers.Application.Volunteers.Commands.AddPetPhoto;
 
-public class AddPetPhotoHandler
+public class AddPetPhotoHandler : ICommandHandler<Guid, AddPetPhotoCommand>
 {
     private readonly IMinIoProvider _minIoProvider;
     private readonly ILogger<AddPetVolunteerHandler> _logger;

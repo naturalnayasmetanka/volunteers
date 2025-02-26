@@ -1,3 +1,5 @@
-﻿namespace Volunteers.Application.Volunteers.Commands.Restore.Commands;
+﻿using Volunteers.Application.Abstractions;
 
-public record RestoreCommand(Guid Id);
+namespace Volunteers.Application.Volunteers.Commands.Restore.Commands;
+
+public record RestoreCommand(Guid Id) : ICommand;

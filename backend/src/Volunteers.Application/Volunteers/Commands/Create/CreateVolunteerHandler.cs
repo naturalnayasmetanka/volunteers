@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using Volunteers.Application.Abstractions;
 using Volunteers.Application.Volunteer;
 using Volunteers.Application.Volunteers.Commands.Create.Commands;
 using Volunteers.Application.Volunteers.Commands.Create.DTO;
@@ -11,7 +12,7 @@ using VolunteerModel = Volunteers.Domain.PetManagment.Volunteer.AggregateRoot.Vo
 
 namespace Volunteers.Application.Volunteers.Commands.Create;
 
-public class CreateVolunteerHandler
+public class CreateVolunteerHandler : ICommandHandler<Guid, CreateVolunteerCommand>
 {
     private List<Error> _errors = [];
     private readonly IVolunteerRepository _repository;
@@ -28,7 +29,7 @@ public class CreateVolunteerHandler
         _validator = validator;
     }
 
-    public async Task<Result<Guid, List<Error>>> Handle(
+    public async Task<Result<Guid, Error>> Handle(
         CreateVolunteerCommand command,
         CancellationToken cancellationToken = default)
     {

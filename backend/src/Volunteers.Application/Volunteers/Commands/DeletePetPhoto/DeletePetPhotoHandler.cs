@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
+using Volunteers.Application.Abstractions;
 using Volunteers.Application.Database;
 using Volunteers.Application.DTO;
 using Volunteers.Application.MessageQueues;
@@ -12,7 +13,7 @@ using Volunteers.Domain.Shared.Ids;
 
 namespace Volunteers.Application.Volunteers.Commands.DeletePetPhoto;
 
-public class DeletePetPhotoHandler
+public class DeletePetPhotoHandler : ICommandHandler<string, DeletePetPhotoCommand>
 {
     private readonly IMinIoProvider _minIoProvider;
     private readonly ILogger<AddPetVolunteerHandler> _logger;

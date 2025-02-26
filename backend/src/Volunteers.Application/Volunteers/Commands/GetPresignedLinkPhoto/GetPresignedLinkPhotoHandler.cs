@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
+using Volunteers.Application.Abstractions;
 using Volunteers.Application.Providers;
 using Volunteers.Application.Volunteers.Commands.AddPet;
 using Volunteers.Application.Volunteers.Commands.GetPresignedLinkPhoto.Commands;
@@ -7,7 +8,7 @@ using Volunteers.Domain.Shared.CustomErrors;
 
 namespace Volunteers.Application.Volunteers.Commands.GetPresignedLinkPhoto;
 
-public class GetPresignedLinkPhotoHandler
+public class GetPresignedLinkPhotoHandler : ICommandHandler<string, GetPresignedLinkPhotoCommand>
 {
     private readonly IMinIoProvider _minIoProvider;
     private readonly ILogger<AddPetVolunteerHandler> _logger;

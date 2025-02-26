@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using Volunteers.Application.Abstractions;
 using Volunteers.Application.Volunteer;
 using Volunteers.Application.Volunteers.Commands.UpdateRequisites.Commands;
 using Volunteers.Application.Volunteers.Commands.UpdateRequisites.DTO;
@@ -10,7 +11,7 @@ using Volunteers.Domain.Shared.Ids;
 
 namespace Volunteers.Application.Volunteers.Commands.UpdateRequisites;
 
-public class UpdateRequisitesHandler
+public class UpdateRequisitesHandler : ICommandHandler<Guid, UpdateRequisiteCommand>
 {
     private List<Error> _errors = [];
     private readonly IVolunteerRepository _repository;
@@ -27,7 +28,7 @@ public class UpdateRequisitesHandler
         _validator = validator;
     }
 
-    public async Task<Result<Guid, List<Error>>> Handle(
+    public async Task<Result<Guid, Error>> Handle(
         UpdateRequisiteCommand command,
         CancellationToken cancellationToken = default)
     {
@@ -38,7 +39,7 @@ public class UpdateRequisitesHandler
             validationResult.Errors.ForEach(error => _errors.Add(Error.Validation(error.ErrorMessage, error.ErrorCode)));
             _logger.LogError("Validation is failed into {0}", nameof(UpdateRequisitesHandler));
 
-            return _errors;
+            return _errors[0];
         }
 
         var id = VolunteerId.Create(command.Id);
@@ -46,10 +47,9 @@ public class UpdateRequisitesHandler
 
         if (volunteer is null)
         {
-            _errors.Add(Errors.General.NotFound(command.Id));
             _logger.LogError("Volunteer {0} was not found into {1}", id.Value, nameof(UpdateRequisitesHandler));
 
-            return _errors;
+            return Errors.General.NotFound(command.Id);
         }
 
         List<VolunteerRequisite> newRequisites = new List<VolunteerRequisite>();

@@ -1,4 +1,5 @@
-﻿using Volunteers.Domain.PetManagment.Pet.Enums;
+﻿using Volunteers.Application.Abstractions;
+using Volunteers.Domain.PetManagment.Pet.Enums;
 
 namespace Volunteers.Application.Volunteers.Commands.AddPet.Commands;
 
@@ -10,4 +11,4 @@ public record AddPetCommand(
     int PetPhoneNumber,
     PetStatus PetStatus,
     DateTime BirthDate,
-    DateTime CreationDate);
+    DateTime CreationDate) : ICommand;

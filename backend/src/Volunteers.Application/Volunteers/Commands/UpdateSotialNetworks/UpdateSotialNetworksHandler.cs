@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using Volunteers.Application.Abstractions;
 using Volunteers.Application.Volunteer;
 using Volunteers.Application.Volunteers.Commands.UpdateSotialNetworks.Commands;
 using Volunteers.Application.Volunteers.Commands.UpdateSotialNetworks.DTO;
@@ -10,7 +11,7 @@ using Volunteers.Domain.Shared.Ids;
 
 namespace Volunteers.Application.Volunteers.Commands.UpdateSotialNetworks;
 
-public class UpdateSotialNetworksHandler
+public class UpdateSotialNetworksHandler : ICommandHandler<Guid, UpdateSocialNetworksCommand>
 {
     private List<Error> _errors = [];
     private readonly IVolunteerRepository _repository;
@@ -28,7 +29,7 @@ public class UpdateSotialNetworksHandler
         _validator = validator;
     }
 
-    public async Task<Result<Guid, List<Error>>> Handle(
+    public async Task<Result<Guid, Error>> Handle(
         UpdateSocialNetworksCommand command,
         CancellationToken cancellationToken = default)
     {
@@ -39,7 +40,7 @@ public class UpdateSotialNetworksHandler
             validationResult.Errors.ForEach(error => _errors.Add(Error.Validation(error.ErrorMessage, error.ErrorCode)));
             _logger.LogError("Validation is failed into {0}", nameof(UpdateSotialNetworksHandler));
 
-            return _errors;
+            return _errors[0];
         }
 
         var id = VolunteerId.Create(command.Id);
@@ -47,10 +48,9 @@ public class UpdateSotialNetworksHandler
 
         if (volunteer is null)
         {
-            _errors.Add(Errors.General.NotFound(command.Id));
             _logger.LogError("Volunteer {0} was not found into {1}", id.Value, nameof(UpdateSotialNetworksHandler));
 
-            return _errors;
+            return Errors.General.NotFound(command.Id);
         }
 
         List<SocialNetwork> newSocials = new List<SocialNetwork>();
