@@ -22,6 +22,13 @@ using Volunteers.Application.Volunteers.Commands.UpdateRequisites;
 using Volunteers.Application.Volunteers.Commands.UpdateSotialNetworks;
 using Volunteers.Application.Volunteers.Commands.Delete.Commands;
 using Volunteers.Application.Volunteers.Commands.Restore.Commands;
+using Volunteers.Application.Volunteers.Queries.GetVolunteers;
+using Volunteers.API.Contracts.Volunteers.GetVolunteers;
+using Volunteers.Application.Abstractions;
+using Volunteers.Application.DTO;
+using Volunteers.Application.Volunteers.Queries.GetVolunteers.Queries;
+using Volunteers.Application.Models;
+using Volunteers.Application.Volunteers.Commands.Create.Commands;
 
 namespace Volunteers.API.Controllers;
 
@@ -34,15 +41,19 @@ public class VolunteerController : ControllerBase
     [HttpGet]
     [SwaggerOperation(Tags = ["Volunteer"])]
     public async Task<IActionResult> Get(
+        [FromServices] IQueryHandler<PagedList<VolunteerDTO>, GetFilteredWithPaginationVolunteersQuery> handler,
+        [FromQuery] GetFilteredWithPaginationVolunteersRequest request,
         CancellationToken cancellationToken = default)
     {
-        return Ok();
+        var query = request.ToQuery();
+        var result = await handler.Handle(query,cancellationToken);
+        return Ok(result);
     }
 
     [HttpPost]
     [SwaggerOperation(Tags = ["Volunteer"])]
     public async Task<IActionResult> Create(
-        [FromServices] CreateVolunteerHandler handler,
+        [FromServices] ICommandHandler<Guid, CreateVolunteerCommand> handler,
         [FromBody] CreateVolunteerRequest request,
         CancellationToken cancellationToken = default)
     {

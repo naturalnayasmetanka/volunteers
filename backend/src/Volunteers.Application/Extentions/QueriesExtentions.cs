@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using Volunteers.Application.Models;
 
 namespace Volunteers.Application.Extentions;
@@ -25,5 +26,13 @@ public static class QueriesExtentions
             PageSize = pageSize,
             TotalCount = totalCount
         };
+    }
+
+    public static IQueryable<T> WhereIf<T>(
+        this IQueryable<T> source,
+        bool condition,
+        Expression<Func<T, bool>> predicate)
+    {
+        return condition ? source.Where(predicate) : source;
     }
 }

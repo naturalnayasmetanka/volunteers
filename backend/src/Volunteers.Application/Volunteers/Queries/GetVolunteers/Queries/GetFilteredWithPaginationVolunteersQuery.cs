@@ -2,4 +2,10 @@
 
 namespace Volunteers.Application.Volunteers.Queries.GetVolunteers.Queries;
 
-public class GetFilteredWithPaginationVolunteersQuery(string? Title, int Page, int PageSize) : IQuery;
+public record GetFilteredWithPaginationVolunteersQuery(
+    string? Name,
+    string? Email,
+    double? ExperienceInYears,
+    int Page,
+    int PageSize) : IQuery;
+

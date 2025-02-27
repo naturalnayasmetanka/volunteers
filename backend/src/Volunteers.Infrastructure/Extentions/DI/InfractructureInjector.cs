@@ -27,6 +27,7 @@ public static class InfractructureInjector
         services.AddScoped<IVolunteerRepository, VolunteerRepository>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddSingleton<ISqlConnConnectionFactory, SqlConnectionFactory>();
 
         services.AddLogger(builder);
         services.AddMinIO(builder);
