@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using System.Text.Json;
+using Dapper;
 using Volunteers.Application.Abstractions;
 using Volunteers.Application.Database;
 using Volunteers.Application.DTO;
@@ -25,7 +26,6 @@ public class GetPaginateVolunteersHandler : IQueryHandler<PagedList<VolunteerDTO
         parameters.Add("@PageSize", query.PageSize);
         parameters.Add("@Offset", (query.Page - 1) * query.PageSize);
 
-
         var sqlQuery = """
                            SELECT id, name, email, experience_in_years, phone_number, "RequisiteDetails", "SocialNetworkDetails"
                            FROM volunteers
@@ -33,9 +33,22 @@ public class GetPaginateVolunteersHandler : IQueryHandler<PagedList<VolunteerDTO
                         """;
 
         var totalCount = await connection.ExecuteScalarAsync<long>("SELECT COUNT(*) FROM volunteers");
-        var volunteers = await connection.QueryAsync<VolunteerDTO>(sqlQuery, parameters);
 
-      
+        var volunteers = await connection.QueryAsync<VolunteerDTO, string?, string?, VolunteerDTO>(
+            sqlQuery,
+            (volunteer, jsonRequisites, jsonSotials) =>
+            {
+                var requisites = jsonRequisites is null ? null : JsonSerializer.Deserialize<RequisiteDetailsDTO>(jsonRequisites);
+                var sotials = jsonSotials is null ? null : JsonSerializer.Deserialize<SocialNetworkDetailsDTO>(jsonSotials);
+
+                volunteer.RequisiteDetails = requisites;
+                volunteer.SocialNetworkDetails = sotials;
+
+                return volunteer;
+            },
+            splitOn: "RequisiteDetails, SocialNetworkDetails",
+            param: parameters);
+
         var pagedList = new PagedList<VolunteerDTO>()
         {
             Items = volunteers.ToList(),

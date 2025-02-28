@@ -2,8 +2,13 @@
 
 namespace Volunteers.API.Contracts.Volunteers.GetVolunteers;
 
-public record GetFilteredWithPaginationVolunteersRequest(string? Name, string? Email, double? ExperienceInYears ,int Page, int PageSize)
+public record GetFilteredWithPaginationVolunteersRequest(
+    string? Name,
+    string? Email,
+    double? ExperienceInYears,
+    int Page,
+    int PageSize)
 {
-    public GetFilteredWithPaginationVolunteersQuery ToQuery() 
+    public GetFilteredWithPaginationVolunteersQuery ToQuery()
         => new GetFilteredWithPaginationVolunteersQuery(Name, Email, ExperienceInYears, Page, PageSize);
 }

@@ -4,31 +4,30 @@ using Volunteers.API.Contracts.Volunteers.AddPet;
 using Volunteers.API.Contracts.Volunteers.AddPetPhoto;
 using Volunteers.API.Contracts.Volunteers.Create;
 using Volunteers.API.Contracts.Volunteers.DeletePetPhoto;
+using Volunteers.API.Contracts.Volunteers.GetVolunteers;
 using Volunteers.API.Contracts.Volunteers.MovePet;
 using Volunteers.API.Contracts.Volunteers.UpdateMainInfo;
 using Volunteers.API.Contracts.Volunteers.UpdateRequisites;
 using Volunteers.API.Contracts.Volunteers.UpdateSocialNetworks;
 using Volunteers.API.Extentions;
 using Volunteers.API.Processors;
+using Volunteers.Application.Abstractions;
+using Volunteers.Application.DTO;
+using Volunteers.Application.Models;
 using Volunteers.Application.Volunteers.Commands.AddPet;
 using Volunteers.Application.Volunteers.Commands.AddPetPhoto;
-using Volunteers.Application.Volunteers.Commands.Create;
+using Volunteers.Application.Volunteers.Commands.Create.Commands;
 using Volunteers.Application.Volunteers.Commands.Delete;
+using Volunteers.Application.Volunteers.Commands.Delete.Commands;
 using Volunteers.Application.Volunteers.Commands.DeletePetPhoto;
 using Volunteers.Application.Volunteers.Commands.MovePet;
 using Volunteers.Application.Volunteers.Commands.Restore;
+using Volunteers.Application.Volunteers.Commands.Restore.Commands;
 using Volunteers.Application.Volunteers.Commands.UpdateMainInfo;
 using Volunteers.Application.Volunteers.Commands.UpdateRequisites;
 using Volunteers.Application.Volunteers.Commands.UpdateSotialNetworks;
-using Volunteers.Application.Volunteers.Commands.Delete.Commands;
-using Volunteers.Application.Volunteers.Commands.Restore.Commands;
-using Volunteers.Application.Volunteers.Queries.GetVolunteers;
-using Volunteers.API.Contracts.Volunteers.GetVolunteers;
-using Volunteers.Application.Abstractions;
-using Volunteers.Application.DTO;
+using Volunteers.Application.Volunteers.Queries.GetVolunteer.Queries;
 using Volunteers.Application.Volunteers.Queries.GetVolunteers.Queries;
-using Volunteers.Application.Models;
-using Volunteers.Application.Volunteers.Commands.Create.Commands;
 
 namespace Volunteers.API.Controllers;
 
@@ -46,7 +45,20 @@ public class VolunteerController : ControllerBase
         CancellationToken cancellationToken = default)
     {
         var query = request.ToQuery();
-        var result = await handler.Handle(query,cancellationToken);
+        var result = await handler.Handle(query, cancellationToken);
+
+        return Ok(result);
+    }
+
+    [HttpGet("{id:guid}")]
+    [SwaggerOperation(Tags = ["Volunteer"])]
+    public async Task<IActionResult> GetById(
+        [FromServices] IQueryHandler<VolunteerDTO?, GetVolunteerQuery> handler,
+        [FromRoute] GetVolunteerRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var query = request.ToQuery();
+        var result = await handler.Handle(query, cancellationToken);
         return Ok(result);
     }
 
@@ -57,7 +69,7 @@ public class VolunteerController : ControllerBase
         [FromBody] CreateVolunteerRequest request,
         CancellationToken cancellationToken = default)
     {
-        var createVolunteerCommand = CreateVolunteerRequest.ToCommand(request); 
+        var createVolunteerCommand = CreateVolunteerRequest.ToCommand(request);
         var createResult = await handler.Handle(createVolunteerCommand, cancellationToken);
 
         if (createResult.IsFailure)

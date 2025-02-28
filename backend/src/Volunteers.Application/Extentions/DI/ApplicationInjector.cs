@@ -25,6 +25,8 @@ using Volunteers.Application.Volunteers.Commands.UpdateRequisites;
 using Volunteers.Application.Volunteers.Commands.UpdateRequisites.Commands;
 using Volunteers.Application.Volunteers.Commands.UpdateSotialNetworks;
 using Volunteers.Application.Volunteers.Commands.UpdateSotialNetworks.Commands;
+using Volunteers.Application.Volunteers.Queries.GetVolunteer;
+using Volunteers.Application.Volunteers.Queries.GetVolunteer.Queries;
 using Volunteers.Application.Volunteers.Queries.GetVolunteers;
 using Volunteers.Application.Volunteers.Queries.GetVolunteers.Queries;
 
@@ -65,6 +67,7 @@ public static class ApplicationInjector
     public static IServiceCollection AddQueries(this IServiceCollection services)
     {
         services.AddScoped<IQueryHandler<PagedList<VolunteerDTO>, GetFilteredWithPaginationVolunteersQuery>, GetPaginateVolunteersHandler>();
+        services.AddScoped<IQueryHandler<VolunteerDTO?, GetVolunteerQuery>, GetVolunteerHandler>();
 
         return services;
     }
