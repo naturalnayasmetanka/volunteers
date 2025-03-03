@@ -7,8 +7,10 @@ public record GetFilteredWithPaginationVolunteersRequest(
     string? Email,
     double? ExperienceInYears,
     int Page,
-    int PageSize)
+    int PageSize,
+    string? SortBy,
+    string? SortDirection)
 {
     public GetFilteredWithPaginationVolunteersQuery ToQuery()
-        => new GetFilteredWithPaginationVolunteersQuery(Name, Email, ExperienceInYears, Page, PageSize);
+        => new GetFilteredWithPaginationVolunteersQuery(Name, Email, ExperienceInYears, Page, PageSize, SortBy, SortDirection);
 }

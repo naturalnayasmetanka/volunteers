@@ -1,8 +1,10 @@
-﻿using System.Text.Json;
-using Dapper;
+﻿using Dapper;
+using System.Text;
+using System.Text.Json;
 using Volunteers.Application.Abstractions;
 using Volunteers.Application.Database;
 using Volunteers.Application.DTO;
+using Volunteers.Application.Extentions;
 using Volunteers.Application.Models;
 using Volunteers.Application.Volunteers.Queries.GetVolunteers.Queries;
 
@@ -23,19 +25,33 @@ public class GetPaginateVolunteersHandler : IQueryHandler<PagedList<VolunteerDTO
         var connection = _connection.Create();
 
         var parameters = new DynamicParameters();
-        parameters.Add("@PageSize", query.PageSize);
-        parameters.Add("@Offset", (query.Page - 1) * query.PageSize);
 
-        var sqlQuery = """
+        var sqlTotalCountQuery = new StringBuilder("""
+                            SELECT COUNT(*) FROM volunteers
+                        """
+                      );
+
+        sqlTotalCountQuery.ApplyFilterByColumn<string>(columnName: "name", queryFieldValue: query.Name);
+        sqlTotalCountQuery.ApplyFilterByColumn<string>(columnName: "email", queryFieldValue: query.Email);
+        sqlTotalCountQuery.ApplyFilterByColumn<double?>(columnName: "experience_in_years", queryFieldValue: query.ExperienceInYears);
+
+        var totalCount = await connection.ExecuteScalarAsync<long>(sqlTotalCountQuery.ToString());
+
+        var sqlQuery = new StringBuilder("""
                            SELECT id, name, email, experience_in_years, phone_number, "RequisiteDetails", "SocialNetworkDetails"
                            FROM volunteers
-                           LIMIT @PageSize OFFSET @Offset
-                        """;
+                        """);
 
-        var totalCount = await connection.ExecuteScalarAsync<long>("SELECT COUNT(*) FROM volunteers");
+        sqlQuery.ApplyFilterByColumn<string>(columnName: "name", queryFieldValue: query.Name);
+        sqlQuery.ApplyFilterByColumn<string>(columnName: "email", queryFieldValue: query.Email);
+        sqlQuery.ApplyFilterByColumn<double?>(columnName: "experience_in_years", queryFieldValue: query.ExperienceInYears);
+
+        sqlQuery.ApplySorting(sortBy: query.SortBy, sortDirection: query.SortDirection, dynamicParameters: parameters);
+
+        sqlQuery.ApplyPagination(page: query.Page, pageSize: query.PageSize, dynamicParameters: parameters);
 
         var volunteers = await connection.QueryAsync<VolunteerDTO, string?, string?, VolunteerDTO>(
-            sqlQuery,
+            sqlQuery.ToString(),
             (volunteer, jsonRequisites, jsonSotials) =>
             {
                 var requisites = jsonRequisites is null ? null : JsonSerializer.Deserialize<RequisiteDetailsDTO>(jsonRequisites);

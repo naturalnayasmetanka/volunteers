@@ -7,5 +7,6 @@ public record GetFilteredWithPaginationVolunteersQuery(
     string? Email,
     double? ExperienceInYears,
     int Page,
-    int PageSize) : IQuery;
-
+    int PageSize,
+    string? SortBy,
+    string? SortDirection) : IQuery;
