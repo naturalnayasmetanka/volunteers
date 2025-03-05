@@ -14,18 +14,17 @@ using Volunteers.API.Processors;
 using Volunteers.Application.Abstractions;
 using Volunteers.Application.DTO;
 using Volunteers.Application.Models;
-using Volunteers.Application.Volunteers.Commands.AddPet;
-using Volunteers.Application.Volunteers.Commands.AddPetPhoto;
+using Volunteers.Application.Volunteers.Commands.AddPet.Commands;
+using Volunteers.Application.Volunteers.Commands.AddPetPhoto.Commands;
 using Volunteers.Application.Volunteers.Commands.Create.Commands;
 using Volunteers.Application.Volunteers.Commands.Delete;
 using Volunteers.Application.Volunteers.Commands.Delete.Commands;
-using Volunteers.Application.Volunteers.Commands.DeletePetPhoto;
-using Volunteers.Application.Volunteers.Commands.MovePet;
-using Volunteers.Application.Volunteers.Commands.Restore;
+using Volunteers.Application.Volunteers.Commands.DeletePetPhoto.Commands;
+using Volunteers.Application.Volunteers.Commands.MovePet.Commands;
 using Volunteers.Application.Volunteers.Commands.Restore.Commands;
-using Volunteers.Application.Volunteers.Commands.UpdateMainInfo;
-using Volunteers.Application.Volunteers.Commands.UpdateRequisites;
-using Volunteers.Application.Volunteers.Commands.UpdateSotialNetworks;
+using Volunteers.Application.Volunteers.Commands.UpdateMainInfo.Commands;
+using Volunteers.Application.Volunteers.Commands.UpdateRequisites.Commands;
+using Volunteers.Application.Volunteers.Commands.UpdateSotialNetworks.Commands;
 using Volunteers.Application.Volunteers.Queries.GetVolunteer.Queries;
 using Volunteers.Application.Volunteers.Queries.GetVolunteers.Queries;
 
@@ -84,7 +83,7 @@ public class VolunteerController : ControllerBase
     public async Task<IActionResult> Create(
         [FromRoute] Guid volunteerId,
         [FromForm] AddPetRequest request,
-        [FromServices] AddPetVolunteerHandler handler,
+        [FromServices] ICommandHandler<Guid, AddPetCommand> handler,
         CancellationToken cancellationToken = default)
     {
         var addPetCommand = AddPetRequest.ToCommand(volunteerId, request);
@@ -103,7 +102,7 @@ public class VolunteerController : ControllerBase
         [FromRoute] Guid volunteerId,
         [FromRoute] Guid petId,
         [FromForm] AddPetPhotoRequest request,
-        [FromServices] AddPetPhotoHandler handler,
+        [FromServices] ICommandHandler<Guid, AddPetPhotoCommand> handler,
         CancellationToken cancellationToken = default)
     {
         await using var fileProcessor = new FormFileProcessor();
@@ -127,7 +126,7 @@ public class VolunteerController : ControllerBase
     [HttpPatch("{volunteerId:guid}/main-info")]
     [SwaggerOperation(Tags = ["Volunteer"])]
     public async Task<IActionResult> Update(
-        [FromServices] UpdateMainInfoHandler handler,
+        [FromServices] ICommandHandler<Guid, UpdateMainInfoCommand> handler,
         [FromBody] UpdateMainInfoRequest request,
         [FromRoute] Guid volunteerId,
         CancellationToken cancellationToken = default)
@@ -145,7 +144,7 @@ public class VolunteerController : ControllerBase
     [HttpPatch("{volunteerId:guid}/social-network")]
     [SwaggerOperation(Tags = ["Volunteer"])]
     public async Task<IActionResult> Update(
-        [FromServices] UpdateSotialNetworksHandler handler,
+        [FromServices] ICommandHandler<Guid, UpdateSocialNetworksCommand> handler,
         [FromBody] UpdateSocialListRequest request,
         [FromRoute] Guid volunteerId,
         CancellationToken cancellationToken = default)
@@ -163,7 +162,7 @@ public class VolunteerController : ControllerBase
     [HttpPatch("{volunteerId:guid}/requisites")]
     [SwaggerOperation(Tags = ["Volunteer"])]
     public async Task<IActionResult> Update(
-        [FromServices] UpdateRequisitesHandler handler,
+        [FromServices] ICommandHandler<Guid, UpdateRequisiteCommand> handler,
         [FromBody] UpdateRequisiteRequest request,
         [FromRoute] Guid volunteerId,
         CancellationToken cancellationToken = default)
@@ -181,11 +180,10 @@ public class VolunteerController : ControllerBase
     [HttpPatch("{volunteerId:guid}/pet-position")]
     [SwaggerOperation(Tags = ["Pet"])]
     public async Task<IActionResult> Update(
-        [FromServices] MovePetHandler handler,
+        [FromServices] ICommandHandler<Guid, MovePetCommand> handler,
         [FromBody] MovePetRequest request,
         [FromRoute] Guid volunteerId,
         CancellationToken cancellationToken = default)
-
     {
         var command = MovePetRequest.ToCommand(volunteerId, request);
         var movePetHandle = await handler.Handle(command, cancellationToken);
@@ -200,7 +198,7 @@ public class VolunteerController : ControllerBase
     [HttpPatch("{volunteerId:guid}/restore")]
     [SwaggerOperation(Tags = ["Volunteer"])]
     public async Task<IActionResult> Restore(
-        [FromServices] RestoreVolunteerHandler handler,
+        [FromServices] ICommandHandler<Guid, RestoreCommand> handler,
         [FromRoute] Guid volunteerId,
         CancellationToken cancellationToken = default)
     {
@@ -217,7 +215,7 @@ public class VolunteerController : ControllerBase
     [HttpDelete("{volunteerId:guid}")]
     [SwaggerOperation(Tags = ["Volunteer"])]
     public async Task<IActionResult> Delete(
-        [FromServices] SoftDeleteVolunteerHandler handler,
+        [FromServices] ICommandHandler<Guid, DeleteCommand> handler,
         [FromRoute] Guid volunteerId,
         CancellationToken cancellationToken = default)
     {
@@ -234,7 +232,7 @@ public class VolunteerController : ControllerBase
     [HttpDelete("{volunteerId:guid}/hard")]
     [SwaggerOperation(Tags = ["Volunteer"])]
     public async Task<IActionResult> Delete(
-        [FromServices] HardDeleteVolunteerHandler handler,
+        [FromServices] HardDeleteVolunteerHandler handler, // добавить отличительный признак софт и хард удаления
         [FromRoute] Guid volunteerId,
         CancellationToken cancellationToken = default)
     {
@@ -253,7 +251,7 @@ public class VolunteerController : ControllerBase
     public async Task<IActionResult> Delete(
         [FromRoute] Guid volunteerId,
         [FromRoute] Guid petId,
-        [FromServices] DeletePetPhotoHandler handler,
+        [FromServices] ICommandHandler<string, DeletePetPhotoCommand> handler,
         [FromBody] DeletePetPhotoRequest request,
         CancellationToken cancellationToken = default)
     {

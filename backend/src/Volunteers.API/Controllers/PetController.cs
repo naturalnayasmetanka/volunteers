@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using Volunteers.API.Contracts.Pets.GetPets;
 using Volunteers.API.Contracts.Volunteers.GetPresignedLinkPhoto;
 using Volunteers.Application.Volunteers.Commands.GetPresignedLinkPhoto;
 
@@ -10,6 +11,18 @@ namespace Volunteers.API.Controllers
     public class PetController : ControllerBase
     {
         private const string BUCKET_NAME = "photos";
+
+        [HttpGet]
+        [SwaggerOperation(Tags = ["Pet"])]
+        public async Task<IActionResult> Get(
+            [FromServices] 
+            [FromQuery] GetFilteredWithPaginationPetsRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            var query = request.ToQuery();
+
+            return Ok();
+        }
 
         [HttpGet("presigned")]
         [SwaggerOperation(Tags = ["Pet"])]
