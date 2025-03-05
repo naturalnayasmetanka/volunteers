@@ -2,33 +2,37 @@
 using Microsoft.Extensions.DependencyInjection;
 using Volunteers.Application.Abstractions;
 using Volunteers.Application.DTO;
+using Volunteers.Application.Handlers.Breeds.Queries.GetBreed;
+using Volunteers.Application.Handlers.Breeds.Queries.GetBreed.Queries;
+using Volunteers.Application.Handlers.Species.Queries.GetSpecies;
+using Volunteers.Application.Handlers.Species.Queries.GetSpecies.Queries;
+using Volunteers.Application.Handlers.Volunteers.Commands.AddPet;
+using Volunteers.Application.Handlers.Volunteers.Commands.AddPet.Commands;
+using Volunteers.Application.Handlers.Volunteers.Commands.AddPetPhoto;
+using Volunteers.Application.Handlers.Volunteers.Commands.AddPetPhoto.Commands;
+using Volunteers.Application.Handlers.Volunteers.Commands.Create;
+using Volunteers.Application.Handlers.Volunteers.Commands.Create.Commands;
+using Volunteers.Application.Handlers.Volunteers.Commands.Delete;
+using Volunteers.Application.Handlers.Volunteers.Commands.Delete.Commands;
+using Volunteers.Application.Handlers.Volunteers.Commands.DeletePetPhoto;
+using Volunteers.Application.Handlers.Volunteers.Commands.DeletePetPhoto.Commands;
+using Volunteers.Application.Handlers.Volunteers.Commands.GetPresignedLinkPhoto;
+using Volunteers.Application.Handlers.Volunteers.Commands.GetPresignedLinkPhoto.Commands;
+using Volunteers.Application.Handlers.Volunteers.Commands.MovePet;
+using Volunteers.Application.Handlers.Volunteers.Commands.MovePet.Commands;
+using Volunteers.Application.Handlers.Volunteers.Commands.Restore;
+using Volunteers.Application.Handlers.Volunteers.Commands.Restore.Commands;
+using Volunteers.Application.Handlers.Volunteers.Commands.UpdateMainInfo;
+using Volunteers.Application.Handlers.Volunteers.Commands.UpdateMainInfo.Commands;
+using Volunteers.Application.Handlers.Volunteers.Commands.UpdateRequisites;
+using Volunteers.Application.Handlers.Volunteers.Commands.UpdateRequisites.Commands;
+using Volunteers.Application.Handlers.Volunteers.Commands.UpdateSotialNetworks;
+using Volunteers.Application.Handlers.Volunteers.Commands.UpdateSotialNetworks.Commands;
+using Volunteers.Application.Handlers.Volunteers.Queries.GetVolunteer;
+using Volunteers.Application.Handlers.Volunteers.Queries.GetVolunteer.Queries;
+using Volunteers.Application.Handlers.Volunteers.Queries.GetVolunteers;
+using Volunteers.Application.Handlers.Volunteers.Queries.GetVolunteers.Queries;
 using Volunteers.Application.Models;
-using Volunteers.Application.Volunteers.Commands.AddPet;
-using Volunteers.Application.Volunteers.Commands.AddPet.Commands;
-using Volunteers.Application.Volunteers.Commands.AddPetPhoto;
-using Volunteers.Application.Volunteers.Commands.AddPetPhoto.Commands;
-using Volunteers.Application.Volunteers.Commands.Create;
-using Volunteers.Application.Volunteers.Commands.Create.Commands;
-using Volunteers.Application.Volunteers.Commands.Delete;
-using Volunteers.Application.Volunteers.Commands.Delete.Commands;
-using Volunteers.Application.Volunteers.Commands.DeletePetPhoto;
-using Volunteers.Application.Volunteers.Commands.DeletePetPhoto.Commands;
-using Volunteers.Application.Volunteers.Commands.GetPresignedLinkPhoto;
-using Volunteers.Application.Volunteers.Commands.GetPresignedLinkPhoto.Commands;
-using Volunteers.Application.Volunteers.Commands.MovePet;
-using Volunteers.Application.Volunteers.Commands.MovePet.Commands;
-using Volunteers.Application.Volunteers.Commands.Restore;
-using Volunteers.Application.Volunteers.Commands.Restore.Commands;
-using Volunteers.Application.Volunteers.Commands.UpdateMainInfo;
-using Volunteers.Application.Volunteers.Commands.UpdateMainInfo.Commands;
-using Volunteers.Application.Volunteers.Commands.UpdateRequisites;
-using Volunteers.Application.Volunteers.Commands.UpdateRequisites.Commands;
-using Volunteers.Application.Volunteers.Commands.UpdateSotialNetworks;
-using Volunteers.Application.Volunteers.Commands.UpdateSotialNetworks.Commands;
-using Volunteers.Application.Volunteers.Queries.GetVolunteer;
-using Volunteers.Application.Volunteers.Queries.GetVolunteer.Queries;
-using Volunteers.Application.Volunteers.Queries.GetVolunteers;
-using Volunteers.Application.Volunteers.Queries.GetVolunteers.Queries;
 
 namespace Volunteers.Application.Extentions.DI;
 
@@ -68,6 +72,9 @@ public static class ApplicationInjector
     {
         services.AddScoped<IQueryHandler<PagedList<VolunteerDTO>, GetFilteredWithPaginationVolunteersQuery>, GetPaginateVolunteersHandler>();
         services.AddScoped<IQueryHandler<VolunteerDTO?, GetVolunteerQuery>, GetVolunteerHandler>();
+
+        services.AddScoped<IQueryHandler<PagedList<SpeciesDTO>, GetSpeciesWithPaginationQuery>, GetSpeciesHandler>();
+        services.AddScoped<IQueryHandler<PagedList<BreedDTO>, GetBreedQuery>, GetBreedHandler>();
 
         return services;
     }

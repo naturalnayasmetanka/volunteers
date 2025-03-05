@@ -1,5 +1,5 @@
 ﻿using Volunteers.Application.DTO;
-using Volunteers.Application.Volunteers.Commands.GetPresignedLinkPhoto.Commands;
+using Volunteers.Application.Handlers.Volunteers.Commands.GetPresignedLinkPhoto.Commands;
 
 namespace Volunteers.API.Contracts.Volunteers.GetPresignedLinkPhoto;
 

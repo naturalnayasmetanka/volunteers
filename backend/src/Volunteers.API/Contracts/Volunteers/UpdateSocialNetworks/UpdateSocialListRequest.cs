@@ -1,5 +1,5 @@
-﻿using Volunteers.Application.Volunteers.Commands.UpdateSotialNetworks.Commands;
-using Volunteers.Application.Volunteers.Commands.UpdateSotialNetworks.DTO;
+﻿using Volunteers.Application.Handlers.Volunteers.Commands.UpdateSotialNetworks.Commands;
+using Volunteers.Application.Handlers.Volunteers.Commands.UpdateSotialNetworks.DTO;
 
 namespace Volunteers.API.Contracts.Volunteers.UpdateSocialNetworks;
 

@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Minio;
-using Volunteers.Application.Volunteer;
 using Volunteers.Infrastructure.Contexts;
 using Volunteers.Infrastructure.Repositories;
 using Serilog;
@@ -15,6 +14,7 @@ using Volunteers.Infrastructure.BackgroundServices;
 using Volunteers.Application.MessageQueues;
 using Volunteers.Infrastructure.MessageQueues;
 using Volunteers.Application.DTO;
+using Volunteers.Application.Handlers.Volunteers;
 
 namespace Volunteers.Infrastructure.Extentions.DI;
 

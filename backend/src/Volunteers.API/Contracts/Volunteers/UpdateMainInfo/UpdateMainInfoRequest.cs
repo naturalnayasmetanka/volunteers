@@ -1,4 +1,4 @@
-﻿using Volunteers.Application.Volunteers.Commands.UpdateMainInfo.Commands;
+﻿using Volunteers.Application.Handlers.Volunteers.Commands.UpdateMainInfo.Commands;
 using Volunteers.Application.Volunteers.Commands.UpdateMainInfo.DTO;
 
 namespace Volunteers.API.Contracts.Volunteers.UpdateMainInfo

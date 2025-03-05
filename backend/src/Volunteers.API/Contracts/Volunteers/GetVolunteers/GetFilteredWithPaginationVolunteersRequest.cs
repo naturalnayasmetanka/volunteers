@@ -1,4 +1,4 @@
-﻿using Volunteers.Application.Volunteers.Queries.GetVolunteers.Queries;
+﻿using Volunteers.Application.Handlers.Volunteers.Queries.GetVolunteers.Queries;
 
 namespace Volunteers.API.Contracts.Volunteers.GetVolunteers;
 

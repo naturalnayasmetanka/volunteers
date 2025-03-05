@@ -1,4 +1,4 @@
-﻿using Volunteers.Application.Pets.Queries.GetPets.Queries;
+﻿using Volunteers.Application.Handlers.Pets.Queries.GetPets.Queries;
 
 namespace Volunteers.API.Contracts.Pets.GetPets;
 

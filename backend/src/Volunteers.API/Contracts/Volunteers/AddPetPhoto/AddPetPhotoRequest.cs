@@ -1,5 +1,5 @@
 ﻿using Volunteers.Application.DTO;
-using Volunteers.Application.Volunteers.Commands.AddPetPhoto.Commands;
+using Volunteers.Application.Handlers.Volunteers.Commands.AddPetPhoto.Commands;
 
 namespace Volunteers.API.Contracts.Volunteers.AddPetPhoto
 {
