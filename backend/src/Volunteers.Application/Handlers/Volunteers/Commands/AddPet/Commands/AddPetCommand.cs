@@ -11,4 +11,6 @@ public record AddPetCommand(
     int PetPhoneNumber,
     PetStatus PetStatus,
     DateTime BirthDate,
-    DateTime CreationDate) : ICommand;
+    DateTime CreationDate,
+    Guid SpeciesId,
+    Guid BreedId) : ICommand;

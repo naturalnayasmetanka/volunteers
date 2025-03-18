@@ -13,6 +13,7 @@ using Volunteers.API.Extentions;
 using Volunteers.API.Processors;
 using Volunteers.Application.Abstractions;
 using Volunteers.Application.DTO;
+using Volunteers.Application.Handlers.Species.Queries.CheckExists.Queries;
 using Volunteers.Application.Handlers.Volunteers.Commands.AddPet.Commands;
 using Volunteers.Application.Handlers.Volunteers.Commands.AddPetPhoto.Commands;
 using Volunteers.Application.Handlers.Volunteers.Commands.Create.Commands;
@@ -46,7 +47,7 @@ public class VolunteersController : ControllerBase
         var query = request.ToQuery();
         var result = await handler.Handle(query, cancellationToken);
 
-        return Ok(result);
+        return Ok(result.Value);
     }
 
     [HttpGet("{id:guid}")]
@@ -58,7 +59,7 @@ public class VolunteersController : ControllerBase
     {
         var query = request.ToQuery();
         var result = await handler.Handle(query, cancellationToken);
-        return Ok(result);
+        return Ok(result.Value);
     }
 
     [HttpPost]
@@ -83,11 +84,19 @@ public class VolunteersController : ControllerBase
     public async Task<IActionResult> Create(
         [FromRoute] Guid volunteerId,
         [FromForm] AddPetRequest request,
-        [FromServices] ICommandHandler<Guid, AddPetCommand> handler,
+        [FromServices] ICommandHandler<Guid, AddPetCommand> petHandler,
+        [FromServices] IQueryHandler<bool, CheckExistsQuery> checkExistsSpeciesBreedHandler,
         CancellationToken cancellationToken = default)
     {
+        var checkExistSpeciesBreedQuery = new CheckExistsQuery(SpeciesId:request.SpeciesId, BreedId:request.BreedId);
+        var speciesBreedExist = await checkExistsSpeciesBreedHandler.Handle(checkExistSpeciesBreedQuery, cancellationToken);
+
+        if(speciesBreedExist.IsFailure)
+            return speciesBreedExist.Error
+                 .ToErrorResponse();
+
         var addPetCommand = AddPetRequest.ToCommand(volunteerId, request);
-        var addPetResult = await handler.Handle(addPetCommand, cancellationToken);
+        var addPetResult = await petHandler.Handle(addPetCommand, cancellationToken);
 
         if (addPetResult.IsFailure)
             return addPetResult.Error

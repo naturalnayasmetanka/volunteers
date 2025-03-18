@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using CSharpFunctionalExtensions;
+using Dapper;
 using System.Text;
 using Volunteers.Application.Abstractions;
 using Volunteers.Application.Database;
@@ -6,6 +7,7 @@ using Volunteers.Application.DTO;
 using Volunteers.Application.Extentions;
 using Volunteers.Application.Handlers.Breeds.Queries.GetBreed.Queries;
 using Volunteers.Application.Models;
+using Volunteers.Domain.Shared.CustomErrors;
 
 namespace Volunteers.Application.Handlers.Breeds.Queries.GetBreed;
 
@@ -17,9 +19,9 @@ public class GetBreedHandler : IQueryHandler<PagedList<BreedDTO>, GetBreedQuery>
         _connection = connection;
     }
 
-    public async Task<PagedList<BreedDTO>> Handle(
-        GetBreedQuery query,
-        CancellationToken cancellationToken = default)
+    public async Task<Result<PagedList<BreedDTO>, Error>> Handle(
+       GetBreedQuery query,
+       CancellationToken cancellationToken = default)
     {
         var connection = _connection.Create();
 

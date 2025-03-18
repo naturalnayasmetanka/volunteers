@@ -1,9 +1,11 @@
 ﻿using System.Text.Json;
+using CSharpFunctionalExtensions;
 using Dapper;
 using Volunteers.Application.Abstractions;
 using Volunteers.Application.Database;
 using Volunteers.Application.DTO;
 using Volunteers.Application.Handlers.Volunteers.Queries.GetVolunteer.Queries;
+using Volunteers.Domain.Shared.CustomErrors;
 
 namespace Volunteers.Application.Handlers.Volunteers.Queries.GetVolunteer;
 
@@ -15,9 +17,9 @@ public class GetVolunteerHandler : IQueryHandler<VolunteerDTO?, GetVolunteerQuer
         _connection = connection;
     }
 
-    public async Task<VolunteerDTO?> Handle(
-        GetVolunteerQuery query,
-        CancellationToken cancellationToken = default)
+    public async Task<Result<VolunteerDTO?, Error>> Handle(
+       GetVolunteerQuery query,
+       CancellationToken cancellationToken = default)
     {
         var connection = _connection.Create();
 

@@ -4,6 +4,8 @@ using Volunteers.Application.Abstractions;
 using Volunteers.Application.DTO;
 using Volunteers.Application.Handlers.Breeds.Queries.GetBreed;
 using Volunteers.Application.Handlers.Breeds.Queries.GetBreed.Queries;
+using Volunteers.Application.Handlers.Species.Queries.CheckExists;
+using Volunteers.Application.Handlers.Species.Queries.CheckExists.Queries;
 using Volunteers.Application.Handlers.Species.Queries.GetSpecies;
 using Volunteers.Application.Handlers.Species.Queries.GetSpecies.Queries;
 using Volunteers.Application.Handlers.Volunteers.Commands.AddPet;
@@ -75,6 +77,8 @@ public static class ApplicationInjector
 
         services.AddScoped<IQueryHandler<PagedList<SpeciesDTO>, GetSpeciesWithPaginationQuery>, GetSpeciesHandler>();
         services.AddScoped<IQueryHandler<PagedList<BreedDTO>, GetBreedQuery>, GetBreedHandler>();
+
+        services.AddScoped<IQueryHandler<bool, CheckExistsQuery>, CheckExistsHandler>();
 
         return services;
     }

@@ -18,6 +18,7 @@ public class AddPetVolunteerHandler : ICommandHandler<Guid, AddPetCommand>
     private readonly ILogger<AddPetVolunteerHandler> _logger;
     private readonly IVolunteerRepository _volunteerRepository;
     private readonly IValidator<AddPetCommand> _validator;
+
     public AddPetVolunteerHandler(
         ILogger<AddPetVolunteerHandler> logger,
         IVolunteerRepository volunteerRepository,
@@ -62,7 +63,9 @@ public class AddPetVolunteerHandler : ICommandHandler<Guid, AddPetCommand>
             helpStatus: command.PetStatus,
             birthDate: command.BirthDate,
             creationDate: command.CreationDate,
-            volunteerId: VolunteerId.Create(command.VolunteerId)).Value;
+            volunteerId: VolunteerId.Create(command.VolunteerId),
+            speciesBreed: SpeciesBreed.Create(speciesId:command.SpeciesId, breedId:command.BreedId).Value
+            ).Value;
 
         var addResult = volunteer.AddPet(pet);
 

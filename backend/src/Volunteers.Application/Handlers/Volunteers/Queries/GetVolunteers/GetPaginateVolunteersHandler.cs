@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using CSharpFunctionalExtensions;
+using Dapper;
 using System.Text;
 using System.Text.Json;
 using Volunteers.Application.Abstractions;
@@ -7,6 +8,7 @@ using Volunteers.Application.DTO;
 using Volunteers.Application.Extentions;
 using Volunteers.Application.Handlers.Volunteers.Queries.GetVolunteers.Queries;
 using Volunteers.Application.Models;
+using Volunteers.Domain.Shared.CustomErrors;
 
 namespace Volunteers.Application.Handlers.Volunteers.Queries.GetVolunteers;
 
@@ -18,9 +20,9 @@ public class GetPaginateVolunteersHandler : IQueryHandler<PagedList<VolunteerDTO
         _connection = connection;
     }
 
-    public async Task<PagedList<VolunteerDTO>> Handle(
-        GetFilteredWithPaginationVolunteersQuery query,
-        CancellationToken cancellationToken = default)
+    public async Task<Result<PagedList<VolunteerDTO>, Error>> Handle(
+       GetFilteredWithPaginationVolunteersQuery query,
+       CancellationToken cancellationToken = default)
     {
         var connection = _connection.Create();
 

@@ -24,7 +24,8 @@ public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
         PetStatus helpStatus,
         DateTime birthDate,
         DateTime creationDate,
-        VolunteerId volunteerId
+        VolunteerId volunteerId,
+        SpeciesBreed speciesBreed
         ) : base(id)
     {
         Nickname = nickname;
@@ -35,6 +36,7 @@ public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
         BirthDate = birthDate;
         CreationDate = creationDate;
         VolunteerId = volunteerId;
+        SpeciesBreed = speciesBreed;
     }
 
     public Nickname Nickname { get; private set; } = default!;
@@ -65,7 +67,8 @@ public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
         PetStatus helpStatus,
         DateTime birthDate,
         DateTime creationDate,
-        VolunteerId volunteerId)
+        VolunteerId volunteerId,
+        SpeciesBreed speciesBreed)
     {
         var newPet = new Pet(
             id: id,
@@ -76,7 +79,8 @@ public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
             helpStatus: helpStatus,
             birthDate: birthDate,
             creationDate: creationDate,
-            volunteerId: volunteerId);
+            volunteerId: volunteerId,
+            speciesBreed: speciesBreed);
 
         return Result.Success(newPet);
     }

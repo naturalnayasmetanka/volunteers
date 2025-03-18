@@ -158,8 +158,12 @@ public class PetConfigurations : IEntityTypeConfiguration<Pet>
             });
         });
 
-        builder.Property(x => x.SpeciesBreed)
-            .JsonValueObjectСonversion();
+        builder.OwnsOne(x => x.SpeciesBreed, ib =>
+        {
+            ib.ToJson();
+            ib.Property(x => x.SpeciesId);
+            ib.Property(x => x.BreedId);
+        });
 
         builder.Property<bool>("_isDeleted")
            .UsePropertyAccessMode(PropertyAccessMode.Field)
