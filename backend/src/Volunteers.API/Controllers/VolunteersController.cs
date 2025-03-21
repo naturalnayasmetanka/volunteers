@@ -7,6 +7,8 @@ using Volunteers.API.Contracts.Volunteers.DeletePetPhoto;
 using Volunteers.API.Contracts.Volunteers.GetVolunteers;
 using Volunteers.API.Contracts.Volunteers.MovePet;
 using Volunteers.API.Contracts.Volunteers.UpdateMainInfo;
+using Volunteers.API.Contracts.Volunteers.UpdatePet;
+using Volunteers.API.Contracts.Volunteers.UpdatePetStatus;
 using Volunteers.API.Contracts.Volunteers.UpdateRequisites;
 using Volunteers.API.Contracts.Volunteers.UpdateSocialNetworks;
 using Volunteers.API.Extentions;
@@ -23,6 +25,8 @@ using Volunteers.Application.Handlers.Volunteers.Commands.DeletePetPhoto.Command
 using Volunteers.Application.Handlers.Volunteers.Commands.MovePet.Commands;
 using Volunteers.Application.Handlers.Volunteers.Commands.Restore.Commands;
 using Volunteers.Application.Handlers.Volunteers.Commands.UpdateMainInfo.Commands;
+using Volunteers.Application.Handlers.Volunteers.Commands.UpdatePet.Commands;
+using Volunteers.Application.Handlers.Volunteers.Commands.UpdatePetStatus.Commands;
 using Volunteers.Application.Handlers.Volunteers.Commands.UpdateRequisites.Commands;
 using Volunteers.Application.Handlers.Volunteers.Commands.UpdateSotialNetworks.Commands;
 using Volunteers.Application.Handlers.Volunteers.Queries.GetVolunteer.Queries;
@@ -37,9 +41,10 @@ public class VolunteersController : ControllerBase
 {
     private const string BUCKET_NAME = "photos";
 
+    #region Volunteer
     [HttpGet]
     [SwaggerOperation(Tags = ["Volunteer"])]
-    public async Task<IActionResult> Get(
+    public async Task<IActionResult> GetVolunteer(
         [FromServices] IQueryHandler<PagedList<VolunteerDTO>, GetFilteredWithPaginationVolunteersQuery> handler,
         [FromQuery] GetFilteredWithPaginationVolunteersRequest request,
         CancellationToken cancellationToken = default)
@@ -52,7 +57,7 @@ public class VolunteersController : ControllerBase
 
     [HttpGet("{id:guid}")]
     [SwaggerOperation(Tags = ["Volunteer"])]
-    public async Task<IActionResult> GetById(
+    public async Task<IActionResult> GetVolunteerById(
         [FromServices] IQueryHandler<VolunteerDTO?, GetVolunteerQuery> handler,
         [FromRoute] GetVolunteerRequest request,
         CancellationToken cancellationToken = default)
@@ -64,7 +69,7 @@ public class VolunteersController : ControllerBase
 
     [HttpPost]
     [SwaggerOperation(Tags = ["Volunteer"])]
-    public async Task<IActionResult> Create(
+    public async Task<IActionResult> CreateVolunteer(
         [FromServices] ICommandHandler<Guid, CreateVolunteerCommand> handler,
         [FromBody] CreateVolunteerRequest request,
         CancellationToken cancellationToken = default)
@@ -79,19 +84,128 @@ public class VolunteersController : ControllerBase
         return Created();
     }
 
+    [HttpPatch("{volunteerId:guid}/main-info")]
+    [SwaggerOperation(Tags = ["Volunteer"])]
+    public async Task<IActionResult> UpdateVolunteerMainInfo(
+        [FromServices] ICommandHandler<Guid, UpdateMainInfoCommand> handler,
+        [FromBody] UpdateMainInfoRequest request,
+        [FromRoute] Guid volunteerId,
+        CancellationToken cancellationToken = default)
+    {
+        var updateMainInfoCommand = UpdateMainInfoRequest.ToCommand(volunteerId, request);
+        var mainInfoUpdateResult = await handler.Handle(updateMainInfoCommand, cancellationToken);
+
+        if (mainInfoUpdateResult.IsFailure)
+            return mainInfoUpdateResult.Error
+                .ToErrorResponse();
+
+        return Ok(mainInfoUpdateResult.Value);
+    }
+
+    [HttpPatch("{volunteerId:guid}/social-network")]
+    [SwaggerOperation(Tags = ["Volunteer"])]
+    public async Task<IActionResult> UpdateVolunteerSocialNetwork(
+        [FromServices] ICommandHandler<Guid, UpdateSocialNetworksCommand> handler,
+        [FromBody] UpdateSocialListRequest request,
+        [FromRoute] Guid volunteerId,
+        CancellationToken cancellationToken = default)
+    {
+        var updateSocialInfoCommand = UpdateSocialListRequest.ToCommand(volunteerId, request);
+        var socialUpdateResult = await handler.Handle(updateSocialInfoCommand, cancellationToken);
+
+        if (socialUpdateResult.IsFailure)
+            return socialUpdateResult.Error
+                .ToErrorResponse();
+
+        return Ok(socialUpdateResult.Value);
+    }
+
+    [HttpPatch("{volunteerId:guid}/requisites")]
+    [SwaggerOperation(Tags = ["Volunteer"])]
+    public async Task<IActionResult> UpdateVolunteerRequisite(
+        [FromServices] ICommandHandler<Guid, UpdateRequisiteCommand> handler,
+        [FromBody] UpdateRequisiteRequest request,
+        [FromRoute] Guid volunteerId,
+        CancellationToken cancellationToken = default)
+    {
+        var updateRequisitesCommand = UpdateRequisiteRequest.ToCommand(volunteerId, request);
+        var requisitesUpdateResult = await handler.Handle(updateRequisitesCommand, cancellationToken);
+
+        if (requisitesUpdateResult.IsFailure)
+            return requisitesUpdateResult.Error
+                .ToErrorResponse();
+
+        return Ok(requisitesUpdateResult);
+    }
+
+    [HttpPatch("{volunteerId:guid}/restore")]
+    [SwaggerOperation(Tags = ["Volunteer"])]
+    public async Task<IActionResult> RestoreVolunteer(
+        [FromServices] ICommandHandler<Guid, RestoreCommand> handler,
+        [FromRoute] Guid volunteerId,
+        CancellationToken cancellationToken = default)
+    {
+        var restoreCommand = new RestoreCommand(volunteerId);
+        var restoreResult = await handler.Handle(restoreCommand, cancellationToken);
+
+        if (restoreResult.IsFailure)
+            return restoreResult.Error
+                .ToErrorResponse();
+
+        return Ok(volunteerId);
+    }
+
+    [HttpDelete("{volunteerId:guid}")]
+    [SwaggerOperation(Tags = ["Volunteer"])]
+    public async Task<IActionResult> SoftDeleteVolunteer(
+        [FromServices] ICommandHandler<Guid, DeleteCommand> handler,
+        [FromRoute] Guid volunteerId,
+        CancellationToken cancellationToken = default)
+    {
+        var deleteCommand = new DeleteCommand(volunteerId);
+        var softDeleteResult = await handler.Handle(deleteCommand, cancellationToken);
+
+        if (softDeleteResult.IsFailure)
+            return softDeleteResult.Error
+                .ToErrorResponse();
+
+        return Ok(volunteerId);
+    }
+
+    [HttpDelete("{volunteerId:guid}/hard")]
+    [SwaggerOperation(Tags = ["Volunteer"])]
+    public async Task<IActionResult> HardDeleteVOlunteer(
+        [FromServices] HardDeleteVolunteerHandler handler, // добавить отличительный признак софт и хард удаления
+        [FromRoute] Guid volunteerId,
+        CancellationToken cancellationToken = default)
+    {
+        var deleteCommand = new DeleteCommand(volunteerId);
+        var hardDeleteResult = await handler.Handle(deleteCommand, cancellationToken);
+
+        if (hardDeleteResult.IsFailure)
+            return hardDeleteResult.Error
+                .ToErrorResponse();
+
+        return Ok(volunteerId);
+    }
+
+    #endregion
+
+    #region Pet
+
     [HttpPost("{volunteerId:guid}/pet")]
     [SwaggerOperation(Tags = ["Pet"])]
-    public async Task<IActionResult> Create(
+    public async Task<IActionResult> CreatePetPhoto(
         [FromRoute] Guid volunteerId,
         [FromForm] AddPetRequest request,
         [FromServices] ICommandHandler<Guid, AddPetCommand> petHandler,
         [FromServices] IQueryHandler<bool, CheckExistsQuery> checkExistsSpeciesBreedHandler,
         CancellationToken cancellationToken = default)
     {
-        var checkExistSpeciesBreedQuery = new CheckExistsQuery(SpeciesId:request.SpeciesId, BreedId:request.BreedId);
+        var checkExistSpeciesBreedQuery = new CheckExistsQuery(SpeciesId: request.SpeciesId, BreedId: request.BreedId);
         var speciesBreedExist = await checkExistsSpeciesBreedHandler.Handle(checkExistSpeciesBreedQuery, cancellationToken);
 
-        if(speciesBreedExist.IsFailure)
+        if (speciesBreedExist.IsFailure)
             return speciesBreedExist.Error
                  .ToErrorResponse();
 
@@ -107,7 +221,7 @@ public class VolunteersController : ControllerBase
 
     [HttpPost("{volunteerId:guid}/pet/{petId:guid}/photo")]
     [SwaggerOperation(Tags = ["Pet"])]
-    public async Task<IActionResult> Create(
+    public async Task<IActionResult> CreatePetPhoto(
         [FromRoute] Guid volunteerId,
         [FromRoute] Guid petId,
         [FromForm] AddPetPhotoRequest request,
@@ -132,63 +246,55 @@ public class VolunteersController : ControllerBase
         return Ok(addPhotoResult.Value);
     }
 
-    [HttpPatch("{volunteerId:guid}/main-info")]
-    [SwaggerOperation(Tags = ["Volunteer"])]
-    public async Task<IActionResult> Update(
-        [FromServices] ICommandHandler<Guid, UpdateMainInfoCommand> handler,
-        [FromBody] UpdateMainInfoRequest request,
+    [HttpPut("{volunteerId:guid}/pet/{petId:guid}")]
+    [SwaggerOperation(Tags = ["Pet"])]
+    public async Task<IActionResult> UpdatePet(
         [FromRoute] Guid volunteerId,
+        [FromRoute] Guid petId,
+        [FromBody] UpdatePetRequest request,
+        [FromServices] ICommandHandler<Guid, UpdatePetCommand> handler,
+        [FromServices] IQueryHandler<bool, CheckExistsQuery> checkExistsSpeciesBreedHandler,
         CancellationToken cancellationToken = default)
     {
-        var updateMainInfoCommand = UpdateMainInfoRequest.ToCommand(volunteerId, request);
-        var mainInfoUpdateResult = await handler.Handle(updateMainInfoCommand, cancellationToken);
+        var checkExistSpeciesBreedQuery = new CheckExistsQuery(SpeciesId: request.SpeciesId, BreedId: request.BreedId);
+        var speciesBreedExist = await checkExistsSpeciesBreedHandler.Handle(checkExistSpeciesBreedQuery, cancellationToken);
 
-        if (mainInfoUpdateResult.IsFailure)
-            return mainInfoUpdateResult.Error
+        if (speciesBreedExist.IsFailure)
+            return speciesBreedExist.Error
+                 .ToErrorResponse();
+
+        var command = UpdatePetRequest.ToCommand(volunteerId: volunteerId, petId: petId, request);
+        var updatePetHandle = await handler.Handle(command, cancellationToken);
+
+        if (updatePetHandle.IsFailure)
+            return updatePetHandle.Error
                 .ToErrorResponse();
 
-        return Ok(mainInfoUpdateResult.Value);
+        return Ok(updatePetHandle.Value);
     }
 
-    [HttpPatch("{volunteerId:guid}/social-network")]
-    [SwaggerOperation(Tags = ["Volunteer"])]
-    public async Task<IActionResult> Update(
-        [FromServices] ICommandHandler<Guid, UpdateSocialNetworksCommand> handler,
-        [FromBody] UpdateSocialListRequest request,
+    [HttpPut("{volunteerId:guid}/pet/{petId:guid}")]
+    [SwaggerOperation(Tags = ["Pet"])]
+    public async Task<IActionResult> ChangeStatus(
         [FromRoute] Guid volunteerId,
+        [FromRoute] Guid petId,
+        [FromBody] UpdatePetStatusRequest request,
+        [FromServices] ICommandHandler<Guid, UpdatePetStatusCommand> handler,
         CancellationToken cancellationToken = default)
     {
-        var updateSocialInfoCommand = UpdateSocialListRequest.ToCommand(volunteerId, request);
-        var socialUpdateResult = await handler.Handle(updateSocialInfoCommand, cancellationToken);
+        var command = UpdatePetStatusRequest.ToCommand(volunteerId: volunteerId, petId: petId, request);
+        var updatePetStatusHandle = await handler.Handle(command, cancellationToken);
 
-        if (socialUpdateResult.IsFailure)
-            return socialUpdateResult.Error
+        if (updatePetStatusHandle.IsFailure)
+            return updatePetStatusHandle.Error
                 .ToErrorResponse();
 
-        return Ok(socialUpdateResult.Value);
-    }
-
-    [HttpPatch("{volunteerId:guid}/requisites")]
-    [SwaggerOperation(Tags = ["Volunteer"])]
-    public async Task<IActionResult> Update(
-        [FromServices] ICommandHandler<Guid, UpdateRequisiteCommand> handler,
-        [FromBody] UpdateRequisiteRequest request,
-        [FromRoute] Guid volunteerId,
-        CancellationToken cancellationToken = default)
-    {
-        var updateRequisitesCommand = UpdateRequisiteRequest.ToCommand(volunteerId, request);
-        var requisitesUpdateResult = await handler.Handle(updateRequisitesCommand, cancellationToken);
-
-        if (requisitesUpdateResult.IsFailure)
-            return requisitesUpdateResult.Error
-                .ToErrorResponse();
-
-        return Ok(requisitesUpdateResult);
+        return Ok(updatePetStatusHandle.Value);
     }
 
     [HttpPatch("{volunteerId:guid}/pet-position")]
     [SwaggerOperation(Tags = ["Pet"])]
-    public async Task<IActionResult> Update(
+    public async Task<IActionResult> UpdatePetPosition(
         [FromServices] ICommandHandler<Guid, MovePetCommand> handler,
         [FromBody] MovePetRequest request,
         [FromRoute] Guid volunteerId,
@@ -204,60 +310,9 @@ public class VolunteersController : ControllerBase
         return Ok(movePetHandle.Value);
     }
 
-    [HttpPatch("{volunteerId:guid}/restore")]
-    [SwaggerOperation(Tags = ["Volunteer"])]
-    public async Task<IActionResult> Restore(
-        [FromServices] ICommandHandler<Guid, RestoreCommand> handler,
-        [FromRoute] Guid volunteerId,
-        CancellationToken cancellationToken = default)
-    {
-        var restoreCommand = new RestoreCommand(volunteerId);
-        var restoreResult = await handler.Handle(restoreCommand, cancellationToken);
-
-        if (restoreResult.IsFailure)
-            return restoreResult.Error
-                .ToErrorResponse();
-
-        return Ok(volunteerId);
-    }
-
-    [HttpDelete("{volunteerId:guid}")]
-    [SwaggerOperation(Tags = ["Volunteer"])]
-    public async Task<IActionResult> Delete(
-        [FromServices] ICommandHandler<Guid, DeleteCommand> handler,
-        [FromRoute] Guid volunteerId,
-        CancellationToken cancellationToken = default)
-    {
-        var deleteCommand = new DeleteCommand(volunteerId);
-        var softDeleteResult = await handler.Handle(deleteCommand, cancellationToken);
-
-        if (softDeleteResult.IsFailure)
-            return softDeleteResult.Error
-                .ToErrorResponse();
-
-        return Ok(volunteerId);
-    }
-
-    [HttpDelete("{volunteerId:guid}/hard")]
-    [SwaggerOperation(Tags = ["Volunteer"])]
-    public async Task<IActionResult> Delete(
-        [FromServices] HardDeleteVolunteerHandler handler, // добавить отличительный признак софт и хард удаления
-        [FromRoute] Guid volunteerId,
-        CancellationToken cancellationToken = default)
-    {
-        var deleteCommand = new DeleteCommand(volunteerId);
-        var hardDeleteResult = await handler.Handle(deleteCommand, cancellationToken);
-
-        if (hardDeleteResult.IsFailure)
-            return hardDeleteResult.Error
-                .ToErrorResponse();
-
-        return Ok(volunteerId);
-    }
-
     [HttpDelete("{volunteerId:guid}/pet/{petId:guid}/photo")]
     [SwaggerOperation(Tags = ["Pet"])]
-    public async Task<IActionResult> Delete(
+    public async Task<IActionResult> DeletePetPhoto(
         [FromRoute] Guid volunteerId,
         [FromRoute] Guid petId,
         [FromServices] ICommandHandler<string, DeletePetPhotoCommand> handler,
@@ -278,4 +333,6 @@ public class VolunteersController : ControllerBase
 
         return Ok(deleteResult.Value);
     }
+
+    #endregion
 }

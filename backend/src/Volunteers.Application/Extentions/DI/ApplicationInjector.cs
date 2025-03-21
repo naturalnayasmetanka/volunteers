@@ -26,6 +26,10 @@ using Volunteers.Application.Handlers.Volunteers.Commands.Restore;
 using Volunteers.Application.Handlers.Volunteers.Commands.Restore.Commands;
 using Volunteers.Application.Handlers.Volunteers.Commands.UpdateMainInfo;
 using Volunteers.Application.Handlers.Volunteers.Commands.UpdateMainInfo.Commands;
+using Volunteers.Application.Handlers.Volunteers.Commands.UpdatePet;
+using Volunteers.Application.Handlers.Volunteers.Commands.UpdatePet.Commands;
+using Volunteers.Application.Handlers.Volunteers.Commands.UpdatePetStatus;
+using Volunteers.Application.Handlers.Volunteers.Commands.UpdatePetStatus.Commands;
 using Volunteers.Application.Handlers.Volunteers.Commands.UpdateRequisites;
 using Volunteers.Application.Handlers.Volunteers.Commands.UpdateRequisites.Commands;
 using Volunteers.Application.Handlers.Volunteers.Commands.UpdateSotialNetworks;
@@ -66,6 +70,9 @@ public static class ApplicationInjector
         services.AddScoped<ICommandHandler<string, GetPresignedLinkPhotoCommand>, GetPresignedLinkPhotoHandler>();
         services.AddScoped<ICommandHandler<string, DeletePetPhotoCommand>, DeletePetPhotoHandler>();
         services.AddScoped<ICommandHandler<Guid, MovePetCommand>, MovePetHandler>();
+
+        services.AddScoped<ICommandHandler<Guid, UpdatePetCommand>, UpdatePetHandler>();
+        services.AddScoped<ICommandHandler<Guid, UpdatePetStatusCommand>, UpdatePetStatusHandler>();
 
         return services;
     }

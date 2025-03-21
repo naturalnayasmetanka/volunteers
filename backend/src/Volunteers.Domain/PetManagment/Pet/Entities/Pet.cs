@@ -100,6 +100,11 @@ public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
         _IsDelete = false;
     }
 
+    public void UpdateStatus(PetStatus status)
+    {
+        HelpStatus = status;
+    }
+
     public void AddLocation(Location location)
     {
         if (LocationDetails is null)

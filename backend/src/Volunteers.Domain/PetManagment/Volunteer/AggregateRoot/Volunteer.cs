@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Volunteers.Domain.PetManagment.Pet.Enums;
 using Volunteers.Domain.PetManagment.Pet.ValueObjects;
 using Volunteers.Domain.PetManagment.Volunteer.ValueObjects;
@@ -140,6 +141,33 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>, ISoftDeletable
         pet.SetSerialNumber(position: position.Value);
 
         _pets.Add(pet);
+
+        return pet;
+    }
+
+    public Result<PetModel, Error> UpdatePet(PetModel updatedPet, Guid petId)
+    {
+        var pet = _pets.FirstOrDefault(x => x.Id == petId);
+
+        if (pet is null)
+            return Errors.General.NotFound(petId);
+
+        updatedPet.SetSerialNumber(pet.Position);
+
+        _pets.Remove(pet);
+        _pets.Add(updatedPet);
+
+        return pet;
+    }
+
+    public Result<PetModel, Error> UpdatePetStatus(PetStatus newStatus, Guid petId)
+    {
+        var pet = _pets.FirstOrDefault(x => x.Id == petId);
+
+        if (pet is null)
+            return Errors.General.NotFound(petId);
+
+        pet.UpdateStatus(newStatus);
 
         return pet;
     }
