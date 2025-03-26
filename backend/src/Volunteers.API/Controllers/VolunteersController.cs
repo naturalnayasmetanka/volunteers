@@ -19,8 +19,8 @@ using Volunteers.Application.Handlers.Species.Queries.CheckExists.Queries;
 using Volunteers.Application.Handlers.Volunteers.Commands.AddPet.Commands;
 using Volunteers.Application.Handlers.Volunteers.Commands.AddPetPhoto.Commands;
 using Volunteers.Application.Handlers.Volunteers.Commands.Create.Commands;
-using Volunteers.Application.Handlers.Volunteers.Commands.Delete;
 using Volunteers.Application.Handlers.Volunteers.Commands.Delete.Commands;
+using Volunteers.Application.Handlers.Volunteers.Commands.DeletePet.Commands;
 using Volunteers.Application.Handlers.Volunteers.Commands.DeletePetPhoto.Commands;
 using Volunteers.Application.Handlers.Volunteers.Commands.MovePet.Commands;
 using Volunteers.Application.Handlers.Volunteers.Commands.Restore.Commands;
@@ -155,14 +155,14 @@ public class VolunteersController : ControllerBase
         return Ok(volunteerId);
     }
 
-    [HttpDelete("{volunteerId:guid}")]
+    [HttpDelete("{volunteerId:guid}/volunteer-soft")]
     [SwaggerOperation(Tags = ["Volunteer"])]
     public async Task<IActionResult> SoftDeleteVolunteer(
-        [FromServices] ICommandHandler<Guid, DeleteCommand> handler,
+        [FromServices] ICommandHandler<Guid, SoftDeleteVolunteerCommand> handler,
         [FromRoute] Guid volunteerId,
         CancellationToken cancellationToken = default)
     {
-        var deleteCommand = new DeleteCommand(volunteerId);
+        var deleteCommand = new SoftDeleteVolunteerCommand(volunteerId);
         var softDeleteResult = await handler.Handle(deleteCommand, cancellationToken);
 
         if (softDeleteResult.IsFailure)
@@ -172,14 +172,14 @@ public class VolunteersController : ControllerBase
         return Ok(volunteerId);
     }
 
-    [HttpDelete("{volunteerId:guid}/hard")]
+    [HttpDelete("{volunteerId:guid}/volunteer-hard")]
     [SwaggerOperation(Tags = ["Volunteer"])]
-    public async Task<IActionResult> HardDeleteVOlunteer(
-        [FromServices] HardDeleteVolunteerHandler handler, // добавить отличительный признак софт и хард удаления
+    public async Task<IActionResult> HardDeleteVolunteer(
+        [FromServices] ICommandHandler<Guid, HardDeleteVolunteerCommand> handler,
         [FromRoute] Guid volunteerId,
         CancellationToken cancellationToken = default)
     {
-        var deleteCommand = new DeleteCommand(volunteerId);
+        var deleteCommand = new HardDeleteVolunteerCommand(volunteerId);
         var hardDeleteResult = await handler.Handle(deleteCommand, cancellationToken);
 
         if (hardDeleteResult.IsFailure)
@@ -246,7 +246,7 @@ public class VolunteersController : ControllerBase
         return Ok(addPhotoResult.Value);
     }
 
-    [HttpPut("{volunteerId:guid}/pet/{petId:guid}")]
+    [HttpPost("{volunteerId:guid}/pet/{petId:guid}", Name = nameof(UpdatePet))]
     [SwaggerOperation(Tags = ["Pet"])]
     public async Task<IActionResult> UpdatePet(
         [FromRoute] Guid volunteerId,
@@ -273,7 +273,7 @@ public class VolunteersController : ControllerBase
         return Ok(updatePetHandle.Value);
     }
 
-    [HttpPut("{volunteerId:guid}/pet/{petId:guid}")]
+    [HttpPatch("{volunteerId:guid}/pet/{petId:guid}", Name = nameof(ChangeStatus))]
     [SwaggerOperation(Tags = ["Pet"])]
     public async Task<IActionResult> ChangeStatus(
         [FromRoute] Guid volunteerId,
@@ -332,6 +332,42 @@ public class VolunteersController : ControllerBase
                 .ToErrorResponse();
 
         return Ok(deleteResult.Value);
+    }
+
+    [HttpDelete("{volunteerId:guid}/pet-soft")]
+    [SwaggerOperation(Tags = ["Pet"])]
+    public async Task<IActionResult> SoftDeletePet(
+        [FromServices] ICommandHandler<Guid, SoftDeletePetCommand> handler,
+        [FromRoute] Guid volunteerId,
+        [FromBody] Guid petId,
+        CancellationToken cancellationToken = default)
+    {
+        var deleteCommand = new SoftDeletePetCommand(VolunteerId: volunteerId, PetId: petId);
+        var softDeleteResult = await handler.Handle(deleteCommand, cancellationToken);
+
+        if (softDeleteResult.IsFailure)
+            return softDeleteResult.Error
+                .ToErrorResponse();
+
+        return Ok(volunteerId);
+    }
+
+    [HttpDelete("{volunteerId:guid}/pet-hard")]
+    [SwaggerOperation(Tags = ["Pet"])]
+    public async Task<IActionResult> HardDeletePet(
+        [FromServices] ICommandHandler<Guid, HardDeletePetCommand> handler,
+        [FromRoute] Guid volunteerId,
+        [FromBody] Guid petId,
+        CancellationToken cancellationToken = default)
+    {
+        var deleteCommand = new HardDeletePetCommand(VolunteerId: volunteerId, PetId: petId);
+        var hardDeleteResult = await handler.Handle(deleteCommand, cancellationToken);
+
+        if (hardDeleteResult.IsFailure)
+            return hardDeleteResult.Error
+                .ToErrorResponse();
+
+        return Ok(volunteerId);
     }
 
     #endregion

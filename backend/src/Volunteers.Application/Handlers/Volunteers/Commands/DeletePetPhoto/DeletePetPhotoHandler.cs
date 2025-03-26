@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using Volunteers.Application.Abstractions;
 using Volunteers.Application.Database;
 using Volunteers.Application.DTO;
-using Volunteers.Application.Handlers.Volunteers;
 using Volunteers.Application.Handlers.Volunteers.Commands.AddPet;
 using Volunteers.Application.Handlers.Volunteers.Commands.DeletePetPhoto.Commands;
 using Volunteers.Application.MessageQueues;

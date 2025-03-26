@@ -1,14 +1,13 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
 using Volunteers.Application.Abstractions;
-using Volunteers.Application.Handlers.Volunteers;
 using Volunteers.Application.Handlers.Volunteers.Commands.Delete.Commands;
 using Volunteers.Domain.Shared.CustomErrors;
 using Volunteers.Domain.Shared.Ids;
 
 namespace Volunteers.Application.Handlers.Volunteers.Commands.Delete;
 
-public class HardDeleteVolunteerHandler : ICommandHandler<Guid, DeleteCommand>
+public class HardDeleteVolunteerHandler : ICommandHandler<Guid, HardDeleteVolunteerCommand>
 {
     private List<Error> _errors = [];
     private readonly IVolunteerRepository _repository;
@@ -23,7 +22,7 @@ public class HardDeleteVolunteerHandler : ICommandHandler<Guid, DeleteCommand>
     }
 
     public async Task<Result<Guid, Error>> Handle(
-        DeleteCommand command,
+        HardDeleteVolunteerCommand command,
         CancellationToken cancellationToken = default)
     {
         var id = VolunteerId.Create(command.Id);

@@ -16,6 +16,8 @@ using Volunteers.Application.Handlers.Volunteers.Commands.Create;
 using Volunteers.Application.Handlers.Volunteers.Commands.Create.Commands;
 using Volunteers.Application.Handlers.Volunteers.Commands.Delete;
 using Volunteers.Application.Handlers.Volunteers.Commands.Delete.Commands;
+using Volunteers.Application.Handlers.Volunteers.Commands.DeletePet;
+using Volunteers.Application.Handlers.Volunteers.Commands.DeletePet.Commands;
 using Volunteers.Application.Handlers.Volunteers.Commands.DeletePetPhoto;
 using Volunteers.Application.Handlers.Volunteers.Commands.DeletePetPhoto.Commands;
 using Volunteers.Application.Handlers.Volunteers.Commands.GetPresignedLinkPhoto;
@@ -57,8 +59,8 @@ public static class ApplicationInjector
     public static IServiceCollection AddCommands(this IServiceCollection services)
     {
         services.AddScoped<ICommandHandler<Guid, CreateVolunteerCommand>, CreateVolunteerHandler>();
-        services.AddScoped<ICommandHandler<Guid, DeleteCommand>, SoftDeleteVolunteerHandler>();
-        services.AddScoped<ICommandHandler<Guid, DeleteCommand>, HardDeleteVolunteerHandler>();
+        services.AddScoped<ICommandHandler<Guid, SoftDeleteVolunteerCommand>, SoftDeleteVolunteerHandler>();
+        services.AddScoped<ICommandHandler<Guid, HardDeleteVolunteerCommand>, HardDeleteVolunteerHandler>();
         services.AddScoped<ICommandHandler<Guid, RestoreCommand>, RestoreVolunteerHandler>();
 
         services.AddScoped<ICommandHandler<Guid, UpdateMainInfoCommand>, UpdateMainInfoHandler>();
@@ -73,6 +75,9 @@ public static class ApplicationInjector
 
         services.AddScoped<ICommandHandler<Guid, UpdatePetCommand>, UpdatePetHandler>();
         services.AddScoped<ICommandHandler<Guid, UpdatePetStatusCommand>, UpdatePetStatusHandler>();
+
+        services.AddScoped<ICommandHandler<Guid, SoftDeletePetCommand>, SoftDeletePetHandler>();
+        services.AddScoped<ICommandHandler<Guid, HardDeletePetCommand>, HardDeletePetHandler>();
 
         return services;
     }

@@ -8,7 +8,7 @@ using Volunteers.Domain.Shared.Ids;
 
 namespace Volunteers.Application.Handlers.Volunteers.Commands.Delete;
 
-public class SoftDeleteVolunteerHandler : ICommandHandler<Guid, DeleteCommand>
+public class SoftDeleteVolunteerHandler : ICommandHandler<Guid, SoftDeleteVolunteerCommand>
 {
     private List<Error> _errors = [];
     private readonly IVolunteerRepository _repository;
@@ -23,7 +23,7 @@ public class SoftDeleteVolunteerHandler : ICommandHandler<Guid, DeleteCommand>
     }
 
     public async Task<Result<Guid, Error>> Handle(
-        DeleteCommand command,
+        SoftDeleteVolunteerCommand command,
         CancellationToken cancellationToken = default)
     {
         var id = VolunteerId.Create(command.Id);

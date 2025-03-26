@@ -2,4 +2,4 @@
 
 namespace Volunteers.Application.Handlers.Volunteers.Commands.Delete.Commands;
 
-public record DeleteCommand(Guid Id) : ICommand;
+public record HardDeleteVolunteerCommand(Guid Id) : ICommand;
