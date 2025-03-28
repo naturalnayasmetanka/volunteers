@@ -6,6 +6,8 @@ using Volunteers.Application.Handlers.Breeds.Queries.GetBreed;
 using Volunteers.Application.Handlers.Breeds.Queries.GetBreed.Queries;
 using Volunteers.Application.Handlers.Pets.Queries.GetPet;
 using Volunteers.Application.Handlers.Pets.Queries.GetPet.Queries;
+using Volunteers.Application.Handlers.Pets.Queries.GetPets;
+using Volunteers.Application.Handlers.Pets.Queries.GetPets.Queries;
 using Volunteers.Application.Handlers.Species.Queries.CheckExists;
 using Volunteers.Application.Handlers.Species.Queries.CheckExists.Queries;
 using Volunteers.Application.Handlers.Species.Queries.GetSpecies;
@@ -101,6 +103,7 @@ public static class ApplicationInjector
 
         #region Pet
         services.AddScoped<IQueryHandler<PetDTO?, GetPetQuery>, GetPetHandler>();
+        services.AddScoped<IQueryHandler<PagedList<PetDTO>, GetFilteredWithPaginationPetsQuery>, GetPaginatePetsHandler>();
         #endregion
 
         #region Species

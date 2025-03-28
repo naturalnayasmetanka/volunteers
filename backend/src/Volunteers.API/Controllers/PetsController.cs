@@ -5,7 +5,9 @@ using Volunteers.API.Contracts.Volunteers.GetPresignedLinkPhoto;
 using Volunteers.Application.Abstractions;
 using Volunteers.Application.DTO;
 using Volunteers.Application.Handlers.Pets.Queries.GetPet.Queries;
+using Volunteers.Application.Handlers.Pets.Queries.GetPets.Queries;
 using Volunteers.Application.Handlers.Volunteers.Commands.GetPresignedLinkPhoto;
+using Volunteers.Application.Models;
 
 namespace Volunteers.API.Controllers
 {
@@ -18,13 +20,14 @@ namespace Volunteers.API.Controllers
         [HttpGet]
         [SwaggerOperation(Tags = ["Pet"])]
         public async Task<IActionResult> GetPets(
-            [FromServices]
+            [FromServices] IQueryHandler<PagedList<PetDTO>, GetFilteredWithPaginationPetsQuery> handler,
             [FromQuery] GetFilteredWithPaginationPetsRequest request,
             CancellationToken cancellationToken = default)
         {
             var query = request.ToQuery();
+            var result = await handler.Handle(query, cancellationToken);
 
-            return Ok();
+            return Ok(result.Value);
         }
 
         [HttpGet("{Id:Guid}")]
@@ -35,7 +38,7 @@ namespace Volunteers.API.Controllers
             CancellationToken cancellationToken = default)
         {
             var query = request.ToQuery();
-            var result = await handler.Handle(query, cancellationToken); // не приходят некторые поля
+            var result = await handler.Handle(query, cancellationToken);
             return Ok(result.Value);
         }
 

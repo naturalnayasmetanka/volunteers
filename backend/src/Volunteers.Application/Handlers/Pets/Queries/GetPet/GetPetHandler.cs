@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Text;
+using System.Text.Json;
 using CSharpFunctionalExtensions;
 using Dapper;
 using Volunteers.Application.Abstractions;
@@ -26,16 +27,16 @@ public class GetPetHandler : IQueryHandler<PetDTO?, GetPetQuery>
         var parameters = new DynamicParameters();
         parameters.Add("@Id", query.Id);
 
-        var sqlQuery = """
+        var sqlQuery = new StringBuilder("""
                         SELECT 
                             id, nickname, common_description, helth_description, phone_number, help_status, birth_date, creation_date,
                             "position", volunteer_id, "LocationDetails", "PhotoDetails", "PhysicalParametersDetails", "RequisitesDetails", "SpeciesBreed"
                         FROM pets
                         WHERE Id = @Id
-                        """;
+                        """);
 
         var pet = await connection.QueryAsync<PetDTO, string?, string?, string?, string?, string?, PetDTO>(
-            sqlQuery,
+            sqlQuery.ToString(),
             (pet, jsonLocation, jsonRequisites, jsonPhoto, jsonPhysicalParameters, jsonSpeciesBreed) =>
             {
                 var locations = jsonLocation is null ? null : JsonSerializer.Deserialize<LocationDetailsDTO>(jsonLocation);

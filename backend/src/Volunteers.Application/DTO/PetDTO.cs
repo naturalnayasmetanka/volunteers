@@ -9,7 +9,7 @@ public class PetDTO
     public string common_description { get; set; } = string.Empty;
     public string helth_description { get; set; } = string.Empty;
     public int phone_number { get; set; }
-    public int help_status { get; set; }
+    public PetStatus help_status { get; set; }
     public DateTime birth_date { get; set; }
     public DateTime creation_date { get; set; }
     public int position { get; set; }
