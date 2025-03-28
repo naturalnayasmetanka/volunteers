@@ -6,6 +6,7 @@ using Volunteers.API.Contracts.Volunteers.Create;
 using Volunteers.API.Contracts.Volunteers.DeletePetPhoto;
 using Volunteers.API.Contracts.Volunteers.GetVolunteers;
 using Volunteers.API.Contracts.Volunteers.MovePet;
+using Volunteers.API.Contracts.Volunteers.SetMainPetPhoto;
 using Volunteers.API.Contracts.Volunteers.UpdateMainInfo;
 using Volunteers.API.Contracts.Volunteers.UpdatePet;
 using Volunteers.API.Contracts.Volunteers.UpdatePetStatus;
@@ -24,6 +25,7 @@ using Volunteers.Application.Handlers.Volunteers.Commands.DeletePet.Commands;
 using Volunteers.Application.Handlers.Volunteers.Commands.DeletePetPhoto.Commands;
 using Volunteers.Application.Handlers.Volunteers.Commands.MovePet.Commands;
 using Volunteers.Application.Handlers.Volunteers.Commands.Restore.Commands;
+using Volunteers.Application.Handlers.Volunteers.Commands.SetMainPetPhoto;
 using Volunteers.Application.Handlers.Volunteers.Commands.UpdateMainInfo.Commands;
 using Volunteers.Application.Handlers.Volunteers.Commands.UpdatePet.Commands;
 using Volunteers.Application.Handlers.Volunteers.Commands.UpdatePetStatus.Commands;
@@ -44,7 +46,7 @@ public class VolunteersController : ControllerBase
     #region Volunteer
     [HttpGet]
     [SwaggerOperation(Tags = ["Volunteer"])]
-    public async Task<IActionResult> GetVolunteer(
+    public async Task<IActionResult> GetVolunteers(
         [FromServices] IQueryHandler<PagedList<VolunteerDTO>, GetFilteredWithPaginationVolunteersQuery> handler,
         [FromQuery] GetFilteredWithPaginationVolunteersRequest request,
         CancellationToken cancellationToken = default)
@@ -193,9 +195,12 @@ public class VolunteersController : ControllerBase
 
     #region Pet
 
+
+
+
     [HttpPost("{volunteerId:guid}/pet")]
     [SwaggerOperation(Tags = ["Pet"])]
-    public async Task<IActionResult> CreatePetPhoto(
+    public async Task<IActionResult> CreatePet(
         [FromRoute] Guid volunteerId,
         [FromForm] AddPetRequest request,
         [FromServices] ICommandHandler<Guid, AddPetCommand> petHandler,
@@ -271,6 +276,25 @@ public class VolunteersController : ControllerBase
                 .ToErrorResponse();
 
         return Ok(updatePetHandle.Value);
+    }
+
+    [HttpPost("{volunteerId:guid}/pet/{petId:guid}/set-main-photo", Name = nameof(SetMainPhoto))]
+    [SwaggerOperation(Tags = ["Pet"])]
+    public async Task<IActionResult> SetMainPhoto(
+        [FromRoute] Guid volunteerId,
+        [FromRoute] Guid petId,
+        [FromBody] SetMainPetPhotoRequest request,
+        [FromServices] SetMainPetPhotoHandler handler,
+        CancellationToken cancellationToken = default)
+    {
+        var command = SetMainPetPhotoRequest.ToCommand(volunteerId: volunteerId, petId: petId, request: request);
+        var setMainPetPhotoResult = await handler.Handle(command: command, cancellationToken: cancellationToken);
+
+        if (setMainPetPhotoResult.IsFailure)
+            return setMainPetPhotoResult.Error
+                   .ToErrorResponse();
+
+        return Ok(setMainPetPhotoResult.Value);
     }
 
     [HttpPatch("{volunteerId:guid}/pet/{petId:guid}", Name = nameof(ChangeStatus))]
@@ -360,7 +384,7 @@ public class VolunteersController : ControllerBase
         [FromBody] Guid petId,
         CancellationToken cancellationToken = default)
     {
-        var deleteCommand = new HardDeletePetCommand(VolunteerId: volunteerId, PetId: petId);
+        var deleteCommand = new HardDeletePetCommand(VolunteerId: volunteerId, PetId: petId, BucketName: BUCKET_NAME);
         var hardDeleteResult = await handler.Handle(deleteCommand, cancellationToken);
 
         if (hardDeleteResult.IsFailure)

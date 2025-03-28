@@ -2,8 +2,8 @@
 
 namespace Volunteers.API.Contracts.Pets.GetPets;
 
-public record GetPetRequest(Guid id)
+public record GetPetRequest(Guid Id)
 {
     public GetPetQuery ToQuery()
-        => new GetPetQuery(id);
+        => new GetPetQuery(Id: Id);
 }

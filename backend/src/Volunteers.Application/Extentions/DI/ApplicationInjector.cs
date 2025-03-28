@@ -4,6 +4,8 @@ using Volunteers.Application.Abstractions;
 using Volunteers.Application.DTO;
 using Volunteers.Application.Handlers.Breeds.Queries.GetBreed;
 using Volunteers.Application.Handlers.Breeds.Queries.GetBreed.Queries;
+using Volunteers.Application.Handlers.Pets.Queries.GetPet;
+using Volunteers.Application.Handlers.Pets.Queries.GetPet.Queries;
 using Volunteers.Application.Handlers.Species.Queries.CheckExists;
 using Volunteers.Application.Handlers.Species.Queries.CheckExists.Queries;
 using Volunteers.Application.Handlers.Species.Queries.GetSpecies;
@@ -26,6 +28,8 @@ using Volunteers.Application.Handlers.Volunteers.Commands.MovePet;
 using Volunteers.Application.Handlers.Volunteers.Commands.MovePet.Commands;
 using Volunteers.Application.Handlers.Volunteers.Commands.Restore;
 using Volunteers.Application.Handlers.Volunteers.Commands.Restore.Commands;
+using Volunteers.Application.Handlers.Volunteers.Commands.SetMainPetPhoto;
+using Volunteers.Application.Handlers.Volunteers.Commands.SetMainPetPhoto.Commands;
 using Volunteers.Application.Handlers.Volunteers.Commands.UpdateMainInfo;
 using Volunteers.Application.Handlers.Volunteers.Commands.UpdateMainInfo.Commands;
 using Volunteers.Application.Handlers.Volunteers.Commands.UpdatePet;
@@ -58,6 +62,7 @@ public static class ApplicationInjector
 
     public static IServiceCollection AddCommands(this IServiceCollection services)
     {
+        #region Volunteer 
         services.AddScoped<ICommandHandler<Guid, CreateVolunteerCommand>, CreateVolunteerHandler>();
         services.AddScoped<ICommandHandler<Guid, SoftDeleteVolunteerCommand>, SoftDeleteVolunteerHandler>();
         services.AddScoped<ICommandHandler<Guid, HardDeleteVolunteerCommand>, HardDeleteVolunteerHandler>();
@@ -66,7 +71,9 @@ public static class ApplicationInjector
         services.AddScoped<ICommandHandler<Guid, UpdateMainInfoCommand>, UpdateMainInfoHandler>();
         services.AddScoped<ICommandHandler<Guid, UpdateSocialNetworksCommand>, UpdateSotialNetworksHandler>();
         services.AddScoped<ICommandHandler<Guid, UpdateRequisiteCommand>, UpdateRequisitesHandler>();
+        #endregion
 
+        #region Pet
         services.AddScoped<ICommandHandler<Guid, AddPetCommand>, AddPetVolunteerHandler>();
         services.AddScoped<ICommandHandler<Guid, AddPetPhotoCommand>, AddPetPhotoHandler>();
         services.AddScoped<ICommandHandler<string, GetPresignedLinkPhotoCommand>, GetPresignedLinkPhotoHandler>();
@@ -79,18 +86,34 @@ public static class ApplicationInjector
         services.AddScoped<ICommandHandler<Guid, SoftDeletePetCommand>, SoftDeletePetHandler>();
         services.AddScoped<ICommandHandler<Guid, HardDeletePetCommand>, HardDeletePetHandler>();
 
+        services.AddScoped<ICommandHandler<Guid, SetMainPetPhotoCommand>, SetMainPetPhotoHandler>();
+        #endregion
+
         return services;
     }
 
     public static IServiceCollection AddQueries(this IServiceCollection services)
     {
+        #region Volunteer
         services.AddScoped<IQueryHandler<PagedList<VolunteerDTO>, GetFilteredWithPaginationVolunteersQuery>, GetPaginateVolunteersHandler>();
         services.AddScoped<IQueryHandler<VolunteerDTO?, GetVolunteerQuery>, GetVolunteerHandler>();
+        #endregion
 
+        #region Pet
+        services.AddScoped<IQueryHandler<PetDTO?, GetPetQuery>, GetPetHandler>();
+        #endregion
+
+        #region Species
         services.AddScoped<IQueryHandler<PagedList<SpeciesDTO>, GetSpeciesWithPaginationQuery>, GetSpeciesHandler>();
-        services.AddScoped<IQueryHandler<PagedList<BreedDTO>, GetBreedQuery>, GetBreedHandler>();
+        #endregion
 
+        #region Breed
+        services.AddScoped<IQueryHandler<PagedList<BreedDTO>, GetBreedQuery>, GetBreedHandler>();
+        #endregion
+
+        #region SpeciesBreed
         services.AddScoped<IQueryHandler<bool, CheckExistsQuery>, CheckExistsHandler>();
+        #endregion
 
         return services;
     }

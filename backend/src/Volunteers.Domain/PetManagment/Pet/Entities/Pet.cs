@@ -90,6 +90,29 @@ public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
         Position = position;
     }
 
+    public Result<PhotoDetails, Error> SetMainPhoto(string path)
+    {
+        if (PhotoDetails is null)
+            return Errors.General.NotFound();
+
+        var photo = PhotoDetails.PetPhoto.FirstOrDefault(x => x.Path == path);
+
+        if (photo is null)
+            return Errors.General.NotFound();
+
+        List<PetPhoto> tempList = new List<PetPhoto>();
+
+        foreach (var item in PhotoDetails.PetPhoto)
+        {
+            tempList.Add(PetPhoto.Create(item.Path, item.Path == path ? true : false).Value);
+        }
+
+        PhotoDetails.PetPhoto.Clear();
+        PhotoDetails.PetPhoto.AddRange(tempList);
+
+        return PhotoDetails;
+    }
+
     public void SoftDelete()
     {
         _IsDelete = true;

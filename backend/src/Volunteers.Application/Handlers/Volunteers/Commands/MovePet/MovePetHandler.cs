@@ -1,7 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
 using Volunteers.Application.Abstractions;
-using Volunteers.Application.Handlers.Volunteers;
 using Volunteers.Application.Handlers.Volunteers.Commands.MovePet.Commands;
 using Volunteers.Domain.PetManagment.Pet.ValueObjects;
 using Volunteers.Domain.Shared.CustomErrors;
@@ -36,16 +35,15 @@ public class MovePetHandler : ICommandHandler<Guid, MovePetCommand>
             return Errors.General.NotFound(command.VolunteerId);
         }
 
-        var pet = volunteer.Pets.FirstOrDefault(x => x.Id == command.PetId);
+        var movePetResult = volunteer.MovePetPosition(PetId.Create(command.PetId), Position.Create(command.NewPosition).Value);
 
-        if (pet is null)
+        if (movePetResult.IsFailure)
         {
-            _logger.LogError("Pet {0} was not found in the volunteer {1} into {2}", command.PetId, command.VolunteerId, nameof(MovePetHandler));
+            _logger.LogError("Pet {0} was not moved in the volunteer {1} into {2}", command.PetId, command.VolunteerId, nameof(MovePetHandler));
 
-            return Error.NotFound("Pet not found", "not.found");
+            return movePetResult.Error;
         }
 
-        volunteer.MovePetPosition(pet, Position.Create(command.NewPosition).Value);
         await _repository.SaveAsync(cancellationToken);
 
         _logger.LogInformation("Pet {0} was moved in the volunteer {1} into {2}", command.PetId, command.VolunteerId, nameof(MovePetHandler));

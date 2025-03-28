@@ -1,12 +1,61 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
+using CSharpFunctionalExtensions;
+using Dapper;
+using Volunteers.Application.Abstractions;
+using Volunteers.Application.Database;
+using Volunteers.Application.DTO;
+using Volunteers.Application.Handlers.Pets.Queries.GetPet.Queries;
+using Volunteers.Domain.Shared.CustomErrors;
 
-namespace Volunteers.Application.Handlers.Pets.Queries.GetPet
+namespace Volunteers.Application.Handlers.Pets.Queries.GetPet;
+
+public class GetPetHandler : IQueryHandler<PetDTO?, GetPetQuery>
 {
-    internal class GetPetHandler
+    private readonly ISqlConnConnectionFactory _connection;
+    public GetPetHandler(ISqlConnConnectionFactory connection)
     {
+        _connection = connection;
+    }
+
+    public async Task<Result<PetDTO?, Error>> Handle(
+        GetPetQuery query,
+        CancellationToken cancellationToken = default)
+    {
+        var connection = _connection.Create();
+
+        var parameters = new DynamicParameters();
+        parameters.Add("@Id", query.Id);
+
+        var sqlQuery = """
+                        SELECT 
+                            id, nickname, common_description, helth_description, phone_number, help_status, birth_date, creation_date,
+                            "position", volunteer_id, "LocationDetails", "PhotoDetails", "PhysicalParametersDetails", "RequisitesDetails", "SpeciesBreed"
+                        FROM pets
+                        WHERE Id = @Id
+                        """;
+
+        var pet = await connection.QueryAsync<PetDTO, string?, string?, string?, string?, string?, PetDTO>(
+            sqlQuery,
+            (pet, jsonLocation, jsonRequisites, jsonPhoto, jsonPhysicalParameters, jsonSpeciesBreed) =>
+            {
+                var locations = jsonLocation is null ? null : JsonSerializer.Deserialize<LocationDetailsDTO>(jsonLocation);
+                var requisites = jsonRequisites is null ? null : JsonSerializer.Deserialize<RequisitesDetailsDTO>(jsonRequisites);
+                var photo = jsonPhoto is null ? null : JsonSerializer.Deserialize<PhotoDetailsDTO>(jsonPhoto);
+                var physicalParams = jsonPhysicalParameters is null ? null : JsonSerializer.Deserialize<PhysicalParametersDetailsDTO>(jsonPhysicalParameters);
+                var speciesBreed = jsonSpeciesBreed is null ? null : JsonSerializer.Deserialize<SpeciesBreedDTO>(jsonSpeciesBreed);
+
+                pet.LocationDetails = locations;
+                pet.RequisitesDetails = requisites;
+                pet.PhotoDetails = photo;
+                pet.PhysicalParametersDetails = physicalParams;
+                pet.SpeciesBreed = speciesBreed;
+
+                return pet;
+            },
+            splitOn: "LocationDetails, PhotoDetails, PhysicalParametersDetails, RequisitesDetails, SpeciesBreed",
+            param: parameters);
+
+
+        return pet.FirstOrDefault();
     }
 }

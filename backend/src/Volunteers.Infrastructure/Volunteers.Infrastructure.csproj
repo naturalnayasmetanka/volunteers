@@ -38,6 +38,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Volunteers.Application\Volunteers.Application.csproj" />
+    <ProjectReference Include="..\Volunteers.Domain\Volunteers.Domain.csproj" />
   </ItemGroup>
 
 </Project>

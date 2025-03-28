@@ -1,5 +1,4 @@
 ﻿using CSharpFunctionalExtensions;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Volunteers.Domain.PetManagment.Pet.Enums;
 using Volunteers.Domain.PetManagment.Pet.ValueObjects;
 using Volunteers.Domain.PetManagment.Volunteer.ValueObjects;
@@ -42,6 +41,9 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>, ISoftDeletable
 
     public IReadOnlyList<PetModel> Pets => _pets;
 
+
+    #region Volunteer
+
     public static Result<Volunteer> Create(
         VolunteerId id,
         Name name,
@@ -59,30 +61,20 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>, ISoftDeletable
         return Result.Success(newVolunteer);
     }
 
-    public void SoftDelete()
+    public void AddSocialNetwork(SocialNetwork socialNetwork)
     {
-        _isDeleted = true;
+        if (SocialNetworkDetails is null)
+            SocialNetworkDetails = new SocialNetworkDetails();
 
-        if (_pets is not null)
-        {
-            foreach (var pet in _pets)
-            {
-                pet.SoftDelete();
-            }
-        }
+        SocialNetworkDetails.SocialNetworks.Add(socialNetwork);
     }
 
-    public void Restore()
+    public void AddVolunteerRequisite(VolunteerRequisite requisite)
     {
-        _isDeleted = false;
+        if (RequisiteDetails is null)
+            RequisiteDetails = new RequisiteDetails();
 
-        if (_pets is not null)
-        {
-            foreach (var pet in _pets)
-            {
-                pet.Restore();
-            }
-        }
+        RequisiteDetails.Requisites.Add(requisite);
     }
 
     public void UpdateMainInfo(
@@ -115,21 +107,35 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>, ISoftDeletable
         RequisiteDetails.Requisites?.AddRange(requisites);
     }
 
-    public void AddSocialNetwork(SocialNetwork socialNetwork)
+    public void SoftDelete()
     {
-        if (SocialNetworkDetails is null)
-            SocialNetworkDetails = new SocialNetworkDetails();
+        _isDeleted = true;
 
-        SocialNetworkDetails.SocialNetworks.Add(socialNetwork);
+        if (_pets is not null)
+        {
+            foreach (var pet in _pets)
+            {
+                pet.SoftDelete();
+            }
+        }
     }
 
-    public void AddVolunteerRequisite(VolunteerRequisite requisite)
+    public void Restore()
     {
-        if (RequisiteDetails is null)
-            RequisiteDetails = new RequisiteDetails();
+        _isDeleted = false;
 
-        RequisiteDetails.Requisites.Add(requisite);
+        if (_pets is not null)
+        {
+            foreach (var pet in _pets)
+            {
+                pet.Restore();
+            }
+        }
     }
+
+    #endregion
+
+    #region Pet
 
     public Result<PetModel, Error> AddPet(PetModel pet)
     {
@@ -141,33 +147,6 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>, ISoftDeletable
         pet.SetSerialNumber(position: position.Value);
 
         _pets.Add(pet);
-
-        return pet;
-    }
-
-    public Result<PetModel, Error> UpdatePet(PetModel updatedPet, Guid petId)
-    {
-        var pet = _pets.FirstOrDefault(x => x.Id == petId);
-
-        if (pet is null)
-            return Errors.General.NotFound(petId);
-
-        updatedPet.SetSerialNumber(pet.Position);
-
-        _pets.Remove(pet);
-        _pets.Add(updatedPet);
-
-        return pet;
-    }
-
-    public Result<PetModel, Error> UpdatePetStatus(PetStatus newStatus, Guid petId)
-    {
-        var pet = _pets.FirstOrDefault(x => x.Id == petId);
-
-        if (pet is null)
-            return Errors.General.NotFound(petId);
-
-        pet.UpdateStatus(newStatus);
 
         return pet;
     }
@@ -189,6 +168,70 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>, ISoftDeletable
         return pets;
     }
 
+    public Result<PetModel, Error> UpdatePet(PetModel updatedPet, PetId petId)
+    {
+        var pet = _pets.FirstOrDefault(x => x.Id == petId.Value);
+
+        if (pet is null)
+            return Errors.General.NotFound(petId);
+
+        updatedPet.SetSerialNumber(pet.Position);
+
+        _pets.Remove(pet);
+        _pets.Add(updatedPet);
+
+        return pet;
+    }
+
+    public Result<PetModel, Error> UpdatePetStatus(PetStatus newStatus, PetId petId)
+    {
+        var pet = _pets.FirstOrDefault(x => x.Id == petId.Value);
+
+        if (pet is null)
+            return Errors.General.NotFound(petId);
+
+        pet.UpdateStatus(newStatus);
+
+        return pet;
+    }
+
+    public Result<PetModel, Error> SetMainPetPhoto(string path, PetId petId)
+    {
+        var pet = _pets.FirstOrDefault(x => x.Id == petId.Value);
+
+        if (pet is null)
+            return Errors.General.NotFound(petId);
+
+        if (pet.PhotoDetails is null)
+            return Errors.General.NotFound(petId);
+
+        pet.SetMainPhoto(path);
+
+        return pet;
+    }
+
+    public Result<PetModel, Error> SoftDeletePet(PetId petId)
+    {
+        var pet = _pets.FirstOrDefault(x => x.Id == petId.Value);
+
+        if (pet is null)
+            return Errors.General.NotFound(petId);
+
+        pet.SoftDelete();
+
+        return pet;
+    }
+
+    public Result<List<PetModel>, Error> HardDeletePet(PetModel pet)
+    {
+        if (pet is null)
+            return Errors.General.NotFound(pet?.Id.Value);
+
+        _pets.Remove(pet);
+
+        return _pets;
+    }
+
     public int NumberOfAttachedAnimals()
        => Pets.Where(x => x.HelpStatus == PetStatus.FoundHome).Count();
 
@@ -198,8 +241,13 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>, ISoftDeletable
     public int NumberOfNeedsHelpAnimals()
         => Pets.Where(x => x.HelpStatus == PetStatus.NeedsHelp).Count();
 
-    public Result<Position, Error> MovePetPosition(PetModel pet, Position newPosition)
+    public Result<Position, Error> MovePetPosition(PetId petId, Position newPosition)
     {
+        var pet = _pets.FirstOrDefault(x => x.Id == petId.Value);
+
+        if (pet is null)
+            return Errors.General.NotFound(petId);
+
         var currentPosition = pet.Position;
 
         if (currentPosition == newPosition)
@@ -273,4 +321,6 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>, ISoftDeletable
 
         return lastPosition.Value;
     }
+
+    #endregion
 }

@@ -34,7 +34,7 @@ public class UpdatePetStatusHandler : ICommandHandler<Guid, UpdatePetStatusComma
             return Errors.General.NotFound(command.VolunteerId);
         }
 
-        var updateStatusResult = volunteer.UpdatePetStatus(newStatus: command.PetStatus, petId: command.PetId);
+        var updateStatusResult = volunteer.UpdatePetStatus(newStatus: command.PetStatus, petId: PetId.Create(command.PetId));
 
         if (updateStatusResult.IsFailure)
         {

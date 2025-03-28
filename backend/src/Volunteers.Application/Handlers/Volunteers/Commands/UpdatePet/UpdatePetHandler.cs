@@ -62,7 +62,7 @@ public class UpdatePetHandler : ICommandHandler<Guid, UpdatePetCommand>
             speciesBreed: SpeciesBreed.Create(speciesId: command.SpeciesId, breedId: command.BreedId).Value
             ).Value;
 
-        var updateResult = volunteer.UpdatePet(pet, command.PetId);
+        var updateResult = volunteer.UpdatePet(pet, PetId.Create(command.PetId));
 
         if (updateResult.IsFailure)
         {
