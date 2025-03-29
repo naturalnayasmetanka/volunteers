@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using Volunteers.API.Contracts.Pets.GetPets;
 using Volunteers.API.Contracts.Volunteers.AddPet;
 using Volunteers.API.Contracts.Volunteers.AddPetPhoto;
 using Volunteers.API.Contracts.Volunteers.Create;
@@ -16,6 +17,7 @@ using Volunteers.API.Extentions;
 using Volunteers.API.Processors;
 using Volunteers.Application.Abstractions;
 using Volunteers.Application.DTO;
+using Volunteers.Application.Handlers.Pets.Queries.GetPets.Queries;
 using Volunteers.Application.Handlers.Species.Queries.CheckExists.Queries;
 using Volunteers.Application.Handlers.Volunteers.Commands.AddPet.Commands;
 using Volunteers.Application.Handlers.Volunteers.Commands.AddPetPhoto.Commands;
@@ -37,14 +39,14 @@ using Volunteers.Application.Models;
 
 namespace Volunteers.API.Controllers;
 
-[Route("api/volunteer")]
+[Route("api")]
 [ApiController]
 public class VolunteersController : ControllerBase
 {
     private const string BUCKET_NAME = "photos";
 
     #region Volunteer
-    [HttpGet]
+    [HttpGet("volunteers")]
     [SwaggerOperation(Tags = ["Volunteer"])]
     public async Task<IActionResult> GetVolunteers(
         [FromServices] IQueryHandler<PagedList<VolunteerDTO>, GetFilteredWithPaginationVolunteersQuery> handler,
@@ -57,7 +59,7 @@ public class VolunteersController : ControllerBase
         return Ok(result.Value);
     }
 
-    [HttpGet("{id:guid}")]
+    [HttpGet("volunteer/{id:guid}")]
     [SwaggerOperation(Tags = ["Volunteer"])]
     public async Task<IActionResult> GetVolunteerById(
         [FromServices] IQueryHandler<VolunteerDTO?, GetVolunteerQuery> handler,
@@ -69,7 +71,7 @@ public class VolunteersController : ControllerBase
         return Ok(result.Value);
     }
 
-    [HttpPost]
+    [HttpPost("volunteer")]
     [SwaggerOperation(Tags = ["Volunteer"])]
     public async Task<IActionResult> CreateVolunteer(
         [FromServices] ICommandHandler<Guid, CreateVolunteerCommand> handler,
@@ -86,7 +88,7 @@ public class VolunteersController : ControllerBase
         return Created();
     }
 
-    [HttpPatch("{volunteerId:guid}/main-info")]
+    [HttpPatch("volunteer/{volunteerId:guid}/main-info")]
     [SwaggerOperation(Tags = ["Volunteer"])]
     public async Task<IActionResult> UpdateVolunteerMainInfo(
         [FromServices] ICommandHandler<Guid, UpdateMainInfoCommand> handler,
@@ -104,7 +106,7 @@ public class VolunteersController : ControllerBase
         return Ok(mainInfoUpdateResult.Value);
     }
 
-    [HttpPatch("{volunteerId:guid}/social-network")]
+    [HttpPatch("volunteer/{volunteerId:guid}/social-network")]
     [SwaggerOperation(Tags = ["Volunteer"])]
     public async Task<IActionResult> UpdateVolunteerSocialNetwork(
         [FromServices] ICommandHandler<Guid, UpdateSocialNetworksCommand> handler,
@@ -122,7 +124,7 @@ public class VolunteersController : ControllerBase
         return Ok(socialUpdateResult.Value);
     }
 
-    [HttpPatch("{volunteerId:guid}/requisites")]
+    [HttpPatch("volunteer/{volunteerId:guid}/requisites")]
     [SwaggerOperation(Tags = ["Volunteer"])]
     public async Task<IActionResult> UpdateVolunteerRequisite(
         [FromServices] ICommandHandler<Guid, UpdateRequisiteCommand> handler,
@@ -140,7 +142,7 @@ public class VolunteersController : ControllerBase
         return Ok(requisitesUpdateResult);
     }
 
-    [HttpPatch("{volunteerId:guid}/restore")]
+    [HttpPatch("volunteer/{volunteerId:guid}/restore")]
     [SwaggerOperation(Tags = ["Volunteer"])]
     public async Task<IActionResult> RestoreVolunteer(
         [FromServices] ICommandHandler<Guid, RestoreCommand> handler,
@@ -157,7 +159,7 @@ public class VolunteersController : ControllerBase
         return Ok(volunteerId);
     }
 
-    [HttpDelete("{volunteerId:guid}/volunteer-soft")]
+    [HttpDelete("volunteer/{volunteerId:guid}/volunteer-soft")]
     [SwaggerOperation(Tags = ["Volunteer"])]
     public async Task<IActionResult> SoftDeleteVolunteer(
         [FromServices] ICommandHandler<Guid, SoftDeleteVolunteerCommand> handler,
@@ -174,7 +176,7 @@ public class VolunteersController : ControllerBase
         return Ok(volunteerId);
     }
 
-    [HttpDelete("{volunteerId:guid}/volunteer-hard")]
+    [HttpDelete("volunteer/{volunteerId:guid}/volunteer-hard")]
     [SwaggerOperation(Tags = ["Volunteer"])]
     public async Task<IActionResult> HardDeleteVolunteer(
         [FromServices] ICommandHandler<Guid, HardDeleteVolunteerCommand> handler,
@@ -194,11 +196,21 @@ public class VolunteersController : ControllerBase
     #endregion
 
     #region Pet
+    [HttpGet("volunteer/{volunteerId:guid}/pets")]
+    [SwaggerOperation(Tags = ["Pet"])]
+    public async Task<IActionResult> GetPets(
+        [FromRoute] Guid volunteerId,
+        [FromQuery] GetFilteredWithPaginationPetsRequest request,
+        [FromServices] IQueryHandler<PagedList<PetDTO>, GetFilteredWithPaginationPetsQuery> handler,
+        CancellationToken cancellationToken = default)
+    {
+        var query = request.ToQuery(volunteerId);
+        var result = await handler.Handle(query, cancellationToken);
 
+        return Ok(result.Value);
+    }
 
-
-
-    [HttpPost("{volunteerId:guid}/pet")]
+    [HttpPost("volunteer/{volunteerId:guid}/pet")]
     [SwaggerOperation(Tags = ["Pet"])]
     public async Task<IActionResult> CreatePet(
         [FromRoute] Guid volunteerId,
@@ -224,7 +236,7 @@ public class VolunteersController : ControllerBase
         return Ok(addPetResult.Value);
     }
 
-    [HttpPost("{volunteerId:guid}/pet/{petId:guid}/photo")]
+    [HttpPost("volunteer/{volunteerId:guid}/pet/{petId:guid}/photo")]
     [SwaggerOperation(Tags = ["Pet"])]
     public async Task<IActionResult> CreatePetPhoto(
         [FromRoute] Guid volunteerId,
@@ -251,7 +263,7 @@ public class VolunteersController : ControllerBase
         return Ok(addPhotoResult.Value);
     }
 
-    [HttpPost("{volunteerId:guid}/pet/{petId:guid}", Name = nameof(UpdatePet))]
+    [HttpPost("volunteer/{volunteerId:guid}/pet/{petId:guid}", Name = nameof(UpdatePet))]
     [SwaggerOperation(Tags = ["Pet"])]
     public async Task<IActionResult> UpdatePet(
         [FromRoute] Guid volunteerId,
@@ -278,7 +290,7 @@ public class VolunteersController : ControllerBase
         return Ok(updatePetHandle.Value);
     }
 
-    [HttpPost("{volunteerId:guid}/pet/{petId:guid}/set-main-photo", Name = nameof(SetMainPhoto))]
+    [HttpPost("volunteer/{volunteerId:guid}/pet/{petId:guid}/set-main-photo", Name = nameof(SetMainPhoto))]
     [SwaggerOperation(Tags = ["Pet"])]
     public async Task<IActionResult> SetMainPhoto(
         [FromRoute] Guid volunteerId,
@@ -297,7 +309,7 @@ public class VolunteersController : ControllerBase
         return Ok(setMainPetPhotoResult.Value);
     }
 
-    [HttpPatch("{volunteerId:guid}/pet/{petId:guid}", Name = nameof(ChangeStatus))]
+    [HttpPatch("volunteer/{volunteerId:guid}/pet/{petId:guid}", Name = nameof(ChangeStatus))]
     [SwaggerOperation(Tags = ["Pet"])]
     public async Task<IActionResult> ChangeStatus(
         [FromRoute] Guid volunteerId,
@@ -316,7 +328,7 @@ public class VolunteersController : ControllerBase
         return Ok(updatePetStatusHandle.Value);
     }
 
-    [HttpPatch("{volunteerId:guid}/pet-position")]
+    [HttpPatch("volunteer/{volunteerId:guid}/pet-position")]
     [SwaggerOperation(Tags = ["Pet"])]
     public async Task<IActionResult> UpdatePetPosition(
         [FromServices] ICommandHandler<Guid, MovePetCommand> handler,
@@ -334,7 +346,7 @@ public class VolunteersController : ControllerBase
         return Ok(movePetHandle.Value);
     }
 
-    [HttpDelete("{volunteerId:guid}/pet/{petId:guid}/photo")]
+    [HttpDelete("volunteer/{volunteerId:guid}/pet/{petId:guid}/photo")]
     [SwaggerOperation(Tags = ["Pet"])]
     public async Task<IActionResult> DeletePetPhoto(
         [FromRoute] Guid volunteerId,
@@ -358,7 +370,7 @@ public class VolunteersController : ControllerBase
         return Ok(deleteResult.Value);
     }
 
-    [HttpDelete("{volunteerId:guid}/pet-soft")]
+    [HttpDelete("volunteer/{volunteerId:guid}/pet-soft")]
     [SwaggerOperation(Tags = ["Pet"])]
     public async Task<IActionResult> SoftDeletePet(
         [FromServices] ICommandHandler<Guid, SoftDeletePetCommand> handler,
@@ -376,7 +388,7 @@ public class VolunteersController : ControllerBase
         return Ok(volunteerId);
     }
 
-    [HttpDelete("{volunteerId:guid}/pet-hard")]
+    [HttpDelete("volunteer/{volunteerId:guid}/pet-hard")]
     [SwaggerOperation(Tags = ["Pet"])]
     public async Task<IActionResult> HardDeletePet(
         [FromServices] ICommandHandler<Guid, HardDeletePetCommand> handler,

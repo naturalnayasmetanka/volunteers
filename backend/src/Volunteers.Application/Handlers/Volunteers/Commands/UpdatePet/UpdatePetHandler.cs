@@ -49,20 +49,17 @@ public class UpdatePetHandler : ICommandHandler<Guid, UpdatePetCommand>
             return Errors.General.NotFound(command.VolunteerId);
         }
 
-        var pet = Pet.Create(
-            id: PetId.Create(command.PetId),
+        var updateResult = volunteer.UpdatePet(
+            petId: PetId.Create(command.PetId),
             nickname: Nickname.Create(command.Nickname).Value,
             commonDescription: CommonDescription.Create(command.CommonDescription).Value,
             helthDescription: HelthDescription.Create(command.HelthDescription).Value,
             phoneNumber: PetPhoneNumber.Create(command.PetPhoneNumber).Value,
-            helpStatus: command.PetStatus,
+            petStatus: command.PetStatus,
             birthDate: command.BirthDate,
             creationDate: command.CreationDate,
             volunteerId: VolunteerId.Create(command.VolunteerId),
-            speciesBreed: SpeciesBreed.Create(speciesId: command.SpeciesId, breedId: command.BreedId).Value
-            ).Value;
-
-        var updateResult = volunteer.UpdatePet(pet, PetId.Create(command.PetId));
+            speciesBreed: SpeciesBreed.Create(speciesId: command.SpeciesId, breedId: command.BreedId).Value);
 
         if (updateResult.IsFailure)
         {
@@ -75,6 +72,6 @@ public class UpdatePetHandler : ICommandHandler<Guid, UpdatePetCommand>
 
         _logger.LogInformation("Pet {0} was updated into {1}", command, nameof(UpdatePetHandler));
 
-        return (Guid)updateResult.Value.Id;
+        return (Guid)updateResult.Value;
     }
 }

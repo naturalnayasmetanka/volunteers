@@ -85,6 +85,30 @@ public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
         return Result.Success(newPet);
     }
 
+    public Result<Guid> Update(PetId id,
+        Nickname nickname,
+        CommonDescription commonDescription,
+        HelthDescription helthDescription,
+        PetPhoneNumber phoneNumber,
+        PetStatus helpStatus,
+        DateTime birthDate,
+        DateTime creationDate,
+        VolunteerId volunteerId,
+        SpeciesBreed speciesBreed)
+    {
+        Nickname = nickname;
+        CommonDescription = commonDescription;
+        HelthDescription = helthDescription;
+        PhoneNumber = phoneNumber;
+        HelpStatus = helpStatus;
+        BirthDate = birthDate;
+        CreationDate = creationDate;
+        VolunteerId = volunteerId;
+        SpeciesBreed = speciesBreed;
+
+        return Result.Success(id.Value);
+    }
+
     public void SetSerialNumber(Position position)
     {
         Position = position;

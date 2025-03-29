@@ -34,10 +34,14 @@ public class GetPaginatePetsHandler : IQueryHandler<PagedList<PetDTO>, GetFilter
                       );
 
         sqlTotalCountQuery.ApplyFilterByColumn(columnName: "nickname", queryFieldValue: query.Name);
-        //sqlTotalCountQuery.ApplyFilterByColumn(columnName: "volunteer_id", queryFieldValue: query.VolunteerId);
+        sqlTotalCountQuery.ApplyFilterByColumn(columnName: "volunteer_id", queryFieldValue: query.VolunteerId.ToString());
         //sqlTotalCountQuery.ApplyFilterByColumn(columnName: "experience_in_years", queryFieldValue: query.Species);
         //sqlTotalCountQuery.ApplyFilterByColumn(columnName: "experience_in_years", queryFieldValue: query.Breed);
-        sqlTotalCountQuery.ApplyFilterByColumn(columnName: "help_status", queryFieldValue: (int)query.PetStatus);
+
+        if (query.PetStatus is not null) 
+        {
+            sqlTotalCountQuery.ApplyFilterByColumn(columnName: "help_status", queryFieldValue: (int)query.PetStatus);
+        }
 
         var totalCount = await connection.ExecuteScalarAsync<long>(sqlTotalCountQuery.ToString());
 
@@ -49,15 +53,18 @@ public class GetPaginatePetsHandler : IQueryHandler<PagedList<PetDTO>, GetFilter
                         """);
 
         sqlQuery.ApplyFilterByColumn(columnName: "nickname", queryFieldValue: query.Name);
-        //sqlTotalCountQuery.ApplyFilterByColumn(columnName: "volunteer_id", queryFieldValue: query.VolunteerId);
-        //sqlTotalCountQuery.ApplyFilterByColumn(columnName: "experience_in_years", queryFieldValue: query.Species);
-        //sqlTotalCountQuery.ApplyFilterByColumn(columnName: "experience_in_years", queryFieldValue: query.Breed);
-        sqlQuery.ApplyFilterByColumn(columnName: "help_status", queryFieldValue: (int)query.PetStatus);
+        sqlQuery.ApplyFilterByColumn(columnName: "volunteer_id", queryFieldValue: query.VolunteerId.ToString());
+        //sqlQuery.ApplyFilterByColumn(columnName: "experience_in_years", queryFieldValue: query.Species);
+        //sqlQuery.ApplyFilterByColumn(columnName: "experience_in_years", queryFieldValue: query.Breed);
+
+        if (query.PetStatus is not null)
+        {
+            sqlTotalCountQuery.ApplyFilterByColumn(columnName: "help_status", queryFieldValue: (int)query.PetStatus);
+        }
 
         sqlQuery.ApplySorting(sortBy: query.SortBy, sortDirection: query.SortDirection, dynamicParameters: parameters);
 
         sqlQuery.ApplyPagination(page: query.Page, pageSize: query.PageSize, dynamicParameters: parameters);
-
 
         var pets = await connection.QueryAsync<PetDTO, string?, string?, string?, string?, string?, PetDTO>(
             sqlQuery.ToString(),

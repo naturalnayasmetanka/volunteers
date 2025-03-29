@@ -11,26 +11,27 @@ using Volunteers.Application.Models;
 
 namespace Volunteers.API.Controllers
 {
-    [Route("api/pet")]
+    [Route("api")]
     [ApiController]
     public class PetsController : ControllerBase
     {
         private const string BUCKET_NAME = "photos";
 
-        [HttpGet]
+        [HttpGet("pets/{volunteerId:Guid}")]
         [SwaggerOperation(Tags = ["Pet"])]
         public async Task<IActionResult> GetPets(
-            [FromServices] IQueryHandler<PagedList<PetDTO>, GetFilteredWithPaginationPetsQuery> handler,
+            [FromRoute] Guid volunteerId,
             [FromQuery] GetFilteredWithPaginationPetsRequest request,
+            [FromServices] IQueryHandler<PagedList<PetDTO>, GetFilteredWithPaginationPetsQuery> handler,
             CancellationToken cancellationToken = default)
         {
-            var query = request.ToQuery();
+            var query = request.ToQuery(volunteerId);
             var result = await handler.Handle(query, cancellationToken);
 
             return Ok(result.Value);
         }
 
-        [HttpGet("{Id:Guid}")]
+        [HttpGet("pet/{petId:Guid}")]
         [SwaggerOperation(Tags = ["Pet"])]
         public async Task<IActionResult> GetPet(
             [FromRoute] GetPetRequest request,

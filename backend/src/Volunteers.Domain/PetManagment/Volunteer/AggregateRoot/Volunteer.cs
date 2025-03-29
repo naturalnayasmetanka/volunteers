@@ -168,19 +168,36 @@ public class Volunteer : CustomEntity.Entity<VolunteerId>, ISoftDeletable
         return pets;
     }
 
-    public Result<PetModel, Error> UpdatePet(PetModel updatedPet, PetId petId)
+    public Result<Guid, Error> UpdatePet(
+        PetId petId,
+        Nickname nickname,
+        CommonDescription commonDescription,
+        HelthDescription helthDescription,
+        PetPhoneNumber phoneNumber,
+        PetStatus petStatus,
+        DateTime birthDate,
+        DateTime creationDate,
+        VolunteerId volunteerId,
+        SpeciesBreed speciesBreed)
     {
         var pet = _pets.FirstOrDefault(x => x.Id == petId.Value);
 
         if (pet is null)
             return Errors.General.NotFound(petId);
 
-        updatedPet.SetSerialNumber(pet.Position);
+        var result = pet.Update(
+            id: petId,
+            nickname: nickname,
+            commonDescription: commonDescription,
+            helthDescription: helthDescription,
+            phoneNumber: phoneNumber,
+            helpStatus: petStatus,
+            birthDate: birthDate,
+            creationDate: creationDate,
+            volunteerId: volunteerId,
+            speciesBreed: speciesBreed);
 
-        _pets.Remove(pet);
-        _pets.Add(updatedPet);
-
-        return pet;
+        return petId.Value;
     }
 
     public Result<PetModel, Error> UpdatePetStatus(PetStatus newStatus, PetId petId)

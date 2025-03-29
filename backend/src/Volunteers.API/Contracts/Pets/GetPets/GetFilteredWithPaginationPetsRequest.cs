@@ -4,7 +4,6 @@ using Volunteers.Domain.PetManagment.Pet.Enums;
 namespace Volunteers.API.Contracts.Pets.GetPets;
 
 public record GetFilteredWithPaginationPetsRequest(
-    Guid? VolunteerId,
     string? Name,
     Guid? Species,
     Guid? Breed,
@@ -14,9 +13,9 @@ public record GetFilteredWithPaginationPetsRequest(
     string? SortBy,
     string? SortDirection)
 {
-    public GetFilteredWithPaginationPetsQuery ToQuery()
+    public GetFilteredWithPaginationPetsQuery ToQuery(Guid volunteerId)
         => new GetFilteredWithPaginationPetsQuery(
-            VolunteerId: VolunteerId, 
+            VolunteerId: volunteerId, 
             Name: Name, 
             PetStatus: PetStatus, 
             Species: Species, 
