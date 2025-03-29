@@ -37,61 +37,52 @@ public class HardDeletePetHandler : ICommandHandler<Guid, HardDeletePetCommand>
     {
         using (var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken))
         {
-            try
+            var volunteer = await _repository.GetByIdAsync(VolunteerId.Create(command.VolunteerId));
+
+            if (volunteer is null)
             {
-                var volunteer = await _repository.GetByIdAsync(VolunteerId.Create(command.VolunteerId));
+                _logger.LogError("Volunteer {0} was not found into {1}", command.VolunteerId, nameof(HardDeleteVolunteerHandler));
 
-                if (volunteer is null)
+                return Errors.General.NotFound(command.VolunteerId);
+            }
+
+            var pet = volunteer.Pets.FirstOrDefault(x => x.Id == command.PetId);
+
+            if (pet is null)
+            {
+                _logger.LogError("Pet {0} was not found into {1}", command.PetId, nameof(HardDeleteVolunteerHandler));
+
+                return Errors.General.NotFound(command.PetId);
+            }
+
+            if (pet.PhotoDetails is not null)
+            {
+                foreach (var photo in pet.PhotoDetails.PetPhoto)
                 {
-                    _logger.LogError("Volunteer {0} was not found into {1}", command.VolunteerId, nameof(HardDeleteVolunteerHandler));
+                    var deleteResult = await _minIoProvider.DeleteAsync(new FileDTO(Stream: null, FileName: photo.Path, BucketName: command.BucketName, ContentType: null), cancellationToken);
 
-                    return Errors.General.NotFound(command.VolunteerId);
-                }
-
-                var pet = volunteer.Pets.FirstOrDefault(x => x.Id == command.PetId);
-
-                if (pet is null)
-                {
-                    _logger.LogError("Pet {0} was not found into {1}", command.PetId, nameof(HardDeleteVolunteerHandler));
-
-                    return Errors.General.NotFound(command.PetId);
-                }
-
-                if (pet.PhotoDetails is not null)
-                {
-                    foreach (var photo in pet.PhotoDetails.PetPhoto)
+                    if (deleteResult.IsFailure)
                     {
-                        var deleteResult = await _minIoProvider.DeleteAsync(new FileDTO(Stream: null, FileName: photo.Path, BucketName: command.BucketName, ContentType: null), cancellationToken);
-
-                        if (deleteResult.IsFailure)
-                        {
-                            throw new Exception(deleteResult.Error.ToString());
-                        }
+                        throw new Exception(deleteResult.Error.ToString());
                     }
                 }
-
-                var petHardDeleteResult = volunteer.HardDeletePet(pet);
-
-                if (petHardDeleteResult.IsFailure)
-                {
-                    _logger.LogError("Pet {0} was not deleted(hard) in the volunteer {1} into {2}", command.PetId, command.VolunteerId, nameof(HardDeleteVolunteerHandler));
-
-                    return petHardDeleteResult.Error;
-                }
-
-                _repository.Attach(volunteer);
-                await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-                _logger.LogInformation("Pet {0} was deleted in the volunteer {1} into {2}", command.PetId, command.VolunteerId, nameof(HardDeleteVolunteerHandler));
-
-                return (Guid)volunteer.Id;
             }
-            catch
+
+            var petHardDeleteResult = volunteer.HardDeletePet(pet);
+
+            if (petHardDeleteResult.IsFailure)
             {
-                transaction.Rollback();
+                _logger.LogError("Pet {0} was not deleted(hard) in the volunteer {1} into {2}", command.PetId, command.VolunteerId, nameof(HardDeleteVolunteerHandler));
 
-                return Error.Failure("Error hard delete", "delete.pet.hard");
+                return petHardDeleteResult.Error;
             }
+
+            _repository.Attach(volunteer);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            _logger.LogInformation("Pet {0} was deleted in the volunteer {1} into {2}", command.PetId, command.VolunteerId, nameof(HardDeleteVolunteerHandler));
+
+            return (Guid)volunteer.Id;
         }
     }
 }
