@@ -79,6 +79,7 @@ public class HardDeletePetHandler : ICommandHandler<Guid, HardDeletePetCommand>
 
             _repository.Attach(volunteer);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+            transaction.Commit();
 
             _logger.LogInformation("Pet {0} was deleted in the volunteer {1} into {2}", command.PetId, command.VolunteerId, nameof(HardDeleteVolunteerHandler));
 
