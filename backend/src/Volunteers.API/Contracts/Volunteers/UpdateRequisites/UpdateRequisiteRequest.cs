@@ -1,5 +1,5 @@
-﻿using Volunteers.Application.Volunteers.UpdateRequisites.Commands;
-using Volunteers.Application.Volunteers.UpdateRequisites.DTO;
+﻿using Volunteers.Application.Handlers.Volunteers.Commands.UpdateRequisites.Commands;
+using Volunteers.Application.Handlers.Volunteers.Commands.UpdateRequisites.DTO;
 
 namespace Volunteers.API.Contracts.Volunteers.UpdateRequisites;
 

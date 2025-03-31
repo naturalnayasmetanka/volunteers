@@ -1,5 +1,5 @@
-﻿using Volunteers.Application.Volunteer.CreateVolunteer.DTO;
-using Volunteers.Application.Volunteers.CreateVolunteer.Commands;
+﻿using Volunteers.Application.Handlers.Volunteers.Commands.Create.Commands;
+using Volunteers.Application.Handlers.Volunteers.Commands.Create.DTO;
 
 namespace Volunteers.API.Contracts.Volunteers.Create;
 

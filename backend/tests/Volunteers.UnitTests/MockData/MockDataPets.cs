@@ -28,7 +28,8 @@ public class MockDataPets
             helpStatus: petStatus,
             birthDate: birthDate,
             creationDate: creationDate,
-            volunteerId: volunteerId
+            volunteerId: volunteerId,
+            speciesBreed: SpeciesBreed.Create(Guid.NewGuid(), Guid.NewGuid()).Value
             );
 
         return mockPet.Value;

@@ -67,10 +67,6 @@ namespace Volunteers.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("position");
 
-                    b.Property<string>("SpeciesBreed")
-                        .HasColumnType("text")
-                        .HasColumnName("species_breed");
-
                     b.Property<Guid>("VolunteerId")
                         .HasColumnType("uuid")
                         .HasColumnName("volunteer_id");
@@ -420,6 +416,29 @@ namespace Volunteers.Infrastructure.Migrations
                             b1.Navigation("PetRequisites");
                         });
 
+                    b.OwnsOne("Volunteers.Domain.PetManagment.Pet.ValueObjects.SpeciesBreed", "SpeciesBreed", b1 =>
+                        {
+                            b1.Property<Guid>("PetId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<Guid>("BreedId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<Guid>("SpeciesId")
+                                .HasColumnType("uuid");
+
+                            b1.HasKey("PetId");
+
+                            b1.ToTable("pets");
+
+                            b1.ToJson("SpeciesBreed");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PetId")
+                                .HasConstraintName("fk_pets_pets_id");
+                        });
+
                     b.Navigation("LocationDetails");
 
                     b.Navigation("PhotoDetails");
@@ -427,6 +446,8 @@ namespace Volunteers.Infrastructure.Migrations
                     b.Navigation("PhysicalParametersDetails");
 
                     b.Navigation("RequisitesDetails");
+
+                    b.Navigation("SpeciesBreed");
 
                     b.Navigation("Volunteer");
                 });

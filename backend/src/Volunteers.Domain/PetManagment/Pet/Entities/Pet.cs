@@ -24,7 +24,8 @@ public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
         PetStatus helpStatus,
         DateTime birthDate,
         DateTime creationDate,
-        VolunteerId volunteerId
+        VolunteerId volunteerId,
+        SpeciesBreed speciesBreed
         ) : base(id)
     {
         Nickname = nickname;
@@ -35,6 +36,7 @@ public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
         BirthDate = birthDate;
         CreationDate = creationDate;
         VolunteerId = volunteerId;
+        SpeciesBreed = speciesBreed;
     }
 
     public Nickname Nickname { get; private set; } = default!;
@@ -65,7 +67,8 @@ public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
         PetStatus helpStatus,
         DateTime birthDate,
         DateTime creationDate,
-        VolunteerId volunteerId)
+        VolunteerId volunteerId,
+        SpeciesBreed speciesBreed)
     {
         var newPet = new Pet(
             id: id,
@@ -76,14 +79,62 @@ public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
             helpStatus: helpStatus,
             birthDate: birthDate,
             creationDate: creationDate,
-            volunteerId: volunteerId);
+            volunteerId: volunteerId,
+            speciesBreed: speciesBreed);
 
         return Result.Success(newPet);
+    }
+
+    public Result<Guid> Update(PetId id,
+        Nickname nickname,
+        CommonDescription commonDescription,
+        HelthDescription helthDescription,
+        PetPhoneNumber phoneNumber,
+        PetStatus helpStatus,
+        DateTime birthDate,
+        DateTime creationDate,
+        VolunteerId volunteerId,
+        SpeciesBreed speciesBreed)
+    {
+        Nickname = nickname;
+        CommonDescription = commonDescription;
+        HelthDescription = helthDescription;
+        PhoneNumber = phoneNumber;
+        HelpStatus = helpStatus;
+        BirthDate = birthDate;
+        CreationDate = creationDate;
+        VolunteerId = volunteerId;
+        SpeciesBreed = speciesBreed;
+
+        return Result.Success(id.Value);
     }
 
     public void SetSerialNumber(Position position)
     {
         Position = position;
+    }
+
+    public Result<PhotoDetails, Error> SetMainPhoto(string path)
+    {
+        if (PhotoDetails is null)
+            return Errors.General.NotFound();
+
+        var photo = PhotoDetails.PetPhoto.FirstOrDefault(x => x.Path == path);
+
+        if (photo is null)
+            return Errors.General.NotFound();
+
+        List<PetPhoto> tempList = new List<PetPhoto>();
+
+        foreach (var item in PhotoDetails.PetPhoto)
+        {
+            tempList.Add(PetPhoto.Create(item.Path, item.Path == path ? true : false).Value);
+        }
+
+        PhotoDetails.PetPhoto.Clear();
+        PhotoDetails.PetPhoto.AddRange(tempList);
+
+        return PhotoDetails;
     }
 
     public void SoftDelete()
@@ -94,6 +145,11 @@ public class Pet : CustomEntity.Entity<PetId>, ISoftDeletable
     public void Restore()
     {
         _IsDelete = false;
+    }
+
+    public void UpdateStatus(PetStatus status)
+    {
+        HelpStatus = status;
     }
 
     public void AddLocation(Location location)

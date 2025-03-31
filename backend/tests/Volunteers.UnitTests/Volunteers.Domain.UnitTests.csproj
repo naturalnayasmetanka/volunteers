@@ -24,10 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Volunteers.API\Volunteers.API.csproj" />
-    <ProjectReference Include="..\..\src\Volunteers.Application\Volunteers.Application.csproj" />
     <ProjectReference Include="..\..\src\Volunteers.Domain\Volunteers.Domain.csproj" />
-    <ProjectReference Include="..\..\src\Volunteers.Infrastructure\Volunteers.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

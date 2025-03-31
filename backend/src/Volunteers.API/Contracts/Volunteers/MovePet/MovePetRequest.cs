@@ -1,4 +1,4 @@
-﻿using Volunteers.Application.Volunteers.MovePet.Commands;
+﻿using Volunteers.Application.Handlers.Volunteers.Commands.MovePet.Commands;
 
 namespace Volunteers.API.Contracts.Volunteers.MovePet;
 

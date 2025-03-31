@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Volunteers.Domain.PetManagment.Pet.Entities;
 using Volunteers.Domain.PetManagment.Pet.ValueObjects;
 using Volunteers.Domain.Shared.Ids;
-using Volunteers.Infrastructure.Extentions.EF;
 
 namespace Volunteers.Infrastructure.Configurations;
 
@@ -99,7 +98,7 @@ public class PetConfigurations : IEntityTypeConfiguration<Pet>
                     .IsRequired(true)
                     .HasMaxLength(5);
             });
-        }) ;
+        });
 
         builder.OwnsOne(x => x.RequisitesDetails, ib =>
         {
@@ -158,8 +157,12 @@ public class PetConfigurations : IEntityTypeConfiguration<Pet>
             });
         });
 
-        builder.Property(x => x.SpeciesBreed)
-            .JsonValueObjectСonversion();
+        builder.OwnsOne(x => x.SpeciesBreed, ib =>
+        {
+            ib.ToJson();
+            ib.Property(x => x.SpeciesId);
+            ib.Property(x => x.BreedId);
+        });
 
         builder.Property<bool>("_isDeleted")
            .UsePropertyAccessMode(PropertyAccessMode.Field)

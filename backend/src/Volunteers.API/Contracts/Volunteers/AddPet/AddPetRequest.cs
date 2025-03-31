@@ -1,4 +1,4 @@
-﻿using Volunteers.Application.Volunteers.AddPet.Commands;
+﻿using Volunteers.Application.Handlers.Volunteers.Commands.AddPet.Commands;
 using Volunteers.Domain.PetManagment.Pet.Enums;
 
 namespace Volunteers.API.Contracts.Volunteers.AddPet;
@@ -12,6 +12,8 @@ public record AddPetRequest
     public PetStatus PetStatus { get; set; }
     public DateTime BirthDate { get; set; }
     public DateTime CreationDate { get; set; }
+    public Guid SpeciesId { get; set; }
+    public Guid BreedId { get; set; }
 
     public static AddPetCommand ToCommand(
         Guid volunteerId,
@@ -25,7 +27,9 @@ public record AddPetRequest
             PetPhoneNumber: request.PetPhoneNumber,
             PetStatus: request.PetStatus,
             BirthDate: request.BirthDate,
-            CreationDate: request.CreationDate);
+            CreationDate: request.CreationDate,
+            SpeciesId: request.SpeciesId,
+            BreedId: request.BreedId);
 
         return command;
     }
