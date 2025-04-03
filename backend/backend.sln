@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Volunteers.Domain.UnitTests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Volunteers.API", "src\Volunteers.API\Volunteers.API.csproj", "{233DB2C2-473B-480A-AADD-3DFB1A97CCEE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Volunteers.Application", "src\Volunteers.Application\Volunteers.Application.csproj", "{321F6972-DAFF-412C-A465-4F3B725E42BA}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Volunteers.Infrastructure", "src\Volunteers.Infrastructure\Volunteers.Infrastructure.csproj", "{6D539224-6046-4ED7-9A0D-21B0229C46A7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Species", "Species", "{43A40871-9BC2-4099-8A2F-25D77D4E6E0F}"
@@ -27,23 +25,25 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Species.Infrastructure", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Species.Contracts", "src\Species\Species.Contracts\Species.Contracts.csproj", "{6193244D-5101-4209-9D43-B6B538E2B162}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Species.Presentation", "src\Species\Species.Presentation\Species.Presentation.csproj", "{C64736B6-12FB-4E15-A76D-41434DA11267}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Species.Presentation", "src\Species\Species.Presentation\Species.Presentation.csproj", "{C64736B6-12FB-4E15-A76D-41434DA11267}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Volunteers.Domain", "src\Volunteers\Volunteers.Domain\Volunteers.Domain.csproj", "{282AAF32-6E67-4B3F-80BB-435D5DFECF89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Volunteers.Domain", "src\Volunteers\Volunteers.Domain\Volunteers.Domain.csproj", "{282AAF32-6E67-4B3F-80BB-435D5DFECF89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Volunteers.Application", "src\Volunteers\Volunteers.Application\Volunteers.Application.csproj", "{029A171C-3EAE-473C-BCE3-6EFDDA383F88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Volunteers.Application", "src\Volunteers\Volunteers.Application\Volunteers.Application.csproj", "{029A171C-3EAE-473C-BCE3-6EFDDA383F88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Volunteers.Infrastructure", "src\Volunteers\Volunteers.Infrastructure\Volunteers.Infrastructure.csproj", "{1A614F08-FAB2-43B3-86DE-D87830F39068}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Volunteers.Infrastructure", "src\Volunteers\Volunteers.Infrastructure\Volunteers.Infrastructure.csproj", "{1A614F08-FAB2-43B3-86DE-D87830F39068}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Volunteers.Contracts", "src\Volunteers\Volunteers.Contracts\Volunteers.Contracts.csproj", "{B253CFEE-9996-48F9-88BE-AB2A45A0A455}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Volunteers.Contracts", "src\Volunteers\Volunteers.Contracts\Volunteers.Contracts.csproj", "{B253CFEE-9996-48F9-88BE-AB2A45A0A455}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Volunteers.Presentation", "src\Volunteers\Volunteers.Presentation\Volunteers.Presentation.csproj", "{1A3486FB-8FDA-479C-8F9E-B71F0AB8545A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Volunteers.Presentation", "src\Volunteers\Volunteers.Presentation\Volunteers.Presentation.csproj", "{1A3486FB-8FDA-479C-8F9E-B71F0AB8545A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Core", "src\Shared\Shared.Core\Shared.Core.csproj", "{0C723257-3327-4863-9E70-AEAA8991E66F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.Core", "src\Shared\Shared.Core\Shared.Core.csproj", "{0C723257-3327-4863-9E70-AEAA8991E66F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Framework", "src\Shared\Shared.Framework\Shared.Framework.csproj", "{2E889C7B-2C3B-4B6E-B570-C45FF4E9A93D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.Framework", "src\Shared\Shared.Framework\Shared.Framework.csproj", "{2E889C7B-2C3B-4B6E-B570-C45FF4E9A93D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Kernel", "src\Shared\Shared.Kernel\Shared.Kernel.csproj", "{C97BBFAA-3439-4191-B111-8E511BEF7F04}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.Kernel", "src\Shared\Shared.Kernel\Shared.Kernel.csproj", "{C97BBFAA-3439-4191-B111-8E511BEF7F04}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6C956D39-F575-48FB-BF3F-074B6E36A7C0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,10 +63,6 @@ Global
 		{233DB2C2-473B-480A-AADD-3DFB1A97CCEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{233DB2C2-473B-480A-AADD-3DFB1A97CCEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{233DB2C2-473B-480A-AADD-3DFB1A97CCEE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{321F6972-DAFF-412C-A465-4F3B725E42BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{321F6972-DAFF-412C-A465-4F3B725E42BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{321F6972-DAFF-412C-A465-4F3B725E42BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{321F6972-DAFF-412C-A465-4F3B725E42BA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6D539224-6046-4ED7-9A0D-21B0229C46A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6D539224-6046-4ED7-9A0D-21B0229C46A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D539224-6046-4ED7-9A0D-21B0229C46A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -128,6 +124,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{A0FD1CE4-5A6A-42FE-B1F7-A81F73E30B16} = {6C956D39-F575-48FB-BF3F-074B6E36A7C0}
 		{48194755-8355-4704-B4C6-5FD6380A3E4A} = {43A40871-9BC2-4099-8A2F-25D77D4E6E0F}
 		{4020676C-0E8A-44AB-B6F0-AA88E8C81856} = {43A40871-9BC2-4099-8A2F-25D77D4E6E0F}
 		{C470A597-3CA5-4E90-A323-F5ED56DDA9D4} = {43A40871-9BC2-4099-8A2F-25D77D4E6E0F}
