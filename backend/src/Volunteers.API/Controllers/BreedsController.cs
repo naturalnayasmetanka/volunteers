@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using Volunteers.API.Contracts.Breeds.GetBreeds;
 using Volunteers.Application.Abstractions;
 using Volunteers.Application.DTO;
 using Volunteers.Application.Handlers.Breeds.Queries.GetBreed.Queries;

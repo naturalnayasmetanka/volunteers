@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Volunteers.Domain.UnitTests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Volunteers.API", "src\Volunteers.API\Volunteers.API.csproj", "{233DB2C2-473B-480A-AADD-3DFB1A97CCEE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Volunteers.Infrastructure", "src\Volunteers.Infrastructure\Volunteers.Infrastructure.csproj", "{6D539224-6046-4ED7-9A0D-21B0229C46A7}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Species", "Species", "{43A40871-9BC2-4099-8A2F-25D77D4E6E0F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{BF315756-FD54-49A9-9F2B-9BA1C17EBAB3}"
@@ -63,10 +61,6 @@ Global
 		{233DB2C2-473B-480A-AADD-3DFB1A97CCEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{233DB2C2-473B-480A-AADD-3DFB1A97CCEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{233DB2C2-473B-480A-AADD-3DFB1A97CCEE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6D539224-6046-4ED7-9A0D-21B0229C46A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6D539224-6046-4ED7-9A0D-21B0229C46A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6D539224-6046-4ED7-9A0D-21B0229C46A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6D539224-6046-4ED7-9A0D-21B0229C46A7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{48194755-8355-4704-B4C6-5FD6380A3E4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{48194755-8355-4704-B4C6-5FD6380A3E4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48194755-8355-4704-B4C6-5FD6380A3E4A}.Release|Any CPU.ActiveCfg = Release|Any CPU

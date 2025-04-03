@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Species.Contracts.Breeds;
+namespace Species.Infrastructure.Extentions.DI;
 
-public interface IBreedContract
+public class SpeciesInfrastructureInjector
 {
+
 }

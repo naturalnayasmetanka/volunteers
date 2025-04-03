@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using Volunteers.API.Contracts.Pets.GetPets;
-using Volunteers.API.Contracts.Volunteers.GetPresignedLinkPhoto;
 using Volunteers.Application.Abstractions;
 using Volunteers.Application.DTO;
 using Volunteers.Application.Handlers.Pets.Queries.GetPet.Queries;
