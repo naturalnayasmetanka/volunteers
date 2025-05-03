@@ -1,5 +1,4 @@
-﻿namespace Volunteers.Domain.PetManagment.Pet.ValueObjects;
-
+﻿namespace Volunteers.Domain.Pets.ValueObjects;
 public class PetPhotoList
 {
     private PetPhotoList() { }

@@ -1,10 +1,11 @@
-﻿using Volunteers.Application.Handlers.Volunteers.Commands.Create.Commands;
-using Volunteers.Application.Handlers.Volunteers.Commands.Create.DTO;
+﻿using Volunteers.Application.Volunteers.Commands.Create.Commands;
+using Volunteers.Application.Volunteers.Commands.Create.DTO;
 
-namespace Volunteers.API.Contracts.Volunteers.Create;
+namespace Volunteers.Contracts.Volunteers.Requests.Volunteers.Create;
 
 public record CreateVolunteerRequest
 {
+
     public string Name { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public double ExperienceInYears { get; set; }

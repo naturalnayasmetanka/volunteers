@@ -1,21 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Volunteers.Application.Handlers.Volunteers;
-using Volunteers.Domain.PetManagment.Volunteer.AggregateRoot;
-using Volunteers.Domain.Shared.Ids;
+﻿using Microsoft.EntityFrameworkCore;
+using Shared.Kernel.Ids;
+using Volunteers.Application.Volunteers;
+using Volunteers.Domain.Volunteers.AggregateRoot;
 using Volunteers.Infrastructure.Contexts;
 
 namespace Volunteers.Infrastructure.Repositories;
 
 public class VolunteerRepository : IVolunteerRepository
 {
-    private readonly ApplicationDbContext _context;
+    private readonly VolunteersDbContext _context;
 
-    public VolunteerRepository(ApplicationDbContext context)
+    public VolunteerRepository(VolunteersDbContext context)
     {
         _context = context;
     }
-     
+
     public async Task<Volunteer> CreateAsync(
         Volunteer newVolunteer,
         CancellationToken cancellationToken = default)

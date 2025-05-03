@@ -1,8 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
+using CSharpFunctionalExtensions;
+using Dapper;
+using Shared.Core.Abstractions.Database;
+using Shared.Core.Abstractions.Handlers;
+using Shared.Core.DTO;
+using Shared.Kernel.CustomErrors;
+using Volunteers.Application.Volunteers.Queries.GetVolunteer.Queries;
 
 namespace Volunteers.Application.Volunteers.Queries.GetVolunteer;
 

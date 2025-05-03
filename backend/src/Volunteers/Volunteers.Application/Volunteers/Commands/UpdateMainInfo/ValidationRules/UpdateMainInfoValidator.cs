@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FluentValidation;
+using Shared.Core.Validations;
+using Volunteers.Application.Volunteers.Commands.UpdateMainInfo.DTO;
+using Volunteers.Domain.Volunteers.ValueObjects;
 
 namespace Volunteers.Application.Volunteers.Commands.UpdateMainInfo.ValidationRules;
 

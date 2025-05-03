@@ -1,6 +1,6 @@
-﻿using Volunteers.Application.Handlers.Volunteers.Commands.SetMainPetPhoto.Commands;
+﻿using Volunteers.Application.Volunteers.Commands.SetMainPetPhoto.Commands;
 
-namespace Volunteers.API.Contracts.Volunteers.SetMainPetPhoto;
+namespace Volunteers.Contracts.Volunteers.Requests.Volunteers.SetMainPetPhoto;
 
 public record SetMainPetPhotoRequest
 {

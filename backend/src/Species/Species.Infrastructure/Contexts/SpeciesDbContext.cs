@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using SpeciesModel = Species.Domain.Species.AggregateRoot.Species;
 
 namespace Species.Infrastructure.Contexts;
 
-public class SpeciesDbContext: DbContext
+public class SpeciesDbContext : DbContext
 {
     private const string VOLUNTEERS_CONNECTION_STRING = "VolunteersDbConnectionString";
     private readonly IConfiguration _configuration;
@@ -17,8 +15,7 @@ public class SpeciesDbContext: DbContext
         _configuration = configuration;
     }
 
-
-    public DbSet<Species> Species { get; set; }
+    public DbSet<SpeciesModel> Species { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

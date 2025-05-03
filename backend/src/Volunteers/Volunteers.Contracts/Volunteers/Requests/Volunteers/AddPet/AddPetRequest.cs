@@ -1,7 +1,9 @@
-﻿using Volunteers.Application.Handlers.Volunteers.Commands.AddPet.Commands;
-using Volunteers.Domain.PetManagment.Pet.Enums;
+﻿
 
-namespace Volunteers.API.Contracts.Volunteers.AddPet;
+using Shared.Kernel.Enums;
+using Volunteers.Application.Volunteers.Commands.AddPet.Commands;
+
+namespace Volunteers.Contracts.Volunteers.Requests.Volunteers.AddPet;
 
 public record AddPetRequest
 {

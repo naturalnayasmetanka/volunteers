@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FluentValidation;
+using Volunteers.Application.Volunteers.Commands.AddPet.Commands;
 
 namespace Volunteers.Application.Volunteers.Commands.AddPet.ValidationRules;
 
@@ -18,3 +15,4 @@ public class AddPetVolunteerValidator : AbstractValidator<AddPetCommand>
         RuleFor(x => x.CreationDate).NotEmpty();
     }
 }
+

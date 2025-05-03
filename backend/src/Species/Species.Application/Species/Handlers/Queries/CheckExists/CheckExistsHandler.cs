@@ -1,9 +1,11 @@
-﻿using Species.Application.Species.Handlers.Queries.CheckExists.Queries;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
+using CSharpFunctionalExtensions;
+using Dapper;
+using Microsoft.Extensions.Logging;
+using Shared.Core.Abstractions.Database;
+using Shared.Core.Abstractions.Handlers;
+using Shared.Kernel.CustomErrors;
+using Species.Application.Species.Handlers.Queries.CheckExists.Queries;
 
 namespace Species.Application.Species.Handlers.Queries.CheckExists;
 
@@ -57,3 +59,4 @@ public class CheckExistsHandler : IQueryHandler<bool, CheckExistsQuery>
         return true;
     }
 }
+

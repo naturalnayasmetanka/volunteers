@@ -1,15 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Volunteers.Domain.PetManagment.Volunteer.AggregateRoot;
-using Volunteers.Domain.PetManagment.Volunteer.ValueObjects;
-using Volunteers.Domain.Shared.Ids;
+using Shared.Kernel.Ids;
+using Volunteers.Domain.Volunteers.AggregateRoot;
+using Volunteers.Domain.Volunteers.ValueObjects;
 
 namespace Volunteers.Infrastructure.Configurations;
 
 public class VolunteerConfigurations : IEntityTypeConfiguration<Volunteer>
 {
     public void Configure(EntityTypeBuilder<Volunteer> builder)
-    { 
+    {
         builder.ToTable("volunteers");
 
         builder.HasKey(x => x.Id);

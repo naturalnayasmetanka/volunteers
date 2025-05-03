@@ -1,5 +1,5 @@
-﻿namespace Volunteers.API.Contracts.Volunteers.UpdateSocialNetworks;
+﻿namespace Volunteers.Contracts.Volunteers.Requests.Volunteers.UpdateSocialNetworks;
 
 public record UpdateSocialRequest(
-    string Title, 
+    string Title,
     string Link);

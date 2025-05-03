@@ -1,6 +1,7 @@
-﻿using Volunteers.Application.DTO;
+﻿using Microsoft.AspNetCore.Http;
+using Shared.Core.DTO;
 
-namespace Volunteers.API.Processors
+namespace Shared.Framework.Processors
 {
     public class FormFileProcessor : IAsyncDisposable
     {

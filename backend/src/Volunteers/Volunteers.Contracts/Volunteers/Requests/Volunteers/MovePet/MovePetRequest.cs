@@ -1,6 +1,6 @@
-﻿using Volunteers.Application.Handlers.Volunteers.Commands.MovePet.Commands;
+﻿using Volunteers.Application.Volunteers.Commands.MovePet.Commands;
 
-namespace Volunteers.API.Contracts.Volunteers.MovePet;
+namespace Volunteers.Contracts.Volunteers.Requests.Volunteers.MovePet;
 
 public record MovePetRequest
 {

@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
-using Volunteers.Domain.Shared.CustomErrors;
+using Shared.Kernel.CustomErrors;
 
-namespace Volunteers.Domain.SpeciesManagment.Breed.ValueObjects;
+namespace Species.Domain.Breeds.ValueObjects;
 
 public record Title
 {

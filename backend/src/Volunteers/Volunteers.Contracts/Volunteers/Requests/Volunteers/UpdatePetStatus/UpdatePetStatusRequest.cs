@@ -1,7 +1,7 @@
-﻿using Volunteers.Application.Handlers.Volunteers.Commands.UpdatePetStatus.Commands;
-using Volunteers.Domain.PetManagment.Pet.Enums;
+﻿using Shared.Kernel.Enums;
+using Volunteers.Application.Volunteers.Commands.UpdatePetStatus.Commands;
 
-namespace Volunteers.API.Contracts.Volunteers.UpdatePetStatus;
+namespace Volunteers.Contracts.Volunteers.Requests.Volunteers.UpdatePetStatus;
 
 public record UpdatePetStatusRequest
 {

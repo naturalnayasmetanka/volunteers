@@ -1,6 +1,6 @@
-﻿using Volunteers.Application.Handlers.Volunteers.Queries.GetVolunteer.Queries;
+﻿using Volunteers.Application.Volunteers.Queries.GetVolunteer.Queries;
 
-namespace Volunteers.API.Contracts.Volunteers.GetVolunteers;
+namespace Volunteers.Contracts.Volunteers.Requests.Volunteers.GetVolunteers;
 
 public record GetVolunteerRequest(Guid id)
 {

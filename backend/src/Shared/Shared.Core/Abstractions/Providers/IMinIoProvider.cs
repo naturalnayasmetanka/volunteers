@@ -2,7 +2,7 @@
 using Shared.Core.DTO;
 using Shared.Kernel.CustomErrors;
 
-namespace Shared.Core.Providers;
+namespace Shared.Core.Abstractions.Providers;
 
 public interface IMinIoProvider
 {

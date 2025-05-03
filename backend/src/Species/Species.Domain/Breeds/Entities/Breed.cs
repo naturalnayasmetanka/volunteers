@@ -1,10 +1,11 @@
 ﻿using CSharpFunctionalExtensions;
-using Volunteers.Domain.Shared.Ids;
-using Volunteers.Domain.SpeciesManagment.Breed.ValueObjects;
-using CustomEntity = Volunteers.Domain.Shared;
-using SpeciesModel = Volunteers.Domain.SpeciesManagment.Species.AggregateRoot.Species;
+using Shared.Kernel.Ids;
+using Species.Domain.Breeds.ValueObjects;
+using CustomEntity = Shared.Kernel;
 
-namespace Volunteers.Domain.SpeciesManagment.Breed.Entities;
+using SpeciesModel = Species.Domain.Species.AggregateRoot.Species;
+
+namespace Species.Domain.Breeds.Entities;
 
 public class Breed : CustomEntity.Entity<BreedId>
 {

@@ -1,16 +1,36 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Minio;
+using Serilog;
+using Shared.Core.Abstractions.Database;
 using Shared.Core.Abstractions.MessageQueues;
+using Shared.Core.Abstractions.Providers;
 using Shared.Core.BackgroundServices;
 using Shared.Core.DTO;
 using Shared.Core.MessageQueues;
 using Shared.Core.Options;
 using Shared.Core.Providers;
+using MinIO = Shared.Core.Options.Minio;
 
 namespace Shared.Core.Extentions.di;
 
-public static class InfrastructureInjector
+public static class SharedCoreInjector
 {
+    public static IServiceCollection AddSharedCore(this IServiceCollection services, WebApplicationBuilder builder)
+    {
+        services.AddSingleton<ISqlConnConnectionFactory, SqlConnectionFactory>();
+
+        services.AddLogger(builder);
+        services.AddMinIO(builder);
+
+        services.AddMessageQueues(builder);
+
+        services.AddBackgroundServices(builder);
+
+        return services;
+    }
+
     private static IServiceCollection AddLogger(this IServiceCollection services, WebApplicationBuilder builder)
     {
         services.Configure<Seq>(builder.Configuration.GetSection(Seq.SEQ_SECTION_NAME));  // for DI usage
@@ -19,8 +39,6 @@ public static class InfrastructureInjector
                 ?? throw new ApplicationException("Seq Options not found in appsettings");
 
         Log.Logger = new LoggerConfiguration()
-            .WriteTo.Console()
-            .WriteTo.Debug()
             .WriteTo.Seq(seqOptions.Url ?? throw new ApplicationException("Seq connection not found in appsettings"))
             .MinimumLevel.Override("Microsoft.AspNetCore.Hosting", Serilog.Events.LogEventLevel.Warning)
             .MinimumLevel.Override("Microsoft.AspNetCore.Mvc", Serilog.Events.LogEventLevel.Warning)

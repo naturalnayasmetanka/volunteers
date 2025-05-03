@@ -1,14 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Volunteers.Domain.Shared.Ids;
-using Volunteers.Domain.SpeciesManagment.Species.AggregateRoot;
-using Volunteers.Domain.SpeciesManagment.Species.ValueObjects;
+using Shared.Kernel.Ids;
+using Species.Domain.Species.ValueObjects;
+using SpeciesModel = Species.Domain.Species.AggregateRoot.Species;
 
-namespace Volunteers.Infrastructure.Configurations;
+namespace Species.Infrastructure.Configurations;
 
-public class SpeciesConfigurations : IEntityTypeConfiguration<Species>
+public class SpeciesConfigurations : IEntityTypeConfiguration<SpeciesModel>
 {
-    public void Configure(EntityTypeBuilder<Species> builder)
+    public void Configure(EntityTypeBuilder<SpeciesModel> builder)
     {
         builder.ToTable("species");
 

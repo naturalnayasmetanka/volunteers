@@ -1,7 +1,7 @@
-﻿using Volunteers.Application.DTO;
-using Volunteers.Application.Handlers.Volunteers.Commands.GetPresignedLinkPhoto.Commands;
+﻿using Shared.Core.DTO;
+using Volunteers.Application.Volunteers.Commands.GetPresignedLinkPhoto.Commands;
 
-namespace Volunteers.API.Contracts.Volunteers.GetPresignedLinkPhoto;
+namespace Volunteers.Contracts.Volunteers.Requests.Volunteers.GetPresignedLinkPhoto;
 
 public record GetPresignedLinkPhotoRequest
 {

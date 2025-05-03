@@ -1,6 +1,7 @@
-﻿using Volunteers.Application.Handlers.Species.Queries.GetSpecies.Queries;
+﻿
+using Species.Application.Species.Handlers.Queries.GetSpecies.Queries;
 
-namespace Volunteers.API.Contracts.Species.GetSpecies
+namespace Species.Contracts.Species.Requests.Species.GetSpecies
 {
     public record GetSpeciesRequest(
         int Page,

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Minio;
 using Minio.DataModel.Args;
 using Minio.Exceptions;
+using Shared.Core.Abstractions.Providers;
 using Shared.Core.DTO;
 using Shared.Kernel.CustomErrors;
 

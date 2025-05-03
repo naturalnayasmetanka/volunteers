@@ -6,8 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+<ItemGroup>
+	<PackageReference Include="EFCore.NamingConventions" Version="8.0.3" />
+	<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
+</ItemGroup>
+
   <ItemGroup>
-    <Folder Include="Extentions\DI\" />
+    <ProjectReference Include="..\Volunteers.Application\Volunteers.Application.csproj" />
   </ItemGroup>
 
 </Project>

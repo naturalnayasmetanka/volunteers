@@ -1,18 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Shared.Core.Abstractions.Handlers;
+using Shared.Core.DTO;
+using Shared.Framework;
+using Species.Application.Breeds.Handlers.Queries.GetBreed.Queries;
+using Species.Contracts.Breeds.Requests.GetBreeds;
 using Swashbuckle.AspNetCore.Annotations;
-using Volunteers.Application.Abstractions;
-using Volunteers.Application.DTO;
-using Volunteers.Application.Handlers.Breeds.Queries.GetBreed.Queries;
 
-namespace Volunteers.API.Controllers;
+namespace Species.Presentation.Controllers;
 
-[Route("api/breeds")]
-[ApiController]
-public class BreedsController : ControllerBase
+public class BreedController : ApplicationController
 {
-    [HttpGet]
+    [HttpGet("breed")]
     [SwaggerOperation(Tags = ["Breed"])]
-    public async Task<IActionResult> Get(
+    public async Task<IActionResult> GetBreed(
         [FromServices] IQueryHandler<BreedDTO, GetBreedQuery> handler,
         [FromQuery] GetBreedRequest request,
         CancellationToken cancellationToken = default)

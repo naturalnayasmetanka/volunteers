@@ -1,15 +1,14 @@
 ﻿using System.Data;
 using Microsoft.EntityFrameworkCore.Storage;
-using Volunteers.Application.Database;
-using Volunteers.Infrastructure.Contexts;
+using Shared.Core.Abstractions.Database;
+using Species.Infrastructure.Contexts;
 
-namespace Volunteers.Infrastructure;
+namespace Species.Infrastructure;
 
-public class UnitOfWork : IUnitOfWork
+public class SpeciesUnitOfWork : IUnitOfWork
 {
-    private readonly ApplicationDbContext _context;
-
-    public UnitOfWork(ApplicationDbContext context)
+    private readonly SpeciesDbContext _context;
+    public SpeciesUnitOfWork(SpeciesDbContext context)
     {
         _context = context;
     }

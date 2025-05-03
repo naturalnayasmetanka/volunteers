@@ -1,8 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CSharpFunctionalExtensions;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Shared.Core.Abstractions.Database;
+using Shared.Core.Abstractions.Handlers;
+using Shared.Core.Abstractions.MessageQueues;
+using Shared.Core.Abstractions.Providers;
+using Shared.Core.DTO;
+using Shared.Core.Enums;
+using Shared.Kernel.CustomErrors;
+using Shared.Kernel.Ids;
+using Volunteers.Application.Volunteers.Commands.AddPet;
+using Volunteers.Application.Volunteers.Commands.DeletePetPhoto.Commands;
 
 namespace Volunteers.Application.Volunteers.Commands.DeletePetPhoto;
 
@@ -19,7 +27,7 @@ public class DeletePetPhotoHandler : ICommandHandler<string, DeletePetPhotoComma
         IMinIoProvider minIoProvider,
         ILogger<AddPetVolunteerHandler> logger,
         IVolunteerRepository volunteerRepository,
-        IUnitOfWork unitOfWork,
+        [FromKeyedServices(UoWServiceDI.VolunteerService)] IUnitOfWork unitOfWork,
         IMessageQueue<List<FileDTO>> messageQueue)
     {
         _minIoProvider = minIoProvider;

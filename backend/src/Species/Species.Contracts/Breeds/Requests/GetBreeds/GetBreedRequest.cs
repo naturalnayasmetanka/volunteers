@@ -1,6 +1,8 @@
-﻿using Volunteers.Application.Handlers.Breeds.Queries.GetBreed.Queries;
+﻿
 
-namespace Volunteers.API.Contracts.Breeds.GetBreeds;
+using Species.Application.Breeds.Handlers.Queries.GetBreed.Queries;
+
+namespace Species.Contracts.Breeds.Requests.GetBreeds;
 
 public record GetBreedRequest(int Page, int PageSize, Guid SpeciesId)
 {

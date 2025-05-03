@@ -1,7 +1,7 @@
-﻿using Volunteers.Application.Handlers.Pets.Queries.GetPets.Queries;
-using Volunteers.Domain.PetManagment.Pet.Enums;
+﻿using Shared.Kernel.Enums;
+using Volunteers.Application.Pets.Queries.GetPets.Queries;
 
-namespace Volunteers.API.Contracts.Pets.GetPets;
+namespace Volunteers.Contracts.Pets.Requests.Pets.GetPets;
 
 public record GetFilteredWithPaginationPetsRequest(
     string? Name,
@@ -15,13 +15,13 @@ public record GetFilteredWithPaginationPetsRequest(
 {
     public GetFilteredWithPaginationPetsQuery ToQuery(Guid volunteerId)
         => new GetFilteredWithPaginationPetsQuery(
-            VolunteerId: volunteerId, 
-            Name: Name, 
-            PetStatus: PetStatus, 
-            Species: Species, 
-            Breed: Breed, 
-            Page:Page, 
-            PageSize:PageSize,
+            VolunteerId: volunteerId,
+            Name: Name,
+            PetStatus: PetStatus,
+            Species: Species,
+            Breed: Breed,
+            Page: Page,
+            PageSize: PageSize,
             SortBy: SortBy,
             SortDirection: SortDirection);
 }

@@ -1,6 +1,6 @@
-﻿using Volunteers.Application.Handlers.Volunteers.Queries.GetVolunteers.Queries;
+﻿using Volunteers.Application.Volunteers.Queries.GetVolunteers.Queries;
 
-namespace Volunteers.API.Contracts.Volunteers.GetVolunteers;
+namespace Volunteers.Contracts.Volunteers.Requests.Volunteers.GetVolunteers;
 
 public record GetFilteredWithPaginationVolunteersRequest(
     string? Name,

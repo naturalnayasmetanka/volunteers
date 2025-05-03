@@ -1,7 +1,10 @@
-﻿using Volunteers.Application.DTO;
-using Volunteers.Application.Handlers.Volunteers.Commands.AddPetPhoto.Commands;
+﻿
 
-namespace Volunteers.API.Contracts.Volunteers.AddPetPhoto
+using Microsoft.AspNetCore.Http;
+using Shared.Core.DTO;
+using Volunteers.Application.Volunteers.Commands.AddPetPhoto.Commands;
+
+namespace Volunteers.Contracts.Volunteers.Requests.Volunteers.AddPetPhoto
 {
     public record AddPetPhotoRequest
     {

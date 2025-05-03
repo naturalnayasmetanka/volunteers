@@ -1,8 +1,9 @@
 ﻿using FluentValidation.Results;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Volunteers.Domain.Shared.CustomErrors;
+using Shared.Kernel.CustomErrors;
 
-namespace Volunteers.API.Extentions;
+namespace Shared.Framework.Extentions;
 
 public static class ResponseExtentions
 {

@@ -1,4 +1,4 @@
-﻿namespace Volunteers.Domain.PetManagment.Volunteer.ValueObjects;
+﻿namespace Volunteers.Domain.Volunteers.ValueObjects;
 
 public class RequisiteDetails
 {

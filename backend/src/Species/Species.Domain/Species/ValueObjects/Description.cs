@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
-using Volunteers.Domain.Shared.CustomErrors;
+using Shared.Kernel.CustomErrors;
 
-namespace Volunteers.Domain.SpeciesManagment.Species.ValueObjects;
+namespace Species.Domain.Species.ValueObjects;
 
 public class Description
 {

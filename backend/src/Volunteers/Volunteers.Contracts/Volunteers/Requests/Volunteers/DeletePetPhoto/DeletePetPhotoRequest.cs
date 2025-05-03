@@ -1,7 +1,7 @@
-﻿using Volunteers.Application.DTO;
-using Volunteers.Application.Handlers.Volunteers.Commands.DeletePetPhoto.Commands;
+﻿using Shared.Core.DTO;
+using Volunteers.Application.Volunteers.Commands.DeletePetPhoto.Commands;
 
-namespace Volunteers.API.Contracts.Volunteers.DeletePetPhoto;
+namespace Volunteers.Contracts.Volunteers.Requests.Volunteers.DeletePetPhoto;
 
 public record DeletePetPhotoRequest
 {

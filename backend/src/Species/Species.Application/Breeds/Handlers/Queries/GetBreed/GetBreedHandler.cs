@@ -1,9 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Volunteers.Application.Handlers.Breeds.Queries.GetBreed.Queries;
+﻿using System.Text;
+using CSharpFunctionalExtensions;
+using Dapper;
+using Shared.Core.Abstractions.Database;
+using Shared.Core.Abstractions.Handlers;
+using Shared.Core.DTO;
+using Shared.Core.Extentions;
+using Shared.Core.Models;
+using Shared.Kernel.CustomErrors;
+using Species.Application.Breeds.Handlers.Queries.GetBreed.Queries;
 
 namespace Species.Application.Breeds.Handlers.Queries.GetBreed;
 

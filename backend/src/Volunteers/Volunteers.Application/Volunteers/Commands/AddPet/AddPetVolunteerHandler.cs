@@ -1,8 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CSharpFunctionalExtensions;
+using FluentValidation;
+using Microsoft.Extensions.Logging;
+using Shared.Core.Abstractions.Handlers;
+using Shared.Core.Abstractions.Providers;
+using Shared.Kernel.CustomErrors;
+using Shared.Kernel.Ids;
+using Volunteers.Application.Volunteers.Commands.AddPet.Commands;
+using Volunteers.Application.Volunteers.Commands.UpdateSotialNetworks;
+using Volunteers.Domain.Pets.Entities;
+using Volunteers.Domain.Pets.ValueObjects;
 
 namespace Volunteers.Application.Volunteers.Commands.AddPet;
 

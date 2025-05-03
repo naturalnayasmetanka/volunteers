@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Volunteers.Domain.Shared.Ids;
-using Volunteers.Domain.SpeciesManagment.Breed.Entities;
-using Volunteers.Domain.SpeciesManagment.Breed.ValueObjects;
+using Shared.Kernel.Ids;
+using Species.Domain.Breeds.Entities;
+using Species.Domain.Breeds.ValueObjects;
 
-namespace Volunteers.Infrastructure.Configurations;
+namespace Species.Infrastructure.Configurations;
 
 public class BreedConfigurations : IEntityTypeConfiguration<Breed>
 {

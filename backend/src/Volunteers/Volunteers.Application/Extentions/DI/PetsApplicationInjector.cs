@@ -1,9 +1,30 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
+using Shared.Core.Abstractions.Handlers;
+using Shared.Core.DTO;
+using Shared.Core.Models;
+using Volunteers.Application.Pets.Queries.GetPet;
+using Volunteers.Application.Pets.Queries.GetPet.Queries;
+using Volunteers.Application.Pets.Queries.GetPets;
+using Volunteers.Application.Pets.Queries.GetPets.Queries;
+using Volunteers.Application.Volunteers.Commands.AddPet;
+using Volunteers.Application.Volunteers.Commands.AddPet.Commands;
+using Volunteers.Application.Volunteers.Commands.AddPetPhoto;
+using Volunteers.Application.Volunteers.Commands.AddPetPhoto.Commands;
+using Volunteers.Application.Volunteers.Commands.DeletePet;
+using Volunteers.Application.Volunteers.Commands.DeletePet.Commands;
+using Volunteers.Application.Volunteers.Commands.DeletePetPhoto;
+using Volunteers.Application.Volunteers.Commands.DeletePetPhoto.Commands;
+using Volunteers.Application.Volunteers.Commands.GetPresignedLinkPhoto;
+using Volunteers.Application.Volunteers.Commands.GetPresignedLinkPhoto.Commands;
+using Volunteers.Application.Volunteers.Commands.MovePet;
+using Volunteers.Application.Volunteers.Commands.MovePet.Commands;
+using Volunteers.Application.Volunteers.Commands.SetMainPetPhoto;
+using Volunteers.Application.Volunteers.Commands.SetMainPetPhoto.Commands;
+using Volunteers.Application.Volunteers.Commands.UpdatePet;
+using Volunteers.Application.Volunteers.Commands.UpdatePet.Commands;
+using Volunteers.Application.Volunteers.Commands.UpdatePetStatus;
+using Volunteers.Application.Volunteers.Commands.UpdatePetStatus.Commands;
 
 namespace Volunteers.Application.Extentions.DI;
 
@@ -11,15 +32,15 @@ public static class PetsApplicationInjector
 {
     public static IServiceCollection AddPetsApplication(this IServiceCollection services)
     {
-        services.AddCommands();
-        services.AddQueries();
+        services.AddPetsCommands();
+        services.AddPetsQueries();
 
         services.AddValidatorsFromAssembly(typeof(PetsApplicationInjector).Assembly);
 
         return services;
     }
 
-    public static IServiceCollection AddCommands(this IServiceCollection services)
+    private static IServiceCollection AddPetsCommands(this IServiceCollection services)
     {
         #region Pet
         services.AddScoped<ICommandHandler<Guid, AddPetCommand>, AddPetVolunteerHandler>();
@@ -40,7 +61,7 @@ public static class PetsApplicationInjector
         return services;
     }
 
-    public static IServiceCollection AddQueries(this IServiceCollection services)
+    private static IServiceCollection AddPetsQueries(this IServiceCollection services)
     {
         #region Pet
         services.AddScoped<IQueryHandler<PetDTO?, GetPetQuery>, GetPetHandler>();

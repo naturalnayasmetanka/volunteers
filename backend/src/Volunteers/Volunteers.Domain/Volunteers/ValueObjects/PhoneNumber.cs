@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
-using Volunteers.Domain.Shared.CustomErrors;
+using Shared.Kernel.CustomErrors;
 
-namespace Volunteers.Domain.PetManagment.Volunteer.ValueObjects;
+namespace Volunteers.Domain.Volunteers.ValueObjects;
 
 public record PhoneNumber
 {

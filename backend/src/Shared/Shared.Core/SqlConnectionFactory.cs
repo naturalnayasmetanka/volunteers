@@ -1,9 +1,9 @@
 ﻿using System.Data;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
-using Volunteers.Application.Database;
+using Shared.Core.Abstractions.Database;
 
-namespace Volunteers.Infrastructure;
+namespace Shared.Core;
 
 public class SqlConnectionFactory : ISqlConnConnectionFactory
 {

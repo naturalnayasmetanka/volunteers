@@ -1,9 +1,8 @@
-﻿using Volunteers.Domain.PetManagment.Pet.ValueObjects;
-using Volunteers.Domain.PetManagment.Volunteer.AggregateRoot;
-using Volunteers.UnitTests.MockData;
+﻿using Volunteers.Domain.Pets.ValueObjects;
+using Volunteers.Domain.UnitTests.MockData;
 using Xunit;
 
-namespace Volunteers.UnitTests.Domain;
+namespace Volunteers.Domain.UnitTests.Domain;
 
 public class VolunteerTests
 {

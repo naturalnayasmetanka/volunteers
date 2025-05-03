@@ -1,14 +1,15 @@
 ﻿using CSharpFunctionalExtensions;
-using Volunteers.Domain.PetManagment.Pet.Enums;
-using Volunteers.Domain.PetManagment.Pet.ValueObjects;
-using Volunteers.Domain.PetManagment.Volunteer.ValueObjects;
-using Volunteers.Domain.Shared;
-using Volunteers.Domain.Shared.CustomErrors;
-using Volunteers.Domain.Shared.Ids;
-using CustomEntity = Volunteers.Domain.Shared;
-using PetModel = Volunteers.Domain.PetManagment.Pet.Entities.Pet;
+using Shared.Kernel;
+using Shared.Kernel.CustomErrors;
+using Shared.Kernel.Enums;
+using Shared.Kernel.Ids;
+using Volunteers.Domain.Pets.ValueObjects;
+using Volunteers.Domain.Volunteers.ValueObjects;
+using CustomEntity = Shared.Kernel;
 
-namespace Volunteers.Domain.PetManagment.Volunteer.AggregateRoot;
+using PetModel = Volunteers.Domain.Pets.Entities.Pet;
+
+namespace Volunteers.Domain.Volunteers.AggregateRoot;
 
 public class Volunteer : CustomEntity.Entity<VolunteerId>, ISoftDeletable
 {

@@ -1,6 +1,8 @@
-﻿using Volunteers.Application.Handlers.Pets.Queries.GetPet.Queries;
+﻿
 
-namespace Volunteers.API.Contracts.Pets.GetPets;
+using Volunteers.Application.Pets.Queries.GetPet.Queries;
+
+namespace Volunteers.Contracts.Pets.Requests.Pets.GetPets;
 
 public record GetPetRequest(Guid petId)
 {

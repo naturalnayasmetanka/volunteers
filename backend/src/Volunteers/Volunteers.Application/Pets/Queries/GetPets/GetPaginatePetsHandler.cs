@@ -1,16 +1,16 @@
-﻿using CSharpFunctionalExtensions;
-using Dapper;
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
-using Volunteers.Application.Abstractions;
-using Volunteers.Application.Database;
-using Volunteers.Application.DTO;
-using Volunteers.Application.Extentions;
-using Volunteers.Application.Handlers.Pets.Queries.GetPets.Queries;
-using Volunteers.Application.Models;
-using Volunteers.Domain.Shared.CustomErrors;
+using CSharpFunctionalExtensions;
+using Dapper;
+using Shared.Core.Abstractions.Database;
+using Shared.Core.Abstractions.Handlers;
+using Shared.Core.DTO;
+using Shared.Core.Extentions;
+using Shared.Core.Models;
+using Shared.Kernel.CustomErrors;
+using Volunteers.Application.Pets.Queries.GetPets.Queries;
 
-namespace Volunteers.Application.Handlers.Pets.Queries.GetPets;
+namespace Volunteers.Application.Pets.Queries.GetPets;
 
 public class GetPaginatePetsHandler : IQueryHandler<PagedList<PetDTO>, GetFilteredWithPaginationPetsQuery>
 {
@@ -38,7 +38,7 @@ public class GetPaginatePetsHandler : IQueryHandler<PagedList<PetDTO>, GetFilter
         //sqlTotalCountQuery.ApplyFilterByColumn(columnName: "experience_in_years", queryFieldValue: query.Species);
         //sqlTotalCountQuery.ApplyFilterByColumn(columnName: "experience_in_years", queryFieldValue: query.Breed);
 
-        if (query.PetStatus is not null) 
+        if (query.PetStatus is not null)
         {
             sqlTotalCountQuery.ApplyFilterByColumn(columnName: "help_status", queryFieldValue: (int)query.PetStatus);
         }

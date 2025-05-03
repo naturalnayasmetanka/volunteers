@@ -2,8 +2,8 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Shared.Core.Abstractions.MessageQueues;
+using Shared.Core.Abstractions.Providers;
 using Shared.Core.DTO;
-using Shared.Core.Providers;
 
 namespace Shared.Core.BackgroundServices;
 

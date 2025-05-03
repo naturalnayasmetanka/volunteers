@@ -1,7 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
-using Volunteers.Domain.Shared.CustomErrors;
+using Shared.Kernel.CustomErrors;
 
-namespace Volunteers.Domain.PetManagment.Pet.ValueObjects;
+namespace Volunteers.Domain.Pets.ValueObjects;
 
 public class PetPhoneNumber
 {

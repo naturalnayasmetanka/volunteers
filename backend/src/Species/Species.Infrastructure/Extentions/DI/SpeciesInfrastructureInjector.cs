@@ -1,12 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Shared.Core.Abstractions.Database;
+using Shared.Core.Enums;
+using Species.Infrastructure.Contexts;
 
 namespace Species.Infrastructure.Extentions.DI;
 
-public class SpeciesInfrastructureInjector
+public static class SpeciesInfrastructureInjector
 {
+    public static IServiceCollection AddSpeciesInfrastructure(this IServiceCollection services)
+    {
+        services.AddKeyedScoped<IUnitOfWork, SpeciesUnitOfWork>(UoWServiceDI.SpeciesService);
+        services.AddScoped<SpeciesDbContext>();
 
+        return services;
+    }
 }

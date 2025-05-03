@@ -1,7 +1,7 @@
-﻿using Volunteers.Application.Abstractions;
-using Volunteers.Domain.PetManagment.Pet.Enums;
+﻿using Shared.Core.Abstractions.Handlers;
+using Shared.Kernel.Enums;
 
-namespace Volunteers.Application.Handlers.Pets.Queries.GetPets.Queries;
+namespace Volunteers.Application.Pets.Queries.GetPets.Queries;
 
 public record GetFilteredWithPaginationPetsQuery(
     Guid? VolunteerId,

@@ -2,13 +2,13 @@
 using System.Text.Json;
 using CSharpFunctionalExtensions;
 using Dapper;
-using Volunteers.Application.Abstractions;
-using Volunteers.Application.Database;
-using Volunteers.Application.DTO;
-using Volunteers.Application.Handlers.Pets.Queries.GetPet.Queries;
-using Volunteers.Domain.Shared.CustomErrors;
+using Shared.Core.Abstractions.Database;
+using Shared.Core.Abstractions.Handlers;
+using Shared.Core.DTO;
+using Shared.Kernel.CustomErrors;
+using Volunteers.Application.Pets.Queries.GetPet.Queries;
 
-namespace Volunteers.Application.Handlers.Pets.Queries.GetPet;
+namespace Volunteers.Application.Pets.Queries.GetPet;
 
 public class GetPetHandler : IQueryHandler<PetDTO?, GetPetQuery>
 {
