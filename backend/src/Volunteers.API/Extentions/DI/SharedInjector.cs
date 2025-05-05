@@ -1,4 +1,4 @@
-﻿using Shared.Core.Extentions.di;
+﻿using Shared.Core.Extentions.DI;
 
 namespace Volunteers.API.Extentions.DI;
 

@@ -13,7 +13,7 @@ using Shared.Core.Options;
 using Shared.Core.Providers;
 using MinIO = Shared.Core.Options.Minio;
 
-namespace Shared.Core.Extentions.di;
+namespace Shared.Core.Extentions.DI;
 
 public static class SharedCoreInjector
 {
