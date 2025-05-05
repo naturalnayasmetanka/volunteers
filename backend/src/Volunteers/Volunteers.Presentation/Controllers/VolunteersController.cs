@@ -5,7 +5,8 @@ using Shared.Core.Models;
 using Shared.Framework;
 using Shared.Framework.Extentions;
 using Shared.Framework.Processors;
-using Species.Application.Species.Handlers.Queries.CheckExists.Queries;
+using Species.Contracts.Species;
+using Species.Contracts.Species.Requests.Species.CheckExists;
 using Swashbuckle.AspNetCore.Annotations;
 using Volunteers.Application.Pets.Queries.GetPets.Queries;
 using Volunteers.Application.Volunteers.Commands.AddPet.Commands;
@@ -213,11 +214,11 @@ public class VolunteersController : ApplicationController
         [FromRoute] Guid volunteerId,
         [FromForm] AddPetRequest request,
         [FromServices] ICommandHandler<Guid, AddPetCommand> petHandler,
-        [FromServices] IQueryHandler<bool, CheckExistsQuery> checkExistsSpeciesBreedHandler, // переделать на contracts
+        [FromServices] ISpeciesContract checkExistsSpeciesBreedContract,
         CancellationToken cancellationToken = default)
     {
-        var checkExistSpeciesBreedQuery = new CheckExistsQuery(SpeciesId: request.SpeciesId, BreedId: request.BreedId);
-        var speciesBreedExist = await checkExistsSpeciesBreedHandler.Handle(checkExistSpeciesBreedQuery, cancellationToken);
+        var checkExistSpeciesBreedRequest = new CheckExistsRequest(SpeciesId: request.SpeciesId, BreedId: request.BreedId);
+        var speciesBreedExist = await checkExistsSpeciesBreedContract.CheckExists(checkExistSpeciesBreedRequest, cancellationToken);
 
         if (speciesBreedExist.IsFailure)
             return speciesBreedExist.Error
@@ -267,11 +268,11 @@ public class VolunteersController : ApplicationController
         [FromRoute] Guid petId,
         [FromBody] UpdatePetRequest request,
         [FromServices] ICommandHandler<Guid, UpdatePetCommand> handler,
-        [FromServices] IQueryHandler<bool, CheckExistsQuery> checkExistsSpeciesBreedHandler, // переделать на contracts
+        [FromServices] ISpeciesContract checkExistsSpeciesBreedContract,
         CancellationToken cancellationToken = default)
     {
-        var checkExistSpeciesBreedQuery = new CheckExistsQuery(SpeciesId: request.SpeciesId, BreedId: request.BreedId);
-        var speciesBreedExist = await checkExistsSpeciesBreedHandler.Handle(checkExistSpeciesBreedQuery, cancellationToken);
+        var checkExistSpeciesBreedRequest = new CheckExistsRequest(SpeciesId: request.SpeciesId, BreedId: request.BreedId);
+        var speciesBreedExist = await checkExistsSpeciesBreedContract.CheckExists(checkExistSpeciesBreedRequest, cancellationToken);
 
         if (speciesBreedExist.IsFailure)
             return speciesBreedExist.Error

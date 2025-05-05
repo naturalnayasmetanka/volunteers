@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CSharpFunctionalExtensions;
+using Shared.Kernel.CustomErrors;
+using Species.Contracts.Species.Requests.Species.CheckExists;
 
 namespace Species.Contracts.Species;
 
 public interface ISpeciesContract
 {
+    Task<Result<bool, Error>> CheckExists(CheckExistsRequest request, CancellationToken cancellationToken = default);
 }

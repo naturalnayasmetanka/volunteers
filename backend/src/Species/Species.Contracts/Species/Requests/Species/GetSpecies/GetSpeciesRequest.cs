@@ -1,5 +1,4 @@
-﻿
-using Species.Application.Species.Handlers.Queries.GetSpecies.Queries;
+﻿using Species.Application.Species.Handlers.Queries.GetSpecies.Queries;
 
 namespace Species.Contracts.Species.Requests.Species.GetSpecies
 {
