@@ -1,5 +1,5 @@
 ﻿using System.Net;
-using Volunteers.Domain.Shared.CustomErrors;
+using Shared.Kernel.CustomErrors;
 
 namespace Volunteers.API.Middlewares;
 

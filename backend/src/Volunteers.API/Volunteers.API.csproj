@@ -34,9 +34,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Volunteers.Application\Volunteers.Application.csproj" />
-    <ProjectReference Include="..\Volunteers.Domain\Volunteers.Domain.csproj" />
-    <ProjectReference Include="..\Volunteers.Infrastructure\Volunteers.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\tests\Volunteers.UnitTests\Volunteers.Domain.UnitTests.csproj" />
+    <ProjectReference Include="..\Shared\Shared.Core\Shared.Core.csproj" />
+    <ProjectReference Include="..\Shared\Shared.Framework\Shared.Framework.csproj" />
+    <ProjectReference Include="..\Shared\Shared.Kernel\Shared.Kernel.csproj" />
+    <ProjectReference Include="..\Species\Species.Application\Species.Application.csproj" />
+    <ProjectReference Include="..\Species\Species.Contracts\Species.Contracts.csproj" />
+    <ProjectReference Include="..\Species\Species.Domain\Species.Domain.csproj" />
+    <ProjectReference Include="..\Species\Species.Infrastructure\Species.Infrastructure.csproj" />
+    <ProjectReference Include="..\Species\Species.Presentation\Species.Presentation.csproj" />
+    <ProjectReference Include="..\Volunteers\Volunteers.Application\Volunteers.Application.csproj" />
+    <ProjectReference Include="..\Volunteers\Volunteers.Contracts\Volunteers.Contracts.csproj" />
+    <ProjectReference Include="..\Volunteers\Volunteers.Domain\Volunteers.Domain.csproj" />
+    <ProjectReference Include="..\Volunteers\Volunteers.Infrastructure\Volunteers.Infrastructure.csproj" />
+    <ProjectReference Include="..\Volunteers\Volunteers.Presentation\Volunteers.Presentation.csproj" />
   </ItemGroup>
 
 </Project>
