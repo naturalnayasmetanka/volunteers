@@ -8,10 +8,10 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Species.Presentation.Controllers;
 
-public class BreedController : ApplicationController
+public class BreedsController : ApplicationController
 {
     [HttpGet("breed")]
-    [SwaggerOperation(Tags = ["Breed"])]
+    [SwaggerOperation(Tags = ["Breeds"])]
     public async Task<IActionResult> GetBreed(
         [FromServices] IQueryHandler<BreedDTO, GetBreedQuery> handler,
         [FromQuery] GetBreedRequest request,

@@ -12,7 +12,7 @@ using Volunteers.Contracts.Volunteers.Requests.Volunteers.GetPresignedLinkPhoto;
 
 namespace Volunteers.Presentation.Controllers;
 
-public class PetsControllers : ApplicationController
+public class PetsController : ApplicationController
 {
     [HttpGet("pets/{volunteerId:Guid}")]
     [SwaggerOperation(Tags = ["Pet"])]

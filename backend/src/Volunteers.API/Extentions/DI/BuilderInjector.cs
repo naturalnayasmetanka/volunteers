@@ -25,6 +25,8 @@ public static class BuilderInjector
 
         app.UseHttpsRedirection();
 
+
+        app.UseAuthentication();
         app.UseAuthorization();
 
 
