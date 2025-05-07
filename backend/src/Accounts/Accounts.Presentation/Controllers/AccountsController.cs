@@ -9,10 +9,16 @@ public class AccountsController : ApplicationController
     [HttpPost("login")]
     [SwaggerOperation(Tags = ["Accounts"])]
     public async Task<IActionResult> Login(
-
-            CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default)
     {
+        return Ok();
+    }
 
+    [HttpPost("register")]
+    [SwaggerOperation(Tags = ["Accounts"])]
+    public async Task<IActionResult> Register(
+        CancellationToken cancellationToken = default)
+    {
         return Ok();
     }
 }
