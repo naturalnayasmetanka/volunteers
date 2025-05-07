@@ -27,7 +27,7 @@ public class VolunteersDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasDefaultSchema("VolunteersPets");
+        modelBuilder.HasDefaultSchema("volunteers_pets");
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(VolunteersDbContext).Assembly);
     }
 

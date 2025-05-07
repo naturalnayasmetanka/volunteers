@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+﻿using Accounts.Infrastructure.Extentions.DI;
 using Microsoft.OpenApi.Models;
 
 namespace Volunteers.API.Extentions.DI;
@@ -15,8 +14,7 @@ public static class ApiInjector
         {
             c.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = "My API",
-                Version = "v1"
+                Title = "Volunteers",
             });
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
@@ -25,7 +23,7 @@ public static class ApiInjector
                 Name = "Authorization",
                 Type = SecuritySchemeType.ApiKey
             });
-            c.AddSecurityRequirement(new OpenApiSecurityRequirement 
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
                 {
                     new OpenApiSecurityScheme
@@ -41,20 +39,7 @@ public static class ApiInjector
             });
         });
 
-        builder.Services
-            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters()
-                {
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ValidateIssuerSigningKey = false,
-                    ValidateLifetime = false,
-
-
-                };
-            });
+        builder.Services.AddAccountsAuthentication(builder);
 
         builder.Services.AddAuthorization();
 

@@ -27,7 +27,7 @@ public class SpeciesDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasDefaultSchema("SpeciesBreed");
+        modelBuilder.HasDefaultSchema("species_breed");
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(SpeciesDbContext).Assembly);
     }
 
