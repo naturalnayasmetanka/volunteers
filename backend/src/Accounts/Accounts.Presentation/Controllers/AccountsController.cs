@@ -1,5 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Accounts.Application.Accounts.Commands.Login.Commands;
+using Accounts.Application.Accounts.Commands.Register.Commands;
+using Accounts.Contracts.Requests;
+using Microsoft.AspNetCore.Mvc;
+using Shared.Core.Abstractions.Handlers;
 using Shared.Framework;
+using Shared.Framework.Extentions;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Accounts.Presentation.Controllers;
@@ -9,16 +14,30 @@ public class AccountsController : ApplicationController
     [HttpPost("login")]
     [SwaggerOperation(Tags = ["Accounts"])]
     public async Task<IActionResult> Login(
+        [FromBody] LoginUserRequest request,
+        [FromServices] ICommandHandler<string, LoginUserCommand> handler,
         CancellationToken cancellationToken = default)
     {
+
+
         return Ok();
     }
 
-    [HttpPost("register")]
+    [HttpPost("registration")]
     [SwaggerOperation(Tags = ["Accounts"])]
     public async Task<IActionResult> Register(
+        [FromBody] RegisterUserRequest request,
+        [FromServices] ICommandHandler<string, RegisterUserCommand> handler,
         CancellationToken cancellationToken = default)
     {
-        return Ok();
+        var command = RegisterUserRequest.ToCommand(request);
+
+        var regusterResult = await handler.Handle(command);
+
+        if (regusterResult.IsFailure)
+            return regusterResult.Error
+                    .ToErrorResponse();
+
+        return Ok(regusterResult.Value);
     }
 }

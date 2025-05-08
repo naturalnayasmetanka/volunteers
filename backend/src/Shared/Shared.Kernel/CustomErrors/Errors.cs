@@ -29,5 +29,10 @@ public static class Errors
         {
             return Error.ServerInternal("server.internal", value ?? string.Empty);
         }
+
+        public static Error AlreadyExists(string? value = null)
+        {
+            return Error.General("already.exists", value ?? string.Empty);
+        }
     }
 }

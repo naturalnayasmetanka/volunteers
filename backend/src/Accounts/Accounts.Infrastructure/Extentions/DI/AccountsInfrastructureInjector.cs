@@ -12,7 +12,10 @@ public static class AccountsInfrastructureInjector
     public static IServiceCollection AddAccountsInfrastructure(this IServiceCollection services)
     {
         services
-            .AddIdentity<User, Role>()
+            .AddIdentity<User, Role>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+            })
             .AddEntityFrameworkStores<AccountDbContext>();
 
         services.AddScoped<AccountDbContext>();

@@ -1,4 +1,6 @@
-﻿namespace Shared.Kernel.CustomErrors;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Shared.Kernel.CustomErrors;
 
 public record Error
 {
@@ -30,4 +32,7 @@ public record Error
 
     public static Error ServerInternal(string message, string code)
         => new Error(message, code, ErrorType.ServerInternal);
+
+    public static Error General(string message, string code)
+        => new Error(message, code, ErrorType.General);
 }
