@@ -12,7 +12,7 @@ public class Program
         builder.Services
             .AddSharedDI(builder)
             .AddSerilog()
-            .AddAccountsDI()
+            .AddAccountsDI(builder)
             .AddVolunteerDI()
             .AddSpeciesDI()
             .AddApi(builder);

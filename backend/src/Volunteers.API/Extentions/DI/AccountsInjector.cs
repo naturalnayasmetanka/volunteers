@@ -5,9 +5,9 @@ namespace Volunteers.API.Extentions.DI
 {
     public static class AccountsInjector
     {
-        public static IServiceCollection AddAccountsDI(this IServiceCollection services)
+        public static IServiceCollection AddAccountsDI(this IServiceCollection services, WebApplicationBuilder builder)
         {
-            services.AddAccountsInfrastructure();
+            services.AddAccountsInfrastructure(builder);
             services.AddAccountsApplication();
 
             return services;

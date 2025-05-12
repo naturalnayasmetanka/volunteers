@@ -38,12 +38,7 @@ public class LoginUserHandler : ICommandHandler<string, LoginUserCommand>
             return Error.NotFound($"User {command.Email} not found.", "user.not.found");
         }
 
-        var user = new User
-        {
-            Email = command.Email,
-        };
-
-        var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, command.Password);
+        var isPasswordCorrect = await _userManager.CheckPasswordAsync(existUser, command.Password);
 
         if (!isPasswordCorrect)
         {
@@ -52,7 +47,10 @@ public class LoginUserHandler : ICommandHandler<string, LoginUserCommand>
             return Error.Failure($"Incorrect user`s {command.Email} password.", "incorrect.password");
         }
 
-        var token = _tokenProvider.GenerateAccessToken(user, cancellationToken);
+        var token = _tokenProvider.GenerateAccessToken(existUser);
 
+        _logger.LogInformation($"User {command.Email} successfully logged in.");
+
+        return token;
     }
 }
